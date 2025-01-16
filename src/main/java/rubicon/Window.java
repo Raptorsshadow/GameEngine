@@ -3,9 +3,9 @@ package rubicon;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
+import util.Time;
 
 import java.util.Objects;
-import java.util.Random;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -18,8 +18,11 @@ public class Window {
     public static Window window;
     public static long glfwWindow;
     private int width, height;
-    private String title;
+    private final String title;
 
+    public float r = 1, g = 1, b = 1, a = 1;
+
+    private static Scene currentScene;
     private Window(int width, int height, String title) {
         this.width = width;
         this.height = height;
@@ -34,9 +37,28 @@ public class Window {
         return Window.window;
     }
 
+    public static Window get() {
+        return Window.window;
+    }
+
+    public static void changeScene(int newScene) {
+        switch(newScene) {
+            case 0:
+                currentScene = new LevelEditorScene();
+                currentScene.init();
+                break;
+            case 1:
+                currentScene = new LevelScene();
+                currentScene.init();
+                break;
+            default:
+                assert false : String.format("Unrecognized scene: %d", newScene);
+                break;
+        }
+    }
     public static Window get(String title) {
         if(Window.window == null) {
-            Window.window = new Window(Window.DEFAULT_WIDTH, Window.DEFAULT_HEIGHT, title);
+            Window.window = get(Window.DEFAULT_WIDTH, Window.DEFAULT_HEIGHT, title);
         }
 
         return Window.window;
@@ -76,30 +98,8 @@ public class Window {
         if ( glfwWindow == NULL )
             throw new IllegalStateException("Failed to create the GLFW window");
 
-        // Set up a key callback. It will be called every time a key is pressed, repeated or released.
-//        glfwSetKeyCallback(glfwWindow, (window, key, scancode, action, mods) -> {
-//            if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-//                glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
-//        });
-//
-//        // Get the thread stack and push a new frame
-//        try ( MemoryStack stack = stackPush() ) {
-//            IntBuffer pWidth = stack.mallocInt(1); // int*
-//            IntBuffer pHeight = stack.mallocInt(1); // int*
-//
-//            // Get the window size passed to glfwCreateWindow
-//            glfwGetWindowSize(glfwWindow, pWidth, pHeight);
-//
-//            // Get the resolution of the primary monitor
-//            GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-//
-//            // Center the window
-//            glfwSetWindowPos(
-//                    glfwWindow,
-//                    (vidmode.width() - pWidth.get(0)) / 2,
-//                    (vidmode.height() - pHeight.get(0)) / 2
-//            );
-//        } // the stack frame is popped automatically
+        //Register listeners to window
+        registerListeners();
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(glfwWindow);
@@ -116,11 +116,30 @@ public class Window {
         // bindings available for use.
         GL.createCapabilities();
 
+        Window.changeScene(0);
+    }
+
+    /**
+     * Register Listeners for Mouse, Keyboard, Window, etc...
+     */
+    private void registerListeners() {
+        //Register Event Listeners
+        glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);
+        glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
+        glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
+        glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
+        glfwSetWindowSizeCallback(glfwWindow, Window::sizeListener);
+    }
+
+    private static void sizeListener(long window, int width, int height) {
+        Window.get().width = width;
+        Window.get().height = height;
     }
 
     private void loop() {
-        Random r = new Random();
-
+        float beginTime = Time.getTime();
+        float endTime;
+        float dt = -1.0f;
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while ( !glfwWindowShouldClose(glfwWindow) ) {
@@ -130,10 +149,19 @@ public class Window {
             // Set the clear color
             //Seizure Mode
             //glClearColor(r.nextFloat(0, 1), r.nextFloat(0, 1), r.nextFloat(0, 1), r.nextFloat(0, 1));
-            glClearColor(1, 0, 0, r.nextFloat(0, 1));
+            glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the frame buffer
 
+            if(dt >= 0) {
+                currentScene.update(dt);
+            }
+
             glfwSwapBuffers(glfwWindow); // swap the color buffers
+
+            //Calculate Scene Change
+            endTime = Time.getTime();
+            dt = endTime - beginTime;
+            beginTime = endTime;
         }
     }
 }
