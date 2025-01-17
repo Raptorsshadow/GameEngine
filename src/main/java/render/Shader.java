@@ -27,9 +27,9 @@ public class Shader {
             String shaderType;
             do {
                 index = source.indexOf(TYPE_CONSTANT, eol) + TYPE_CONSTANT.length();
-                eol = source.indexOf("\r\n", index);
+                eol = source.indexOf("\n", index);
                 if(index >= 6) {
-                    shaderType = source.substring(index, eol);
+                    shaderType = source.substring(index, eol).trim();
                     switch(shaderType) {
                         case "vertex":
                             this.vertexSource = split[i++];
