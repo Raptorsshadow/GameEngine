@@ -5,12 +5,11 @@ import org.lwjgl.glfw.GLFW;
 import java.util.stream.IntStream;
 
 public class MouseListener {
+    private static MouseListener instance;
+    private final boolean[] mouseButtonPressed = new boolean[3];
     private double lastX, lastY, x, y;
     private double scrollX, scrollY;
-    private final boolean[] mouseButtonPressed = new boolean[3];
     private boolean isDragging;
-
-    private static MouseListener instance;
 
     private MouseListener() {
         this.lastX = 0.0;
@@ -23,7 +22,7 @@ public class MouseListener {
     }
 
     public static MouseListener get() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new MouseListener();
         }
         return instance;
@@ -38,13 +37,13 @@ public class MouseListener {
     }
 
     public static void mouseButtonCallback(long ignoredWindow, int button, int action, int ignoredMods) {
-        if(action == GLFW.GLFW_PRESS) {
-            if(button < get().mouseButtonPressed.length) {
+        if (action == GLFW.GLFW_PRESS) {
+            if (button < get().mouseButtonPressed.length) {
                 get().mouseButtonPressed[button] = true;
             }
-        } else if (action == GLFW.GLFW_RELEASE){
+        } else if (action == GLFW.GLFW_RELEASE) {
             get().isDragging = false;
-            if(button < get().mouseButtonPressed.length) {
+            if (button < get().mouseButtonPressed.length) {
                 get().mouseButtonPressed[button] = false;
             }
         }
@@ -77,6 +76,7 @@ public class MouseListener {
     public static float getDy() {
         return (float) (get().lastY - get().y);
     }
+
     public static float getScrollX() {
         return (float) get().scrollX;
     }
@@ -90,7 +90,7 @@ public class MouseListener {
     }
 
     static boolean isMouseButtonDown(int button) {
-        if(button < get().mouseButtonPressed.length) {
+        if (button < get().mouseButtonPressed.length) {
             return get().mouseButtonPressed[button];
         }
         return false;

@@ -25,6 +25,7 @@ public class Camera {
 
     /**
      * Defines how the Camera is looking.
+     *
      * @return View Matrix after lookAt cameraFront/Position
      */
     public Matrix4f getViewMatrix() {
@@ -39,6 +40,7 @@ public class Camera {
     public Matrix4f getProjectionMatrix() {
         return this.projectionMatrix;
     }
+
     public Vector2f getPosition() {
         return position;
     }

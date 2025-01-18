@@ -1,6 +1,6 @@
 package rubicon;
 
-public class LevelScene extends Scene{
+public class LevelScene extends Scene {
 
     public LevelScene() {
         System.out.println("Inside Level Scene");

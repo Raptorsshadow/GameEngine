@@ -10,15 +10,15 @@ import java.nio.file.Paths;
 
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL20.glGetShaderInfoLog;
 
 public class Shader {
     public static final String TYPE_CONSTANT = "#type ";
+    private final String filePath;
     private int shaderProgramId;
     private boolean inUse;
     private String vertexSource;
     private String fragmentSource;
-    private final String filePath;
+
     public Shader(String filePath) {
         this.filePath = filePath;
 
@@ -33,9 +33,9 @@ public class Shader {
             do {
                 index = source.indexOf(TYPE_CONSTANT, eol) + TYPE_CONSTANT.length();
                 eol = source.indexOf("\n", index);
-                if(index >= 6) {
+                if (index >= 6) {
                     shaderType = source.substring(index, eol).trim();
-                    switch(shaderType) {
+                    switch (shaderType) {
                         case "vertex":
                             this.vertexSource = split[i++];
                             break;
@@ -46,13 +46,14 @@ public class Shader {
                             assert false : "Unsupported shader type detected " + shaderType;
                     }
                 }
-            } while(index >= TYPE_CONSTANT.length());
+            } while (index >= TYPE_CONSTANT.length());
             //compile();
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             assert false : "Error: Could not open file for shader " + filePath;
         }
     }
+
     public void compileAndLinkShader() {
         // =========================================
         // Generate and Compile Shader and Fragments
@@ -65,7 +66,7 @@ public class Shader {
 
         //Check if there were errors in compilation
         int success = glGetShaderi(vertexID, GL_COMPILE_STATUS);
-        if(success == GL_FALSE) {
+        if (success == GL_FALSE) {
             int len = glGetShaderi(vertexID, GL_INFO_LOG_LENGTH);
             System.out.println("ERROR: " + filePath + " 'defaultShader.glsl'\n\tVertex Shader Compilation Failed.");
             System.out.println(glGetShaderInfoLog(vertexID, len));
@@ -79,7 +80,7 @@ public class Shader {
 
         //Check if there were errors in compilation
         success = glGetShaderi(fragmentID, GL_COMPILE_STATUS);
-        if(success == GL_FALSE) {
+        if (success == GL_FALSE) {
             int len = glGetShaderi(fragmentID, GL_INFO_LOG_LENGTH);
             System.out.println("ERROR: " + filePath + "'defaultShader.glsl'\n\tFragment Shader Compilation Failed.");
             System.out.println(glGetShaderInfoLog(fragmentID, len));
@@ -95,7 +96,7 @@ public class Shader {
         glLinkProgram(shaderProgramId);
 
         success = glGetProgrami(shaderProgramId, GL_LINK_STATUS);
-        if(success == GL_FALSE) {
+        if (success == GL_FALSE) {
             int len = glGetProgrami(shaderProgramId, GL_INFO_LOG_LENGTH);
             System.out.println("ERROR: " + filePath + " 'defaultShader.glsl'\n\tLinking of Shaders Failed.");
             System.out.println(glGetProgramInfoLog(shaderProgramId, len));
@@ -104,14 +105,14 @@ public class Shader {
     }
 
     public void use() {
-        if(!inUse) {
+        if (!inUse) {
             glUseProgram(shaderProgramId);
             inUse = true;
         }
     }
 
     public void detach() {
-        if(inUse) {
+        if (inUse) {
             glUseProgram(0);
             inUse = false;
         }
@@ -119,8 +120,9 @@ public class Shader {
 
     /**
      * Registers a Matrix4f value with the given name in the graphics card for TextureShaders
+     *
      * @param varName name of variable
-     * @param mat Matrix4f we wish to set
+     * @param mat     Matrix4f we wish to set
      */
     public void uploadMat4f(String varName, Matrix4f mat) {
         int varLocation = glGetUniformLocation(shaderProgramId, varName);
@@ -132,8 +134,9 @@ public class Shader {
 
     /**
      * Registers a Matrix3f value with the given name in the graphics card for TextureShaders
+     *
      * @param varName name of variable
-     * @param mat Matrix3f we wish to set
+     * @param mat     Matrix3f we wish to set
      */
     public void uploadMat3f(String varName, Matrix3f mat) {
         int varLocation = glGetUniformLocation(shaderProgramId, varName);
@@ -145,38 +148,45 @@ public class Shader {
 
     /**
      * Registers a Vector4f value with the given name in the graphics card for TextureShaders
+     *
      * @param varName name of variable
-     * @param vec Vector4f we wish to set
+     * @param vec     Vector4f we wish to set
      */
     public void uploadVec4f(String varName, Vector4f vec) {
         int varLocation = glGetUniformLocation(shaderProgramId, varName);
         use();
         glUniform4f(varLocation, vec.x, vec.y, vec.z, vec.w);
     }
+
     /**
      * Registers a Vector3f value with the given name in the graphics card for TextureShaders
+     *
      * @param varName name of variable
-     * @param vec Vector3f we wish to set
+     * @param vec     Vector3f we wish to set
      */
     public void uploadVec3f(String varName, Vector3f vec) {
         int varLocation = glGetUniformLocation(shaderProgramId, varName);
         use();
         glUniform3f(varLocation, vec.x, vec.y, vec.z);
     }
+
     /**
      * Registers a Vector2f value with the given name in the graphics card for TextureShaders
+     *
      * @param varName name of variable
-     * @param vec Vector2f we wish to set
+     * @param vec     Vector2f we wish to set
      */
     public void uploadVec2f(String varName, Vector2f vec) {
         int varLocation = glGetUniformLocation(shaderProgramId, varName);
         use();
         glUniform2f(varLocation, vec.x, vec.y);
     }
+
     /**
      * Registers a float value with the given name in the graphics card for TextureShaders
+     *
      * @param varName name of variable
-     * @param val Vector4f we wish to set
+     * @param val     Vector4f we wish to set
      */
     public void uploadFloat(String varName, float val) {
         int varLocation = glGetUniformLocation(shaderProgramId, varName);
@@ -186,8 +196,9 @@ public class Shader {
 
     /**
      * Registers an int value with the given name in the graphics card for TextureShaders
+     *
      * @param varName name of variable
-     * @param val int we wish to set
+     * @param val     int we wish to set
      */
     public void uploadInt(String varName, int val) {
         int varLocation = glGetUniformLocation(shaderProgramId, varName);
@@ -198,8 +209,9 @@ public class Shader {
     /**
      * Registers a Texture value with the given name in the graphics card for TextureShaders.  This has the same
      * behavior as uploadInt, however in the shader this is treated differently so we're making the distinction here.
+     *
      * @param varName name of variable
-     * @param slot Texture slot we're forwarding.
+     * @param slot    Texture slot we're forwarding.
      */
     public void uploadTexture(String varName, int slot) {
         int varLocation = glGetUniformLocation(shaderProgramId, varName);

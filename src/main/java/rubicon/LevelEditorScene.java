@@ -17,19 +17,20 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 public class LevelEditorScene extends Scene {
     private final Shader shader;
     private final Texture texture;
-    private int vaoID;
-    private final float [] vertexArray = {
-      //position            //color                     UV Coords
-      100f, 0f, 0.0f,       1.0f, 0.0f, 0.0f, 1.0f,     1, 0,       //Bottom Right
-      0f, 100f, 0.0f,       0.0f, 1.0f, 0.0f, 1.0f,     0, 1,       //Top Left
-      100f, 100f, 0.0f,     0.0f, 0.0f, 1.0f, 1.0f,     1, 1,       //Top Right
-      0f, 0f, 0.0f,         1.0f, 1.0f, 0.0f, 1.0f,     0, 0        //Bottom Left
+    private final float[] vertexArray = {
+            //position            //color                     UV Coords
+            100f, 0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1, 0,       //Bottom Right
+            0f, 100f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0, 1,       //Top Left
+            100f, 100f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1, 1,       //Top Right
+            0f, 0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0, 0        //Bottom Left
     };
     //Important Counter Clockwise Order
     private final int[] elementArray = {
-      2, 1, 0,  //Top Right Triangle
-      0, 1, 3   //Bottom Left Triangle
+            2, 1, 0,  //Top Right Triangle
+            0, 1, 3   //Bottom Left Triangle
     };
+    private int vaoID;
+
     public LevelEditorScene() {
         this.texture = new Texture("assets/images/testImage.png");
         this.shader = new Shader("assets/shader/default.glsl");

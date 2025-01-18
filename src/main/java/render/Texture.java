@@ -11,6 +11,7 @@ import static org.lwjgl.stb.STBImage.*;
 public class Texture {
     private final String filePath;
     private final int textureId;
+
     public Texture(String filePath) {
         this.filePath = filePath;
         // Generate textures
@@ -28,17 +29,17 @@ public class Texture {
     }
 
     protected void loadTexture() {
-        IntBuffer width  = BufferUtils.createIntBuffer(1);
+        IntBuffer width = BufferUtils.createIntBuffer(1);
         IntBuffer height = BufferUtils.createIntBuffer(1);
         IntBuffer channels = BufferUtils.createIntBuffer(1);
         stbi_set_flip_vertically_on_load(true);
         ByteBuffer image = stbi_load(filePath, width, height, channels, 0);
 
-        if(image != null) {
+        if (image != null) {
             int COLOR_TYPE = -1;
-            if(channels.get(0) == 3) {
+            if (channels.get(0) == 3) {
                 COLOR_TYPE = GL_RGB;
-            } else if(channels.get(0) == 4) {
+            } else if (channels.get(0) == 4) {
                 COLOR_TYPE = GL_RGBA;
             } else {
                 assert false : "Error: Texture : Unknown channel count for texture " + channels.get(0);

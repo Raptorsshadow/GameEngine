@@ -10,17 +10,18 @@ public class KeyListener {
     private KeyListener() {
 
     }
+
     public static KeyListener get() {
-        if(KeyListener.instance == null) {
+        if (KeyListener.instance == null) {
             KeyListener.instance = new KeyListener();
         }
         return KeyListener.instance;
     }
 
     public static void keyCallback(long ignoredWindow, int key, int ignoredScancode, int action, int ignoredMods) {
-        if(action == GLFW.GLFW_PRESS) {
+        if (action == GLFW.GLFW_PRESS) {
             get().keyPressed[key] = true;
-        } else if(action == GLFW.GLFW_RELEASE) {
+        } else if (action == GLFW.GLFW_RELEASE) {
             get().keyPressed[key] = false;
         }
     }
