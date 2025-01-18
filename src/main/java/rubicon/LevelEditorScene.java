@@ -1,6 +1,8 @@
 package rubicon;
 
 
+import components.FontRenderer;
+import components.SpriteRenderer;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import render.Shader;
@@ -17,6 +19,7 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 public class LevelEditorScene extends Scene {
     private final Shader shader;
     private final Texture texture;
+    private final GameObject testObject;
     private final float[] vertexArray = {
             //position            //color                     UV Coords
             100f, 0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1, 0,       //Bottom Right
@@ -35,6 +38,7 @@ public class LevelEditorScene extends Scene {
         this.texture = new Texture("assets/images/testImage.png");
         this.shader = new Shader("assets/shader/default.glsl");
         this.camera = new Camera(new Vector2f());
+        this.testObject = new GameObject("test");
     }
 
     @Override
@@ -42,6 +46,9 @@ public class LevelEditorScene extends Scene {
 
         this.shader.compileAndLinkShader();
 
+        this.testObject.addComponent(new SpriteRenderer());
+        this.testObject.addComponent(new FontRenderer());
+        this.addGameObjectToScene(this.testObject);
         // =========================================================
         // Generate VAO, VBO, and EBO buffer objects and send to GPU
         // =========================================================
@@ -111,5 +118,14 @@ public class LevelEditorScene extends Scene {
         glDisableVertexAttribArray(1);
         glBindVertexArray(0);
         this.shader.detach();
+
+        this.gameObjects.forEach(go -> go.update(dt));
+
+        if(this.gameObjects.size() == 1) {
+            System.out.println("Creating Game Objects");
+            GameObject go = new GameObject("Game Test 2");
+            go.addComponent(new SpriteRenderer());
+            this.addGameObjectToScene(go);
+        }
     }
 }
