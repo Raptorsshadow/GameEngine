@@ -11,30 +11,61 @@ import java.nio.file.Paths;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
 
+/**
+ * Class: Shader
+ * Author: rapto
+ * CreatedDate: 1/19/2025 : 12:59 AM
+ * Project: GameEngine
+ * Description: Responsible for configuring and linking shader resources and managing lifecycle and destruction when finished.
+ */
 public class Shader {
+    // Constant for parsing shader files used to key on type preprocessor
     public static final String TYPE_CONSTANT = "#type ";
+
+    //Shader filepath
     private final String filePath;
+
+    //Shader programId registered on GPU
     private int shaderProgramId;
+
+    //Lifecycle tracking variable.  True if shader has been registered and is running
     private boolean inUse;
+
+    //Parsed out vertex source from shader file
     private String vertexSource;
+
+    //Parsed out fragment source from shader file
     private String fragmentSource;
 
+    /**
+     * Constructor that attempts to load the given shader file and parse out the vertex and fragment sources.
+     *
+     * @param filePath Shader file combining vertex and fragment sources.
+     */
     public Shader(String filePath) {
         this.filePath = filePath;
 
         try {
+            //Load shader file
             String source = new String(Files.readAllBytes(Paths.get(filePath)));
+
+            //split the source on the type pre-processor
             String[] split = source.split("(#type)( )+([a-zA-Z]+)");
 
             int i = 1;
             int index;
             int eol = 0;
             String shaderType;
+            /*
+                Iterate through the source looking for type declarations, determine the appropriate type
+                and store the resulting regex parsed index in the appropriate source variable.
+             */
             do {
                 index = source.indexOf(TYPE_CONSTANT, eol) + TYPE_CONSTANT.length();
                 eol = source.indexOf("\n", index);
                 if (index >= 6) {
-                    shaderType = source.substring(index, eol).trim();
+                    shaderType = source.substring(index, eol)
+                                       .trim();
                     switch (shaderType) {
                         case "vertex":
                             this.vertexSource = split[i++];
@@ -47,13 +78,16 @@ public class Shader {
                     }
                 }
             } while (index >= TYPE_CONSTANT.length());
-            //compile();
+
         } catch (IOException e) {
             e.printStackTrace();
             assert false : "Error: Could not open file for shader " + filePath;
         }
     }
 
+    /**
+     * Compile and Link the verted and fragment shader sources
+     */
     public void compileAndLinkShader() {
         // =========================================
         // Generate and Compile Shader and Fragments
@@ -104,6 +138,9 @@ public class Shader {
         }
     }
 
+    /**
+     * Responsible for telling the system to begin using the linked shader.
+     */
     public void use() {
         if (!inUse) {
             glUseProgram(shaderProgramId);
@@ -111,6 +148,9 @@ public class Shader {
         }
     }
 
+    /**
+     * Responsible for telling the system to stop using the linked shader.
+     */
     public void detach() {
         if (inUse) {
             glUseProgram(0);

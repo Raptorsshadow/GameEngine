@@ -16,24 +16,42 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
+/**
+ * Class: LevelEditorScene
+ * Author: rapto
+ * CreatedDate: 1/19/2025 : 3:49 AM
+ * Project: GameEngine
+ * Description: Editor Scene for testing capabilities.
+ */
 public class LevelEditorScene extends Scene {
-    private final Shader shader;
-    private final Texture texture;
+
+    //Scene Shader
+    private final Shader     shader;
+    //Scene Texture
+    private final Texture    texture;
+    //Scene GameObject
     private final GameObject testObject;
-    private final float[] vertexArray = {
+    //Scene VertexArray
+    private final float[]    vertexArray  = {
             //position            //color                     UV Coords
             100f, 0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1, 0,       //Bottom Right
             0f, 100f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0, 1,       //Top Left
             100f, 100f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1, 1,       //Top Right
             0f, 0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0, 0        //Bottom Left
     };
+    //Scene Element Array
     //Important Counter Clockwise Order
-    private final int[] elementArray = {
+    private final int[]      elementArray = {
             2, 1, 0,  //Top Right Triangle
             0, 1, 3   //Bottom Left Triangle
     };
+
+    //Registered View Array Object Identifier
     private int vaoID;
 
+    /**
+     * Default constructor used to initialize the scene pieces
+     */
     public LevelEditorScene() {
         this.texture = new Texture("assets/images/testImage.png");
         this.shader = new Shader("assets/shader/default.glsl");
@@ -41,6 +59,9 @@ public class LevelEditorScene extends Scene {
         this.testObject = new GameObject("test");
     }
 
+    /**
+     * Init method called when the scene is loaded, responsible for initializing all components.
+     */
     @Override
     public void init() {
 
@@ -58,7 +79,8 @@ public class LevelEditorScene extends Scene {
 
         //Create a float buffer of vertices
         FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(vertexArray.length);
-        vertexBuffer.put(vertexArray).flip();
+        vertexBuffer.put(vertexArray)
+                    .flip();
 
         int vboID = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
@@ -66,7 +88,8 @@ public class LevelEditorScene extends Scene {
 
         //Create the indices and upload
         IntBuffer elementBuffer = BufferUtils.createIntBuffer(elementArray.length);
-        elementBuffer.put(elementArray).flip();
+        elementBuffer.put(elementArray)
+                     .flip();
 
         int eboID = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
@@ -91,6 +114,11 @@ public class LevelEditorScene extends Scene {
         glEnableVertexAttribArray(2);
     }
 
+    /**
+     * Responsible for rendering each frame of the scene at delta time.
+     *
+     * @param dt Delta Time since last scene
+     */
     @Override
     public void update(float dt) {
         //Bind the shader program
@@ -121,7 +149,7 @@ public class LevelEditorScene extends Scene {
 
         this.gameObjects.forEach(go -> go.update(dt));
 
-        if(this.gameObjects.size() == 1) {
+        if (this.gameObjects.size() == 1) {
             System.out.println("Creating Game Objects");
             GameObject go = new GameObject("Game Test 2");
             go.addComponent(new SpriteRenderer());

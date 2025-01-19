@@ -2,17 +2,21 @@ package components;
 
 import rubicon.Component;
 
+/**
+ * Class: SpriteRenderer
+ * Author: rapto
+ * CreatedDate: 1/19/2025 : 12:52 AM
+ * Project: GameEngine
+ * Description: Component reponsible for rendering Text to a Scene
+ */
 public class SpriteRenderer extends Component {
-    private boolean first = false;
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param dt
+     */
     @Override
     public void update(float dt) {
-        if(!first)
-            System.out.println("I am Updating!");
-        first = true;
-    }
-
-    @Override
-    public void start() {
-        System.out.println("I am Starting");
     }
 }

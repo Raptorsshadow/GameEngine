@@ -4,10 +4,30 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+/**
+ * Class: Camera
+ * Author: rapto
+ * CreatedDate: 1/19/2025 : 1:50 AM
+ * Project: GameEngine
+ * Description: Responsible for creating and adjusting a Camera viewpoint.
+ */
 public class Camera {
-    private final Matrix4f projectionMatrix, viewMatrix;
+
+    //Defines the projection matrix used to describe the scene canvas
+    private final Matrix4f projectionMatrix;
+
+    //Defines the viewpoint of the camera itself
+    private final Matrix4f viewMatrix;
+
+    //Defines the x/y coordinates of the camera
     private final Vector2f position;
 
+    /**
+     * Constructor responsible for initializing relevant camera matrices and adjusting the projection to the
+     * given position.
+     *
+     * @param position x/y coordinates of the camera
+     */
     public Camera(Vector2f position) {
         this.position = position;
         this.projectionMatrix = new Matrix4f();
@@ -20,6 +40,8 @@ public class Camera {
      */
     public void adjustProjection() {
         projectionMatrix.identity();
+
+        //Configured the Projection matrix to be an orthogonal plane.
         projectionMatrix.ortho(0.0f, 32.0f * 40.0f, 0.0f, 32.0f * 21.0f, 0.0f, 100.0f);
     }
 
@@ -32,16 +54,27 @@ public class Camera {
         Vector3f cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
         Vector3f cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
         this.viewMatrix.identity();
-        viewMatrix.lookAt(new Vector3f(position.x, position.y, 20.0f), cameraFront.add(position.x, position.y, 0.0f), cameraUp);
+        viewMatrix.lookAt(new Vector3f(position.x, position.y, 20.0f), cameraFront.add(position.x, position.y, 0.0f),
+                          cameraUp);
 
         return this.viewMatrix;
     }
 
+    /**
+     * Getter to return the projectionMatrix
+     *
+     * @return projectionMatrix
+     */
     public Matrix4f getProjectionMatrix() {
         return this.projectionMatrix;
     }
 
+    /**
+     * Getter to return the Position
+     *
+     * @return position
+     */
     public Vector2f getPosition() {
-        return position;
+        return this.position;
     }
 }
