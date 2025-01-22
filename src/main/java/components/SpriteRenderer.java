@@ -15,30 +15,31 @@ import rubicon.Component;
 public class SpriteRenderer extends Component {
 
     // 4 bit Color variable (RGBA)
-    private final Vector4f   color;
+    private final Vector4f color;
 
-    //Texture coordinates in [BR, BL, TR, TL] order
-    private Vector2f[] texCoords = null;
-
-    private final Texture texture;
+    //Sprite containing texture data
+    private final Sprite sprite;
 
     /**
      * Default Constructor taking in color Vector
+     *
      * @param color Color Vector
      */
     public SpriteRenderer(Vector4f color) {
         this.color = color;
-        this.texture = null;
+        this.sprite = null;
     }
 
     /**
      * Default Constructor taking in a Texture resource
-     * @param texture Texture to use
+     *
+     * @param sprite Sprite to use
      */
-    public SpriteRenderer(Texture texture) {
-        this.texture = texture;
-        this.color = new Vector4f(1,1,1,1);
+    public SpriteRenderer(Sprite sprite) {
+        this.sprite = sprite;
+        this.color = new Vector4f(1, 1, 1, 1);
     }
+
     /**
      * {@inheritDoc}
      *
@@ -51,6 +52,7 @@ public class SpriteRenderer extends Component {
 
     /**
      * Returns color vector.
+     *
      * @return color
      */
     public Vector4f getColor() {
@@ -58,26 +60,22 @@ public class SpriteRenderer extends Component {
     }
 
     /**
-     * Return the texture
+     * Return the texture of the sprite
+     *
      * @return texture
      */
     public Texture getTexture() {
-        return this.texture;
+        assert this.sprite != null : "Error: SpriteRenderer: Attempted to access Texture on a null Sprite";
+        return this.sprite.getTexture();
     }
 
     /**
-     * Retrieve the texCoords for the Texture from a sprite sheet.
+     * Retrieve the texCoords of the sprite
+     *
      * @return TexCoords Array
      */
     public Vector2f[] getTexCoords() {
-        if(this.texCoords == null) {
-            texCoords = new Vector2f[]{
-                new Vector2f(1, 1),
-                new Vector2f(1, 0),
-                new Vector2f(0, 0),
-                new Vector2f(0, 1)
-            };
-        }
-        return this.texCoords;
+        assert this.sprite != null : "Error: SpriteRenderer: Attempted to access Texture Coordinates on a null Sprite";
+        return this.sprite.getTexCoords();
     }
 }

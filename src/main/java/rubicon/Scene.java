@@ -17,11 +17,12 @@ public abstract class Scene {
     // Collection of GameObjects used to build the scene
     protected final List<GameObject> gameObjects = new ArrayList<>();
     // Camera responsible for displaying the scene
-    protected Camera camera;
-    // State variable to track if the scene is running
-    private boolean isRunning = false;
+    protected       Camera           camera;
     // Renderer used to draw the scene
-    protected Renderer renderer;
+    protected       Renderer         renderer;
+    // State variable to track if the scene is running
+    private         boolean          isRunning   = false;
+
     /**
      * Contract method responsible for updating the scene event delta time.
      *
@@ -62,6 +63,7 @@ public abstract class Scene {
 
     /**
      * Retrieve the Scene Camera
+     *
      * @return camera
      */
     public Camera getCamera() {

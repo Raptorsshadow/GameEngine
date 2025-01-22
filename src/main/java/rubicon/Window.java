@@ -27,25 +27,20 @@ public class Window {
 
     // Window singleton reference
     public static Window window;
-
-    // Provisioned identifier for the Window
-    private long glfwWindow;
-
-    // The active scene
-    private Scene currentScene;
-
+    //Default background colors for RGBA channels
+    public static float  r = 1;
+    public static float  g = 1;
+    public static float  b = 1;
+    public static float  a = 1;
     // Window title
     private final String title;
-
-    //Default background colors for RGBA channels
-    public static float r = 1;
-    public static float g = 1;
-    public static float b = 1;
-    public static float a = 1;
-
+    // Provisioned identifier for the Window
+    private       long   glfwWindow;
+    // The active scene
+    private       Scene  currentScene;
     //Actual resolution values for the window.
-    private int width;
-    private int height;
+    private       int    width;
+    private       int    height;
 
     /**
      * Default Constructor taking window initialization params
@@ -118,6 +113,7 @@ public class Window {
 
     /**
      * Get the Active Scene
+     *
      * @return Currently Active Scene in the Window
      */
     public static Scene getScene() {
@@ -221,7 +217,7 @@ public class Window {
      * Execution loop for the Engine.  Runs until the window is closed rendering the active scene.
      */
     private void loop() {
-        float beginTime = (float)glfwGetTime();
+        float beginTime = (float) glfwGetTime();
         float endTime;
         float dt = -1.0f;
         // Run the rendering loop until the user has attempted to close
@@ -243,7 +239,7 @@ public class Window {
             glfwSwapBuffers(glfwWindow);
 
             //Calculate Delta Time
-            endTime = (float)glfwGetTime();
+            endTime = (float) glfwGetTime();
             dt = endTime - beginTime;
             beginTime = endTime;
         }

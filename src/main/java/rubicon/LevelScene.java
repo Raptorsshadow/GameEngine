@@ -11,9 +11,12 @@ public class LevelScene extends Scene {
 
     public LevelScene() {
         System.out.println("Inside Level Scene");
-        Window.get().r = 1;
-        Window.get().g = 0;
-        Window.get().b = 0;
+        Window.get();
+        Window.r = 1;
+        Window.get();
+        Window.g = 0;
+        Window.get();
+        Window.b = 0;
     }
 
     /**
@@ -23,6 +26,6 @@ public class LevelScene extends Scene {
      */
     @Override
     public void update(float dt) {
-
+        // Unused
     }
 }

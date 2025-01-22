@@ -3,13 +3,11 @@ package rubicon;
 import org.joml.Vector2f;
 
 /**
- *
- Class: Transform
- Author: rapto
- CreatedDate: 1/22/2025 : 11:10 AM
- Project: GameEngine
- Description: Stores transformation data to be used when rendering resources.
-
+ * Class: Transform
+ * Author: rapto
+ * CreatedDate: 1/22/2025 : 11:10 AM
+ * Project: GameEngine
+ * Description: Stores transformation data to be used when rendering resources.
  */
 public class Transform {
 
@@ -27,6 +25,7 @@ public class Transform {
 
     /**
      * Override constructor accepting positional data
+     *
      * @param position X/Y Position coordinates
      */
     public Transform(Vector2f position) {
@@ -35,8 +34,9 @@ public class Transform {
 
     /**
      * Override constructor accepting positional and scaling data
+     *
      * @param position X/Y Position coordinates
-     * @param scale X/Y Scaling data
+     * @param scale    X/Y Scaling data
      */
     public Transform(Vector2f position, Vector2f scale) {
         this.position = position;

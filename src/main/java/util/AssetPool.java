@@ -1,5 +1,6 @@
 package util;
 
+import components.SpriteSheet;
 import render.Shader;
 import render.Texture;
 
@@ -16,9 +17,11 @@ import java.util.Map;
  */
 public class AssetPool {
     //Map of Shader assets
-    private static final Map<String, Shader>  shaderMap  = new HashMap<>();
+    private static final Map<String, Shader>      shaderMap      = new HashMap<>();
     //Map  of Texture assets
-    private static final Map<String, Texture> textureMap = new HashMap<>();
+    private static final Map<String, Texture>     textureMap     = new HashMap<>();
+    //Map  of SpriteSheet assets
+    private static final Map<String, SpriteSheet> spriteSheetMap = new HashMap<>();
 
     /**
      * Hide default constructor as this is a static util class.
@@ -72,5 +75,34 @@ public class AssetPool {
             assert false : "ERROR : AssetPool : Texture with given resourceName not found.";
             return null;
         }
+    }
+
+    /**
+     * Attempts to store a SpriteSheet with given resourceName.
+     *
+     * @param resourceName Relative Texture path
+     * @param spriteSheet  SpriteSheet to store
+     */
+    public static void addSpriteSheet(String resourceName, SpriteSheet spriteSheet) {
+        File file = new File(resourceName);
+        if (!spriteSheetMap.containsKey(file.getAbsolutePath())) {
+            AssetPool.spriteSheetMap.put(file.getAbsolutePath(), spriteSheet);
+        } else {
+            assert false : "ERROR : AssetPool : SpriteSheet with given resourceName not found.";
+        }
+    }
+
+    /**
+     * Attempts to retrieve a SpriteSheet with given resourceName.
+     *
+     * @param resourceName Relative Texture path
+     * @return SpriteSheet found at resourceName, null otherwise.
+     */
+    public static SpriteSheet getSpriteSheet(String resourceName) {
+        File file = new File(resourceName);
+        if (!spriteSheetMap.containsKey(file.getAbsolutePath())) {
+            assert false : "ERROR : AssetPool : SpriteSheet with given resourceName not found.";
+        }
+        return AssetPool.spriteSheetMap.getOrDefault(file.getAbsolutePath(), null);
     }
 }

@@ -3,16 +3,15 @@ package render;
 import components.SpriteRenderer;
 import rubicon.GameObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- *
- Class: Renderer
- Author: rapto
- CreatedDate: 1/22/2025 : 11:01 AM
- Project: GameEngine
- Description: Manages GameObject resources and batches them as available for rendering.
-
+ * Class: Renderer
+ * Author: rapto
+ * CreatedDate: 1/22/2025 : 11:01 AM
+ * Project: GameEngine
+ * Description: Manages GameObject resources and batches them as available for rendering.
  */
 public class Renderer {
 
@@ -24,32 +23,34 @@ public class Renderer {
 
     /**
      * Adds a GameObject to the Renderer.
+     *
      * @param go GameObject we wish to render.
      */
     public void add(GameObject go) {
         SpriteRenderer spr = go.getComponent(SpriteRenderer.class);
-        if(spr != null) {
+        if (spr != null) {
             add(spr);
         }
     }
 
     /**
      * Attempts to add give SpriteRenderer to an available RenderBatch or allocates a new one if necessary.
+     *
      * @param spr Sprite Component to be registered
      */
     private void add(SpriteRenderer spr) {
         boolean isAdded = false;
-        for(RenderBatch batch : batches) {
-            if(batch.hasRoom()) {
+        for (RenderBatch batch : batches) {
+            if (batch.hasRoom()) {
                 Texture tex = spr.getTexture();
-                if(tex == null || (batch.hasSprite(tex) || batch.hasSpriteRoom())) {
+                if (tex == null || (batch.hasSprite(tex) || batch.hasSpriteRoom())) {
                     batch.addSprite(spr);
                     isAdded = true;
                     break;
                 }
             }
         }
-        if(!isAdded) {
+        if (!isAdded) {
             RenderBatch rb = new RenderBatch(MAX_BATCH_SIZE);
             rb.start();
             batches.add(rb);

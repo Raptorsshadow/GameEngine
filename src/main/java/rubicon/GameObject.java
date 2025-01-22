@@ -13,14 +13,13 @@ import java.util.List;
  */
 public class GameObject {
 
+    //Transform to be applied to this object when rendering
+    public final  Transform       transform;
     //Name of component used for logging and management purposes
-    private final String name;
-
+    private final String          name;
     //All components managed by this object
     private final List<Component> components = new ArrayList<>();
 
-    //Transform to be applied to this object when rendering
-    public final Transform transform;
     /**
      * Constructor that names the object.
      *
@@ -32,7 +31,8 @@ public class GameObject {
 
     /**
      * Constructor that names and transforms the object
-     * @param name GameObject name
+     *
+     * @param name      GameObject name
      * @param transform Transform data to be applied based on viewpoint
      */
     public GameObject(String name, Transform transform) {

@@ -23,6 +23,10 @@ public class Texture {
     // TextureId of registered resources
     private final int textureId;
 
+    //Width and Height of the Texture file
+    private int width;
+    private int height;
+
     /**
      * Constructor responsible for configuring texture behavior and provisioning it in the system.
      *
@@ -52,15 +56,15 @@ public class Texture {
     protected void loadTexture() {
 
         //Provision Buffers
-        IntBuffer width = BufferUtils.createIntBuffer(1);
-        IntBuffer height = BufferUtils.createIntBuffer(1);
+        IntBuffer widthBuffer = BufferUtils.createIntBuffer(1);
+        IntBuffer heightBuffer = BufferUtils.createIntBuffer(1);
         IntBuffer channels = BufferUtils.createIntBuffer(1);
 
         //When read into the system, it's loaded as a vertical mirror.  This flips it back.
         stbi_set_flip_vertically_on_load(true);
 
         //Load the file and leverage the buffers to store relevant data.
-        ByteBuffer image = stbi_load(filePath, width, height, channels, 0);
+        ByteBuffer image = stbi_load(filePath, widthBuffer, heightBuffer, channels, 0);
 
         //If we loaded an image, ensure we select the appropriate color channel so we display it correctly.
         if (image != null) {
@@ -72,8 +76,13 @@ public class Texture {
             } else {
                 assert false : "Error: Texture : Unknown channel count for texture " + channels.get(0);
             }
+            //Populate the width and height from image channels.
+            this.width = widthBuffer.get(0);
+            this.height = heightBuffer.get(0);
+
             //Instruct the system to populate the provisioned space.
-            glTexImage2D(GL_TEXTURE_2D, 0, colorType, width.get(0), height.get(0), 0, colorType, GL_UNSIGNED_BYTE,
+            glTexImage2D(GL_TEXTURE_2D, 0, colorType, widthBuffer.get(0), heightBuffer.get(0), 0, colorType,
+                         GL_UNSIGNED_BYTE,
                          image);
         } else {
             assert false : "Error : Texture : Could not load Image: " + this.filePath;
@@ -95,5 +104,23 @@ public class Texture {
      */
     public void unbind() {
         glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    /**
+     * Return the width of the texture
+     *
+     * @return texture width
+     */
+    public int getWidth() {
+        return this.width;
+    }
+
+    /**
+     * Return the height of the texture
+     *
+     * @return texture height
+     */
+    public int getHeight() {
+        return this.height;
     }
 }
