@@ -19,13 +19,25 @@ public class GameObject {
     //All components managed by this object
     private final List<Component> components = new ArrayList<>();
 
+    //Transform to be applied to this object when rendering
+    public final Transform transform;
     /**
      * Constructor that names the object.
      *
      * @param name GameObject name
      */
     public GameObject(String name) {
+        this(name, new Transform());
+    }
+
+    /**
+     * Constructor that names and transforms the object
+     * @param name GameObject name
+     * @param transform Transform data to be applied based on viewpoint
+     */
+    public GameObject(String name, Transform transform) {
         this.name = name;
+        this.transform = transform;
     }
 
     /**
@@ -75,7 +87,6 @@ public class GameObject {
      * @param dt The time delta
      */
     public void update(float dt) {
-        System.out.println("Updating Components for " + this.name);
         this.components.forEach(c -> c.update(dt));
     }
 
@@ -83,7 +94,6 @@ public class GameObject {
      * Iterate all the registered components and run their start method.
      */
     public void start() {
-        System.out.println("Starting Components for " + this.name);
         this.components.forEach(Component::start);
     }
 }

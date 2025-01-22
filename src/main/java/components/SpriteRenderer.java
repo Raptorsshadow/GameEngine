@@ -1,5 +1,6 @@
 package components;
 
+import org.joml.Vector4f;
 import rubicon.Component;
 
 /**
@@ -11,12 +12,31 @@ import rubicon.Component;
  */
 public class SpriteRenderer extends Component {
 
+    // 4 bit Color variable (RGBA)
+    private final Vector4f color;
+
+    /**
+     * Default Constructor taking in color Vector
+     * @param color Color Vector
+     */
+    public SpriteRenderer(Vector4f color) {
+        this.color = color;
+    }
     /**
      * {@inheritDoc}
      *
-     * @param dt
+     * @param dt Delta time between calls.
      */
     @Override
     public void update(float dt) {
+        //Does Nothing
+    }
+
+    /**
+     * Returns color vector.
+     * @return color
+     */
+    public Vector4f getColor() {
+        return color;
     }
 }

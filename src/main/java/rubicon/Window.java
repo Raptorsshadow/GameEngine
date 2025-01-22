@@ -3,7 +3,6 @@ package rubicon;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
-import util.Time;
 
 import java.util.Objects;
 
@@ -30,19 +29,19 @@ public class Window {
     public static Window window;
 
     // Provisioned identifier for the Window
-    public static long glfwWindow;
+    private long glfwWindow;
 
     // The active scene
-    private static Scene currentScene;
+    private Scene currentScene;
 
     // Window title
     private final String title;
 
     //Default background colors for RGBA channels
-    public float r = 1;
-    public float g = 1;
-    public float b = 1;
-    public float a = 1;
+    public static float r = 1;
+    public static float g = 1;
+    public static float b = 1;
+    public static float a = 1;
 
     //Actual resolution values for the window.
     private int width;
@@ -105,16 +104,24 @@ public class Window {
     public static void changeScene(int sceneId) {
         switch (sceneId) {
             case 0:
-                currentScene = new LevelEditorScene();
+                get().currentScene = new LevelEditorScene();
                 break;
             case 1:
-                currentScene = new LevelScene();
+                get().currentScene = new LevelScene();
                 break;
             default:
                 assert false : String.format("Unrecognized scene: %d", sceneId);
         }
-        currentScene.init();
-        currentScene.start();
+        get().currentScene.init();
+        get().currentScene.start();
+    }
+
+    /**
+     * Get the Active Scene
+     * @return Currently Active Scene in the Window
+     */
+    public static Scene getScene() {
+        return get().currentScene;
     }
 
     /**
@@ -214,7 +221,7 @@ public class Window {
      * Execution loop for the Engine.  Runs until the window is closed rendering the active scene.
      */
     private void loop() {
-        float beginTime = Time.getTime();
+        float beginTime = (float)glfwGetTime();
         float endTime;
         float dt = -1.0f;
         // Run the rendering loop until the user has attempted to close
@@ -224,8 +231,6 @@ public class Window {
             // invoked during this call.
             glfwPollEvents();
             // Set the clear color
-            //Seizure Mode
-            //glClearColor(r.nextFloat(0, 1), r.nextFloat(0, 1), r.nextFloat(0, 1), r.nextFloat(0, 1));
             glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the frame buffer
 
@@ -238,7 +243,7 @@ public class Window {
             glfwSwapBuffers(glfwWindow);
 
             //Calculate Delta Time
-            endTime = Time.getTime();
+            endTime = (float)glfwGetTime();
             dt = endTime - beginTime;
             beginTime = endTime;
         }
