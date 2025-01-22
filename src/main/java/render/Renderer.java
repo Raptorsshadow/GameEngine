@@ -41,8 +41,12 @@ public class Renderer {
         boolean isAdded = false;
         for(RenderBatch batch : batches) {
             if(batch.hasRoom()) {
-                batch.addSprite(spr);
-                isAdded = true;
+                Texture tex = spr.getTexture();
+                if(tex == null || (batch.hasSprite(tex) || batch.hasSpriteRoom())) {
+                    batch.addSprite(spr);
+                    isAdded = true;
+                    break;
+                }
             }
         }
         if(!isAdded) {

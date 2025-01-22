@@ -258,4 +258,16 @@ public class Shader {
         use();
         glUniform1i(varLocation, slot);
     }
+
+    /**
+     * Registers an array of Texture values with the given name in the graphics card for TextureShaders.
+     *
+     * @param varName name of variable
+     * @param slots   Texture slots we're forwarding.
+     */
+    public void uploadIntArray(String varName, int[] slots) {
+        int varLocation = glGetUniformLocation(shaderProgramId, varName);
+        use();
+        glUniform1iv(varLocation, slots);
+    }
 }
