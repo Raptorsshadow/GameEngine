@@ -33,7 +33,7 @@ public class RenderBatch {
 
     private final SpriteRenderer [] sprites;
     private       int               numSprites;
-    private       boolean  hasRoom = false;
+    private       boolean  hasRoom;
     private final float [] vertices;
 
     private int vaoId;
