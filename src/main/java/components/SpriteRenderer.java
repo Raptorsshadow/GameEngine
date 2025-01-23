@@ -4,6 +4,7 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 import render.Texture;
 import rubicon.Component;
+import rubicon.Transform;
 
 /**
  * Class: SpriteRenderer
@@ -18,7 +19,10 @@ public class SpriteRenderer extends Component {
     private final Vector4f color;
 
     //Sprite containing texture data
-    private final Sprite sprite;
+    private Sprite sprite;
+
+    private Transform lastTransform;
+    private boolean   isDirty = false;
 
     /**
      * Default Constructor taking in color Vector
@@ -42,12 +46,27 @@ public class SpriteRenderer extends Component {
 
     /**
      * {@inheritDoc}
+     * <p>
+     * Set the lastTransform to game object transform
+     */
+    @Override
+    public void start() {
+        this.lastTransform = gameObject.transform.copy();
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Check if the SpriteRenderer has become dirty since the last update.
      *
      * @param dt Delta time between calls.
      */
     @Override
     public void update(float dt) {
-        //Does Nothing
+        if (!this.lastTransform.equals(this.gameObject.transform)) {
+            this.gameObject.transform.copyTo(lastTransform);
+            this.isDirty = true;
+        }
     }
 
     /**
@@ -57,6 +76,18 @@ public class SpriteRenderer extends Component {
      */
     public Vector4f getColor() {
         return color;
+    }
+
+    /**
+     * Set the color on the SpriteRenderer and flag dirty if different from existing.
+     *
+     * @param color updated color
+     */
+    public void setColor(Vector4f color) {
+        if (!this.color.equals(color)) {
+            this.color.set(color);
+            this.isDirty = true;
+        }
     }
 
     /**
@@ -77,5 +108,31 @@ public class SpriteRenderer extends Component {
     public Vector2f[] getTexCoords() {
         assert this.sprite != null : "Error: SpriteRenderer: Attempted to access Texture Coordinates on a null Sprite";
         return this.sprite.getTexCoords();
+    }
+
+    /**
+     * Set the sprite on the spriteRenderer and flag dirty.
+     *
+     * @param sprite new Sprite
+     */
+    public void setSprite(Sprite sprite) {
+        this.sprite = sprite;
+        this.isDirty = true;
+    }
+
+    /**
+     * Return dirty state of SpriteRenderer
+     *
+     * @return isDirty
+     */
+    public boolean isDirty() {
+        return isDirty;
+    }
+
+    /**
+     * Set the dirty state to clean(true)
+     */
+    public void setClean() {
+        this.isDirty = false;
     }
 }

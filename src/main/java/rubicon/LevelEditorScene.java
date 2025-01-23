@@ -16,6 +16,10 @@ import java.util.Objects;
  */
 public class LevelEditorScene extends Scene {
 
+    float lastChange = 0;
+    private int        currentSprite = 0;
+    private GameObject obj1;
+
     /**
      * Default constructor used to initialize the scene pieces
      */
@@ -33,13 +37,13 @@ public class LevelEditorScene extends Scene {
 
         this.camera = new Camera(new Vector2f());
         SpriteSheet sprites = AssetPool.getSpriteSheet("assets/images/spritesheet.png");
-        GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)));
+        obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)));
         obj1.addComponent(new SpriteRenderer(sprites.getSprite(0)));
 
         this.addGameObjectToScene(obj1);
 
 
-        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 400), new Vector2f(256, 256)));
+        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)));
         obj2.addComponent(new SpriteRenderer(sprites.getSprite(25)));
 
         this.addGameObjectToScene(obj2);
@@ -64,6 +68,17 @@ public class LevelEditorScene extends Scene {
      */
     @Override
     public void update(float dt) {
+        lastChange += dt;
+        obj1.transform.position.x += 10 * dt;
+        SpriteSheet sprites = AssetPool.getSpriteSheet("assets/images/spritesheet.png");
+
+        SpriteRenderer spr = obj1.getComponent(SpriteRenderer.class);
+
+        if (currentSprite != (int) (lastChange % 10)) {
+            currentSprite = (int) (lastChange % 10);
+            spr.setSprite(sprites.getSprite(currentSprite));
+        }
+
         //update all gameobjects for the frame.
         this.gameObjects.forEach(go -> go.update(dt));
 

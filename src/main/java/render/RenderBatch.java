@@ -37,18 +37,18 @@ public class RenderBatch {
     private static final int TEX_COORDS_OFFSET = COLOR_OFFSET + COLOR_SIZE * Float.BYTES;
     private static final int TEX_ID_OFFSET     = TEX_COORDS_OFFSET + TEX_COORDS_SIZE * Float.BYTES;
 
-    private static final int VERTEX_SIZE       = POS_SIZE + COLOR_SIZE + TEX_COORDS_SIZE + TEX_ID_SIZE;
-    private static final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
-    private static final int[]         texSlots = {0, 1, 2, 3, 4, 5, 6, 7};
-    private final SpriteRenderer[] sprites;
-    private final float[]          vertices;
-    private final        List<Texture> textures;
-    private final        int           maxBatchSize;
-    private final        Shader        shader;
-    private       int              numSprites;
-    private       boolean          hasRoom;
-    private              int           vaoId;
-    private              int           vboId;
+    private static final int              VERTEX_SIZE       = POS_SIZE + COLOR_SIZE + TEX_COORDS_SIZE + TEX_ID_SIZE;
+    private static final int              VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
+    private static final int[]            texSlots          = {0, 1, 2, 3, 4, 5, 6, 7};
+    private final        SpriteRenderer[] sprites;
+    private final        float[]          vertices;
+    private final        List<Texture>    textures;
+    private final        int              maxBatchSize;
+    private final        Shader           shader;
+    private              int              numSprites;
+    private              boolean          hasRoom;
+    private              int              vaoId;
+    private              int              vboId;
 
     /**
      * Default Constructor initializes specific renderBatch
@@ -157,10 +157,24 @@ public class RenderBatch {
      * Populates, draws and frees shader resource.
      */
     public void render() {
-        //For now, re-buffer all data every frame.
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
-
+        boolean rebufferData = false;
+        /*
+            Loop over sprites and check if any are dirty and need
+            re-rendered.
+         */
+        for (int i = 0; i < this.numSprites; i++) {
+            SpriteRenderer spr = sprites[i];
+            if (spr.isDirty()) {
+                loadVertexProperties(i);
+                spr.setClean();
+                rebufferData = true;
+            }
+        }
+        //If rebuffered, send the data to the GPU
+        if (rebufferData) {
+            glBindBuffer(GL_ARRAY_BUFFER, vboId);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+        }
         shader.use();
         shader.uploadMat4f("uProjection", Window.getScene()
                                                 .getCamera()

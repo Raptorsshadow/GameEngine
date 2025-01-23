@@ -42,4 +42,37 @@ public class Transform {
         this.position = position;
         this.scale = scale;
     }
+
+    /**
+     * Return a copy of this Transform
+     *
+     * @return new Transform
+     */
+    public Transform copy() {
+        return new Transform(new Vector2f(this.position), new Vector2f(this.scale));
+    }
+
+    /**
+     * Update data from this transform into the given transform.
+     *
+     * @param to Transform to update
+     */
+    public void copyTo(Transform to) {
+        to.position.set(this.position);
+        to.scale.set(this.scale);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Transform t) {
+            return t.position.equals(this.position) && t.scale.equals(this.scale);
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.position.hashCode() + this.scale.hashCode();
+    }
 }
