@@ -19,6 +19,8 @@ public class GameObject {
     private final String          name;
     //All components managed by this object
     private final List<Component> components = new ArrayList<>();
+    //Track zIndex relative to other game objects
+    private final int             zIndex;
 
     /**
      * Constructor that names the object.
@@ -26,7 +28,7 @@ public class GameObject {
      * @param name GameObject name
      */
     public GameObject(String name) {
-        this(name, new Transform());
+        this(name, new Transform(), 0);
     }
 
     /**
@@ -35,9 +37,10 @@ public class GameObject {
      * @param name      GameObject name
      * @param transform Transform data to be applied based on viewpoint
      */
-    public GameObject(String name, Transform transform) {
+    public GameObject(String name, Transform transform, int zIndex) {
         this.name = name;
         this.transform = transform;
+        this.zIndex = zIndex;
     }
 
     /**
@@ -95,5 +98,14 @@ public class GameObject {
      */
     public void start() {
         this.components.forEach(Component::start);
+    }
+
+    /**
+     * Return the zIndex of the GameObject to be used in rendering
+     *
+     * @return zIndex
+     */
+    public int getzIndex() {
+        return this.zIndex;
     }
 }

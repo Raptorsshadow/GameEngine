@@ -32,6 +32,7 @@ public class SpriteRenderer extends Component {
     public SpriteRenderer(Vector4f color) {
         this.color = color;
         this.sprite = null;
+        this.isDirty = true;
     }
 
     /**
@@ -42,6 +43,7 @@ public class SpriteRenderer extends Component {
     public SpriteRenderer(Sprite sprite) {
         this.sprite = sprite;
         this.color = new Vector4f(1, 1, 1, 1);
+        this.isDirty = true;
     }
 
     /**

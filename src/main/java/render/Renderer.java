@@ -4,6 +4,7 @@ import components.SpriteRenderer;
 import rubicon.GameObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -41,7 +42,7 @@ public class Renderer {
     private void add(SpriteRenderer spr) {
         boolean isAdded = false;
         for (RenderBatch batch : batches) {
-            if (batch.hasRoom()) {
+            if (batch.hasRoom() && batch.getzIndex() == spr.gameObject.getzIndex()) {
                 Texture tex = spr.getTexture();
                 if (tex == null || (batch.hasSprite(tex) || batch.hasSpriteRoom())) {
                     batch.addSprite(spr);
@@ -51,10 +52,11 @@ public class Renderer {
             }
         }
         if (!isAdded) {
-            RenderBatch rb = new RenderBatch(MAX_BATCH_SIZE);
+            RenderBatch rb = new RenderBatch(MAX_BATCH_SIZE, spr.gameObject.getzIndex());
             rb.start();
             batches.add(rb);
             rb.addSprite(spr);
+            Collections.sort(batches);
         }
     }
 

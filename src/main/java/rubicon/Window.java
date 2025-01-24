@@ -198,6 +198,10 @@ public class Window {
         // bindings available for use.
         GL.createCapabilities();
 
+        //Enable Alpha blending.
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
         Window.changeScene(0);
     }
 
@@ -235,6 +239,9 @@ public class Window {
                 currentScene.update(dt);
             }
 
+            if (KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)) {
+                System.exit(0);
+            }
             // swap the color buffers
             glfwSwapBuffers(glfwWindow);
 

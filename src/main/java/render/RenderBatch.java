@@ -1,6 +1,7 @@
 package render;
 
 import components.SpriteRenderer;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import rubicon.Window;
@@ -21,7 +22,7 @@ import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
  * Project: GameEngine
  * Description: Batches render calls to speed up performance.
  */
-public class RenderBatch {
+public class RenderBatch implements Comparable<RenderBatch> {
 
     // Vertex
     // ======
@@ -49,13 +50,14 @@ public class RenderBatch {
     private              boolean          hasRoom;
     private              int              vaoId;
     private              int              vboId;
+    private final        int              zIndex;
 
     /**
      * Default Constructor initializes specific renderBatch
      *
      * @param maxBatchSize maximum number of renders per batch.
      */
-    public RenderBatch(int maxBatchSize) {
+    public RenderBatch(int maxBatchSize, int zIndex) {
         this.shader = AssetPool.getShader("assets/shader/default.glsl");
         this.sprites = new SpriteRenderer[maxBatchSize];
         this.textures = new ArrayList<>();
@@ -63,6 +65,7 @@ public class RenderBatch {
         this.vertices = new float[maxBatchSize * 4 * VERTEX_SIZE];
         this.numSprites = 0;
         this.hasRoom = true;
+        this.zIndex = zIndex;
     }
 
     /**
@@ -286,5 +289,14 @@ public class RenderBatch {
 
     public boolean hasSprite(Texture t) {
         return this.textures.contains(t);
+    }
+
+    public int getzIndex() {
+        return this.zIndex;
+    }
+
+    @Override
+    public int compareTo(@NotNull RenderBatch o) {
+        return Integer.compare(this.zIndex, o.zIndex);
     }
 }
