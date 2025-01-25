@@ -19,12 +19,14 @@ public class LevelEditorScene extends Scene {
 
     float lastChange = 0;
     private GameObject obj1;
+    private final IMGuiLayer guiLayer;
 
     /**
      * Default constructor used to initialize the scene pieces
      */
     public LevelEditorScene() {
         super();
+        guiLayer = new IMGuiLayer();
     }
 
     /**
@@ -70,6 +72,7 @@ public class LevelEditorScene extends Scene {
         lastChange += dt;
         obj1.transform.position.x += 10 * dt;
 
+        guiLayer.imgui();
 
         //update all gameobjects for the frame.
         this.gameObjects.forEach(go -> go.update(dt));

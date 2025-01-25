@@ -1,15 +1,33 @@
 package rubicon;
 
+import imgui.ImFontConfig;
+import imgui.ImFontGlyphRangesBuilder;
+import imgui.ImGui;
+import imgui.ImGuiIO;
+import imgui.app.Color;
+import imgui.app.Configuration;
+import imgui.flag.ImGuiConfigFlags;
+import imgui.gl3.ImGuiImplGl3;
+import imgui.glfw.ImGuiImplGlfw;
 import org.lwjgl.Version;
+import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.IntBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Objects;
 
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
  * Class: Window
@@ -20,75 +38,63 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  * scenes as necessary.
  */
 public class Window {
-
-    // Default Resolution WIDTH and HEIGHT
-    public static final int DEFAULT_WIDTH  = 1920;
-    public static final int DEFAULT_HEIGHT = 1080;
-
     // Window singleton reference
-    public static Window window;
+    public static   Window window;
     //Default background colors for RGBA channels
-    public static float  r = 1;
-    public static float  g = 1;
-    public static float  b = 1;
-    public static float  a = 1;
-    // Window title
-    private final String title;
-    // Provisioned identifier for the Window
-    private       long   glfwWindow;
-    // The active scene
-    private       Scene  currentScene;
+    protected final Color  colorBg = new Color(1, 1, 1, 1);
+
+    // Window config
+    private final Configuration config;
+    //ImgUI params
+    protected     ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
+    protected     ImGuiImplGl3  imGuiGl3  = new ImGuiImplGl3();
     //Actual resolution values for the window.
-    private       int    width;
-    private       int    height;
+    float dt = -1.0f;
+    // Provisioned identifier for the Window
+    private long   glfwWindow;
+    // The active scene
+    private Scene  currentScene;
+    private String glslVersion = null;
 
     /**
      * Default Constructor taking window initialization params
      *
-     * @param width  Width in pixels
-     * @param height Height in pixels
-     * @param title  Title bar for the Window
+     * @param config Window Configuration Data
      */
-    private Window(int width, int height, String title) {
-        this.width = width;
-        this.height = height;
-        this.title = title;
+    private Window(Configuration config) {
+        this.config = config;
     }
 
     /**
-     * Instance initializer and retriever that passes a width, height and title to the window.
+     * Instance accessor and retriever that passes a config to initialize the window.
      *
-     * @param width  Width in pixels
-     * @param height Height in pixels
-     * @param title  Title text for the window
+     * @param config Window Configuration Object
      * @return Instance of the window
      */
-    public static Window get(int width, int height, String title) {
+    public static Window get(Configuration config) {
         if (Window.window == null) {
-            Window.window = new Window(width, height, title);
+            Window.window = new Window(config);
+            Window.window.init();
         }
 
         return Window.window;
     }
 
     /**
-     * Instance initializer and retriever that passes a title to the window, leveragin default width and height values.
-     *
-     * @param title Title text for the window
-     * @return Instance of the window
-     */
-    public static Window get(String title) {
-        return get(Window.DEFAULT_WIDTH, Window.DEFAULT_HEIGHT, title);
-    }
-
-    /**
-     * Default initializer that will create a window with default values if first call.
+     * Default accessor that will create a window with default values if first call.
      *
      * @return Instance of the window
      */
     public static Window get() {
-        return get(DEFAULT_WIDTH, DEFAULT_HEIGHT, "Tester");
-
+        if (Window.window == null) {
+            final Configuration config = new Configuration();
+            config.setHeight(1080);
+            config.setWidth(1920);
+            config.setTitle("Test with IMGui");
+            Window.window = new Window(config);
+            Window.window.init();
+        }
+        return Window.window;
     }
 
     /**
@@ -97,18 +103,19 @@ public class Window {
      * @param sceneId scene identifier
      */
     public static void changeScene(int sceneId) {
+        Window w = Window.get();
         switch (sceneId) {
             case 0:
-                get().currentScene = new LevelEditorScene();
+                w.currentScene = new LevelEditorScene();
                 break;
             case 1:
-                get().currentScene = new LevelScene();
+                w.currentScene = new LevelScene();
                 break;
             default:
                 assert false : String.format("Unrecognized scene: %d", sceneId);
         }
-        get().currentScene.init();
-        get().currentScene.start();
+        w.currentScene.init();
+        w.currentScene.start();
     }
 
     /**
@@ -128,8 +135,70 @@ public class Window {
      * @param height new height
      */
     private static void sizeListener(long window, int width, int height) {
-        Window.get().width = width;
-        Window.get().height = height;
+        Window.get().config.setWidth(width);
+        Window.get().config.setHeight(height);
+    }
+
+    /**
+     * Retrieve Window Width
+     *
+     * @return window width
+     */
+    public static int getWidth() {
+        return get().config.getWidth();
+    }
+
+    /**
+     * Retrieve Window Height
+     *
+     * @return window height
+     */
+    public static int getHeight() {
+        return get().config.getHeight();
+    }
+
+    /**
+     * Load Resources from classpath
+     *
+     * @param name Resource Name/Path
+     * @return resource data
+     */
+    private static byte[] loadFromResources(String name) {
+        try {
+            return Files.readAllBytes(Paths.get(Window.class.getResource(name)
+                                                            .toURI()));
+        } catch (IOException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Accessor to retrieve Window Background Color
+     *
+     * @return windo background color
+     */
+    public static Color getBackgroundColor() {
+        return get().colorBg;
+    }
+
+    /**
+     * Initialize the Window and IMGui Framework.
+     */
+    public void init() {
+        initWindow();
+        initImGui();
+        imGuiGlfw.init(glfwWindow, true);
+        imGuiGl3.init(glslVersion);
+    }
+
+    /**
+     * Method to dispose all used application resources and destroy its window.
+     */
+    protected void dispose() {
+        imGuiGl3.shutdown();
+        imGuiGlfw.shutdown();
+        disposeImGui();
+        disposeWindow();
     }
 
     /**
@@ -138,71 +207,227 @@ public class Window {
     public void run() {
         System.out.println("Hello LWJGL " + Version.getVersion() + "!");
 
-        //Initialize the window
-        init();
-
         //Loop until exit.
-        loop();
+        this.loop();
 
-        // Free the window callbacks and destroy the window
-        glfwFreeCallbacks(glfwWindow);
-        glfwDestroyWindow(glfwWindow);
-
-        // Terminate GLFW and free the error callback
-        glfwTerminate();
-        Objects.requireNonNull(glfwSetErrorCallback(null))
-               .free();
+        //Dispose of the window and release resources
+        this.dispose();
     }
 
     /**
-     * Initialize the window setting up error handling, binding event listeners, configuring window behavior, and
-     * loading the first scene.
+     * Initialize and configure the Window
      */
-    private void init() {
-        // Set up an error callback. The default implementation
-        // will print the error message in System.err.
+    protected void initWindow() {
         GLFWErrorCallback.createPrint(System.err)
                          .set();
 
-        // Initialize GLFW. Most GLFW functions will not work before doing this.
         if (!glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
 
-        // Configure GLFW
-        glfwDefaultWindowHints(); // optional, the current window hints are already the default
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
+        decideGlGlslVersions();
+
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
-        // Create the window
-        glfwWindow = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
-        if (glfwWindow == NULL) {
-            throw new IllegalStateException("Failed to create the GLFW window");
+        glfwWindow = glfwCreateWindow(config.getWidth(), config.getHeight(), config.getTitle(), MemoryUtil.NULL,
+                                      MemoryUtil.NULL);
+
+        if (glfwWindow == MemoryUtil.NULL) {
+            throw new IllegalArgumentException("Failed to create the GLFW window");
         }
+
+        glfwDefaultWindowHints(); // optional, the current window hints are already the default
 
         //Register listeners to window
         registerListeners();
 
-        // Make the OpenGL context current
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            final IntBuffer pWidth = stack.mallocInt(1); // int*
+            final IntBuffer pHeight = stack.mallocInt(1); // int*
+
+            glfwGetWindowSize(glfwWindow, pWidth, pHeight);
+            final GLFWVidMode vidmode = Objects.requireNonNull(glfwGetVideoMode(glfwGetPrimaryMonitor()));
+            glfwSetWindowPos(glfwWindow, (vidmode.width() - pWidth.get(0)) / 2,
+                             (vidmode.height() - pHeight.get(0)) / 2);
+        }
+
         glfwMakeContextCurrent(glfwWindow);
-        // Enable v-sync
-        glfwSwapInterval(1);
 
-        // Make the window visible
-        glfwShowWindow(glfwWindow);
-
-        // This line is critical for LWJGL's interoperation with GLFW's
-        // OpenGL context, or any context that is managed externally.
-        // LWJGL detects the context that is current in the current thread,
-        // creates the GLCapabilities instance and makes the OpenGL
-        // bindings available for use.
         GL.createCapabilities();
+
+        glfwSwapInterval(GLFW_TRUE);
+
+        if (config.isFullScreen()) {
+            glfwMaximizeWindow(glfwWindow);
+        } else {
+            glfwShowWindow(glfwWindow);
+        }
 
         //Enable Alpha blending.
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
         Window.changeScene(0);
+
+        clearBuffer();
+        renderBuffer();
+
+        glfwSetWindowSizeCallback(glfwWindow, new GLFWWindowSizeCallback() {
+            @Override
+            public void invoke(final long window, final int width, final int height) {
+                runFrame(dt);
+            }
+        });
+    }
+
+    /**
+     * Determine the GLSL Version from os.
+     */
+    private void decideGlGlslVersions() {
+        final boolean isMac = System.getProperty("os.name")
+                                    .toLowerCase()
+                                    .contains("mac");
+        if (isMac) {
+            glslVersion = "#version 150";
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
+            glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);          // Required on Mac
+        } else {
+            glslVersion = "#version 130";
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+        }
+    }
+
+    /**
+     * Method used to clear the OpenGL buffer.
+     */
+    private void clearBuffer() {
+        GL11.glClearColor(colorBg.getRed(), colorBg.getGreen(), colorBg.getBlue(), colorBg.getAlpha());
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+    }
+
+    /**
+     * Method called at the beginning of the main cycle.
+     * It clears OpenGL buffer and starts an ImGui frame.
+     */
+    protected void startFrame() {
+        clearBuffer();
+        imGuiGl3.newFrame();
+        imGuiGlfw.newFrame();
+        ImGui.newFrame();
+    }
+
+    /**
+     * Method called in the end of the main cycle.
+     * It renders ImGui and swaps GLFW buffers to show an updated frame.
+     */
+    protected void endFrame() {
+        ImGui.render();
+        imGuiGl3.renderDrawData(ImGui.getDrawData());
+
+        // Update and Render additional Platform Windows
+        // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
+        //  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
+        if (ImGui.getIO()
+                 .hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
+            final long backupCurrentContext = glfwGetCurrentContext();
+            ImGui.updatePlatformWindows();
+            ImGui.renderPlatformWindowsDefault();
+            glfwMakeContextCurrent(backupCurrentContext);
+        }
+
+        renderBuffer();
+    }
+
+    /**
+     * Method to render the OpenGL buffer and poll window events.
+     */
+    private void renderBuffer() {
+        glfwSwapBuffers(glfwWindow);
+        glfwPollEvents();
+    }
+
+    /**
+     * Method to destroy Dear ImGui context.
+     */
+    protected void disposeImGui() {
+        ImGui.destroyContext();
+    }
+
+    /**
+     * Method to destroy GLFW window.
+     */
+    protected void disposeWindow() {
+        Callbacks.glfwFreeCallbacks(glfwWindow);
+        glfwDestroyWindow(glfwWindow);
+        glfwTerminate();
+        Objects.requireNonNull(glfwSetErrorCallback(null))
+               .free();
+    }
+
+    /**
+     * Method to initialize Dear ImGui context. Could be overridden to do custom Dear ImGui setup before application start.
+     */
+    protected void initImGui() {
+        ImGui.createContext();
+
+        final ImGuiIO io = ImGui.getIO();
+        io.setIniFilename(null);                                // We don't want to save .ini file
+        io.addConfigFlags(ImGuiConfigFlags.NavEnableKeyboard);  // Enable Keyboard Controls
+        io.addConfigFlags(ImGuiConfigFlags.DockingEnable);      // Enable Docking
+        io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);    // Enable Multi-Viewport / Platform Windows
+        io.setConfigViewportsNoTaskBarIcon(true);
+
+        initFonts(io);
+    }
+
+    /**
+     * Example of fonts configuration
+     * For more information read: https://github.com/ocornut/imgui/blob/33cdbe97b8fd233c6c12ca216e76398c2e89b0d8/docs/FONTS.md
+     */
+    private void initFonts(final ImGuiIO io) {
+        // This enables FreeType font renderer, which is disabled by default.
+        io.getFonts()
+          .setFreeTypeRenderer(true);
+
+        // Add default font for latin glyphs
+        io.getFonts()
+          .addFontDefault();
+
+        // You can use the ImFontGlyphRangesBuilder helper to create glyph ranges based on text input.
+        // For example: for a game where your script is known, if you can feed your entire script to it (using addText) and only build the characters the game needs.
+        // Here we are using it just to combine all required glyphs in one place
+        final ImFontGlyphRangesBuilder rangesBuilder = new ImFontGlyphRangesBuilder(); // Glyphs ranges provide
+        rangesBuilder.addRanges(io.getFonts()
+                                  .getGlyphRangesDefault());
+        rangesBuilder.addRanges(io.getFonts()
+                                  .getGlyphRangesCyrillic());
+        rangesBuilder.addRanges(io.getFonts()
+                                  .getGlyphRangesJapanese());
+        rangesBuilder.addRanges(FontAwesomeIcons._IconRange);
+
+        // Font config for additional fonts
+        // This is a natively allocated struct so don't forget to call destroy after atlas is built
+        final ImFontConfig fontConfig = new ImFontConfig();
+        fontConfig.setMergeMode(true);  // Enable merge mode to merge cyrillic, japanese and icons with default font
+
+        final short[] glyphRanges = rangesBuilder.buildRanges();
+        io.getFonts()
+          .addFontFromMemoryTTF(loadFromResources("/Tahoma.ttf"), 14, fontConfig, glyphRanges); // cyrillic glyphs
+        io.getFonts()
+          .addFontFromMemoryTTF(loadFromResources("/NotoSansCJKjp-Medium.otf"), 14, fontConfig,
+                                glyphRanges); // japanese glyphs
+        io.getFonts()
+          .addFontFromMemoryTTF(loadFromResources("/fa-regular-400.ttf"), 14, fontConfig, glyphRanges); // font awesome
+        io.getFonts()
+          .addFontFromMemoryTTF(loadFromResources("/fa-solid-900.ttf"), 14, fontConfig, glyphRanges); // font awesome
+        io.getFonts()
+          .build();
+
+        fontConfig.destroy();
     }
 
     /**
@@ -218,37 +443,62 @@ public class Window {
     }
 
     /**
-     * Execution loop for the Engine.  Runs until the window is closed rendering the active scene.
+     * Main application loop.
      */
-    private void loop() {
+    protected void loop() {
         float beginTime = (float) glfwGetTime();
         float endTime;
-        float dt = -1.0f;
-        // Run the rendering loop until the user has attempted to close
-        // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(glfwWindow)) {
-            // Poll for window events. The key callback above will only be
-            // invoked during this call.
-            glfwPollEvents();
-            // Set the clear color
-            glClearColor(r, g, b, a);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the frame buffer
-
-            //If dt isn't 0, we call update on the scene.
-            if (dt >= 0) {
-                currentScene.update(dt);
-            }
-
-            if (KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)) {
-                System.exit(0);
-            }
-            // swap the color buffers
-            glfwSwapBuffers(glfwWindow);
+            runFrame(dt);
 
             //Calculate Delta Time
             endTime = (float) glfwGetTime();
             dt = endTime - beginTime;
             beginTime = endTime;
         }
+    }
+
+    /**
+     * Method used to run the next frame.
+     */
+    protected void runFrame(float dt) {
+        startFrame();
+        preProcess(dt);
+        process(dt);
+        postProcess(dt);
+        endFrame();
+    }
+
+    /**
+     * Perform pre-render setup if necessary
+     *
+     * @param dt delta time of frame
+     */
+    private void preProcess(float dt) {
+        //Not Implemented
+    }
+
+    /**
+     * Call out to the scene to render
+     *
+     * @param dt delta time of frame
+     */
+    private void process(float dt) {
+        //If dt isn't 0, we call update on the scene.
+        if (dt >= 0) {
+            currentScene.update(dt);
+        }
+        if (KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)) {
+            System.exit(0);
+        }
+    }
+
+    /**
+     * Hook to perform scene cleanup if necessary
+     *
+     * @param dt delta time of frame
+     */
+    private void postProcess(float dt) {
+        //Not Implemented
     }
 }

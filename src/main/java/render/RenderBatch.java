@@ -46,11 +46,11 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private final        List<Texture>    textures;
     private final        int              maxBatchSize;
     private final        Shader           shader;
+    private final        int              zIndex;
     private              int              numSprites;
     private              boolean          hasRoom;
     private              int              vaoId;
     private              int              vboId;
-    private final        int              zIndex;
 
     /**
      * Default Constructor initializes specific renderBatch

@@ -11,12 +11,8 @@ public class LevelScene extends Scene {
 
     public LevelScene() {
         System.out.println("Inside Level Scene");
-        Window.get();
-        Window.r = 1;
-        Window.get();
-        Window.g = 0;
-        Window.get();
-        Window.b = 0;
+        Window.getBackgroundColor()
+              .set(1, 0, 0, 1);
     }
 
     /**
