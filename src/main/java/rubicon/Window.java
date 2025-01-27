@@ -165,7 +165,7 @@ public class Window {
      */
     private static byte[] loadFromResources(String name) {
         try {
-            return Files.readAllBytes(Paths.get(Window.class.getResource(name)
+            return Files.readAllBytes(Paths.get(Objects.requireNonNull(Window.class.getResource(name))
                                                             .toURI()));
         } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e);
@@ -175,7 +175,7 @@ public class Window {
     /**
      * Accessor to retrieve Window Background Color
      *
-     * @return windo background color
+     * @return window background color
      */
     public static Color getBackgroundColor() {
         return get().colorBg;
@@ -295,10 +295,12 @@ public class Window {
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
             glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);          // Required on Mac
         } else {
-            glslVersion = "#version 130";
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+            glslVersion = "#version 460";
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         }
+
+        System.out.println("GLSL Version: " + this.glslVersion);
     }
 
     /**
@@ -386,7 +388,7 @@ public class Window {
 
     /**
      * Example of fonts configuration
-     * For more information read: https://github.com/ocornut/imgui/blob/33cdbe97b8fd233c6c12ca216e76398c2e89b0d8/docs/FONTS.md
+     * For more information read: <a href="https://github.com/ocornut/imgui/blob/33cdbe97b8fd233c6c12ca216e76398c2e89b0d8/docs/FONTS.md">docs</a>
      */
     private void initFonts(final ImGuiIO io) {
         // This enables FreeType font renderer, which is disabled by default.
