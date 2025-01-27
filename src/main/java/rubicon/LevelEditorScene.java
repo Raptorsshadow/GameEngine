@@ -48,8 +48,18 @@ public class LevelEditorScene extends Scene {
         obj2.addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("assets/images/blendImage2.png"))));
 
         this.addGameObjectToScene(obj2);
+
+        this.guiLayer.init();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void dispose() {
+        //Dispose of IMGui Resources
+        this.guiLayer.dispose();
+    }
     /**
      * Pre-Load necessary assets to prevent runtime allocations.
      */
@@ -71,7 +81,7 @@ public class LevelEditorScene extends Scene {
     public void update(float dt) {
         lastChange += dt;
         obj1.transform.position.x += 10 * dt;
-
+        guiLayer.startFrame();
         guiLayer.imgui();
 
         //update all gameobjects for the frame.
@@ -79,5 +89,6 @@ public class LevelEditorScene extends Scene {
 
         //Call the renderer
         this.renderer.render();
+        guiLayer.endFrame();
     }
 }

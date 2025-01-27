@@ -38,6 +38,12 @@ public abstract class Scene {
     }
 
     /**
+     * Lifecycle hook called to dispose of any resources held by the scene.
+     */
+    public void dispose() {
+        //Optional Lifecycle hook for disposing of resources.
+    }
+    /**
      * Iterates all GameObjects and calls their start method and flags scene as running.
      */
     public void start() {
