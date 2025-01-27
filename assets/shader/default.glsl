@@ -32,10 +32,7 @@ uniform sampler2D uTextures[8];
 out vec4 color;
 
 void main() {
-    //float avg = (fColor.r + fColor.g + fColor.b) / 3;
-    //float noise = fract(sin(dot(fColor.xy, vec2(12.9898, 78.233))) * 43758.5453);
-    //color = fColor * noise * 1/avg;
-    if (fTexId > 0) {
+  if (fTexId > 0) {
         int id = int(fTexId);
         color = fColor * texture(uTextures[id], fTexCoords);
         // color = vec4(fTexCoords, 0, 1);

@@ -16,12 +16,21 @@ public abstract class Component {
      *
      * @param dt Delta Time
      */
-    public abstract void update(float dt);
+    public void update(float dt) {
+        //Not implemented
+    }
 
     /**
      * Optional lifecycle hook to perform initialization and startup procedures if necessary.
      */
     public void start() {
+        //Not implemented
+    }
 
+    /**
+     * Hook for a component to render its own ImGui overlay
+     */
+    public void imgui() {
+        //Not implemented
     }
 }

@@ -108,4 +108,11 @@ public class GameObject {
     public int getzIndex() {
         return this.zIndex;
     }
+
+    /**
+     * Render all the component ImGui management overlays.
+     */
+    public void imgui() {
+        this.components.forEach(Component::imgui);
+    }
 }

@@ -3,7 +3,9 @@ package rubicon;
 import components.Sprite;
 import components.SpriteRenderer;
 import components.SpriteSheet;
+import imgui.ImGui;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 import util.AssetPool;
 
 import java.util.Objects;
@@ -19,14 +21,12 @@ public class LevelEditorScene extends Scene {
 
     float lastChange = 0;
     private GameObject obj1;
-    private final IMGuiLayer guiLayer;
 
     /**
      * Default constructor used to initialize the scene pieces
      */
     public LevelEditorScene() {
         super();
-        guiLayer = new IMGuiLayer();
     }
 
     /**
@@ -38,28 +38,18 @@ public class LevelEditorScene extends Scene {
         loadResources();
 
         this.camera = new Camera(new Vector2f());
-        obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)), 2);
-        obj1.addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("assets/images/blendImage1.png"))));
+        obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)), 1);
+        obj1.addComponent(new SpriteRenderer(new Vector4f(1.0f,0f,0f,0f)));
 
         this.addGameObjectToScene(obj1);
-
+        this.actveGameObject = obj1;
 
         GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), 2);
         obj2.addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("assets/images/blendImage2.png"))));
 
         this.addGameObjectToScene(obj2);
-
-        this.guiLayer.init();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void dispose() {
-        //Dispose of IMGui Resources
-        this.guiLayer.dispose();
-    }
     /**
      * Pre-Load necessary assets to prevent runtime allocations.
      */
@@ -79,16 +69,21 @@ public class LevelEditorScene extends Scene {
      */
     @Override
     public void update(float dt) {
-        lastChange += dt;
-        obj1.transform.position.x += 10 * dt;
-        guiLayer.startFrame();
-        guiLayer.imgui();
+
 
         //update all gameobjects for the frame.
         this.gameObjects.forEach(go -> go.update(dt));
 
         //Call the renderer
         this.renderer.render();
-        guiLayer.endFrame();
+    }
+
+    @Override
+    public void imgui() {
+        ImGui.begin("LES Window");
+        if(ImGui.button("LevelEditorScene")) {
+            ImGui.text("It works");
+        }
+        ImGui.end();
     }
 }

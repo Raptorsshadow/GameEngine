@@ -1,5 +1,6 @@
 package rubicon;
 
+import imgui.ImGui;
 import render.Renderer;
 
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ public abstract class Scene {
     protected       Renderer         renderer;
     // State variable to track if the scene is running
     private         boolean          isRunning   = false;
+    //Currently Selected activeGameObject used to render specific ImGui Overlays
+    protected GameObject actveGameObject = null;
 
     /**
      * Contract method responsible for updating the scene event delta time.
@@ -74,5 +77,25 @@ public abstract class Scene {
      */
     public Camera getCamera() {
         return this.camera;
+    }
+
+    /**
+     * Render the ImGui overlay for a scene.  If we currently have an active game object
+     * render those controls as well.
+     */
+    public void sceneImgui () {
+        if(actveGameObject != null) {
+            ImGui.begin("Inspector");
+            actveGameObject.imgui();
+            ImGui.end();
+        }
+        imgui();
+    }
+
+    /**
+     * Hook available for scene specific ImGui controls.
+     */
+    public void imgui() {
+        //Used to create custom scene IMGui interactions
     }
 }

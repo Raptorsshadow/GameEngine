@@ -41,25 +41,30 @@ public class Window {
     private long   glfwWindow;
     // The active scene
     private Scene  currentScene;
+    //ImGui Layer used to render overlays.
+    private final IMGuiLayer guiLayer;
 
     /**
      * Default Constructor taking window initialization params
      *
      * @param config Window Configuration Data
+     * @param guiLayer ImGuiLayer Object that manages ImGui resources
      */
-    private Window(Configuration config) {
+    private Window(Configuration config, IMGuiLayer guiLayer) {
         this.config = config;
+        this.guiLayer = guiLayer;
     }
 
     /**
-     * Instance accessor and retriever that passes a config to initialize the window.
+     * Instance accessor and retriever that passes a config and IMGuiLayer to initialize the window.
      *
      * @param config Window Configuration Object
+     * @param guiLayer ImGuiLayer Object that manages ImGui resources
      * @return Instance of the window
      */
-    public static Window get(Configuration config) {
+    public static Window get(Configuration config, IMGuiLayer guiLayer) {
         if (Window.window == null) {
-            Window.window = new Window(config);
+            Window.window = new Window(config, guiLayer);
             Window.window.init();
         }
 
@@ -77,7 +82,7 @@ public class Window {
             config.setHeight(1080);
             config.setWidth(1920);
             config.setTitle("Test with IMGui");
-            Window.window = new Window(config);
+            Window.window = new Window(config, new IMGuiLayer());
             Window.window.init();
         }
         return Window.window;
@@ -162,6 +167,7 @@ public class Window {
      */
     public void init() {
         initWindow();
+        guiLayer.init();
     }
 
     /**
@@ -169,6 +175,7 @@ public class Window {
      */
     protected void dispose() {
         disposeWindow();
+        guiLayer.dispose();
     }
 
     /**
@@ -338,6 +345,7 @@ public class Window {
         if (dt >= 0) {
             currentScene.update(dt);
         }
+        this.guiLayer.update(dt, currentScene);
         if (KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)) {
             System.exit(0);
         }
