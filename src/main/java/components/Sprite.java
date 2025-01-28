@@ -21,7 +21,7 @@ public class Sprite {
     };
 
     //The texture containing the sprite
-    private final Texture    texture;
+    private final Texture texture;
     //The bounding box of the sprite
     private final Vector2f[] texCoords;
 

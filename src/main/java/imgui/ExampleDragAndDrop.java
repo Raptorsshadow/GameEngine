@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ExampleDragAndDrop {
     private static final String PAYLOAD_TYPE = "PAYLOAD";
 
-    private static final StringPayload  STRING_PAYLOAD  = new StringPayload();
+    private static final StringPayload STRING_PAYLOAD = new StringPayload();
     private static final IntegerPayload INTEGER_PAYLOAD = new IntegerPayload();
 
     private static final AtomicInteger CLASS_SPECIFIC_PAYLOAD = new AtomicInteger(23);

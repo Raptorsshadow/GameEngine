@@ -16,15 +16,15 @@ import java.util.List;
 public abstract class Scene {
 
     // Collection of GameObjects used to build the scene
-    protected final List<GameObject> gameObjects     = new ArrayList<>();
+    protected final List<GameObject> gameObjects = new ArrayList<>();
     // Camera responsible for displaying the scene
-    protected       Camera           camera;
+    protected Camera camera;
     // Renderer used to draw the scene
-    protected       Renderer         renderer;
+    protected Renderer renderer;
     //Currently Selected activeGameObject used to render specific ImGui Overlays
-    protected       GameObject       actveGameObject = null;
+    protected GameObject actveGameObject = null;
     // State variable to track if the scene is running
-    private         boolean          isRunning       = false;
+    private boolean isRunning = false;
 
     /**
      * Contract method responsible for updating the scene event delta time.

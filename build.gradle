@@ -77,3 +77,16 @@ test {
     useJUnitPlatform()
 }
 
+configurations {
+    mockitoAgent
+}
+dependencies {
+    mockitoAgent('org.mockito:mockito-core:5.+') {
+        transitive = false
+    }
+}
+tasks {
+    test {
+        jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
+    }
+}

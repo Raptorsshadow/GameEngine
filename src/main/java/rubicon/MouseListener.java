@@ -71,7 +71,7 @@ public class MouseListener {
         get().x = xPos;
         get().y = yPos;
         get().isDragging = IntStream.range(0, get().mouseButtonPressed.length)
-                                    .anyMatch(pos -> get().mouseButtonPressed[pos]);
+                .anyMatch(pos -> get().mouseButtonPressed[pos]);
     }
 
     /**

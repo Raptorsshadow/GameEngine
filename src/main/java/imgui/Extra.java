@@ -4,18 +4,18 @@ import imgui.app.Color;
 import imgui.type.ImBoolean;
 
 public class Extra {
-    private static final ImBoolean SHOW_DEMO_WINDOW                   = new ImBoolean(false);
-    private static final ImBoolean SHOW_IMNODES_DEMO_WINDOW           = new ImBoolean(false);
+    private static final ImBoolean SHOW_DEMO_WINDOW = new ImBoolean(false);
+    private static final ImBoolean SHOW_IMNODES_DEMO_WINDOW = new ImBoolean(false);
     private static final ImBoolean SHOW_IMGUI_NODE_EDITOR_DEMO_WINDOW = new ImBoolean(false);
-    private static final ImBoolean SHOW_DRAG_N_DROP_WINDOW            = new ImBoolean(false);
-    private static final ImBoolean SHOW_IMPLOT_DEMO_WINDOW            = new ImBoolean(false);
-    private static final ImBoolean SHOW_IMGUIZMO_DEMO                 = new ImBoolean(false);
-    private static final ImBoolean SHOW_IMGUI_COLOR_TEXT_EDIT_WINDOW  = new ImBoolean(false);
-    private static final ImBoolean SHOW_IMGUI_FILE_DIALOG_WINDOW      = new ImBoolean(false);
-    private static final ImBoolean SHOW_IMGUI_MEMORY_EDITOR_WINDOW    = new ImBoolean(false);
-    private static final ImBoolean SHOW_IMGUI_CANVAS_EDITOR_WINDOW    = new ImBoolean(false);
-    private static final ImBoolean SHOW_IMGUI_INPUT_CALLBACK_WINDOW   = new ImBoolean(false);
-    private static final ImBoolean SHOW_IMGUI_KNOBS_DEMO              = new ImBoolean(false);
+    private static final ImBoolean SHOW_DRAG_N_DROP_WINDOW = new ImBoolean(false);
+    private static final ImBoolean SHOW_IMPLOT_DEMO_WINDOW = new ImBoolean(false);
+    private static final ImBoolean SHOW_IMGUIZMO_DEMO = new ImBoolean(false);
+    private static final ImBoolean SHOW_IMGUI_COLOR_TEXT_EDIT_WINDOW = new ImBoolean(false);
+    private static final ImBoolean SHOW_IMGUI_FILE_DIALOG_WINDOW = new ImBoolean(false);
+    private static final ImBoolean SHOW_IMGUI_MEMORY_EDITOR_WINDOW = new ImBoolean(false);
+    private static final ImBoolean SHOW_IMGUI_CANVAS_EDITOR_WINDOW = new ImBoolean(false);
+    private static final ImBoolean SHOW_IMGUI_INPUT_CALLBACK_WINDOW = new ImBoolean(false);
+    private static final ImBoolean SHOW_IMGUI_KNOBS_DEMO = new ImBoolean(false);
 
     private static final Graph GRAPH = new Graph();
 

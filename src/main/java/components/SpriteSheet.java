@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class SpriteSheet {
     //Texture containing all the sprites
-    private final Texture      texture;
+    private final Texture texture;
     //Collection of manages sprites
     private final List<Sprite> sprites;
 

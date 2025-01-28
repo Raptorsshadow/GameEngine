@@ -17,9 +17,9 @@ import java.util.Map;
  */
 public class AssetPool {
     //Map of Shader assets
-    private static final Map<String, Shader>      shaderMap      = new HashMap<>();
+    private static final Map<String, Shader> shaderMap = new HashMap<>();
     //Map  of Texture assets
-    private static final Map<String, Texture>     textureMap     = new HashMap<>();
+    private static final Map<String, Texture> textureMap = new HashMap<>();
     //Map  of SpriteSheet assets
     private static final Map<String, SpriteSheet> spriteSheetMap = new HashMap<>();
 

@@ -65,7 +65,7 @@ public class Shader {
                 eol = source.indexOf("\n", index);
                 if (index >= 6) {
                     shaderType = source.substring(index, eol)
-                                       .trim();
+                            .trim();
                     switch (shaderType) {
                         case "vertex":
                             this.vertexSource = split[i++];

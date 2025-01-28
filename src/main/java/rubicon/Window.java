@@ -28,18 +28,18 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class Window {
     // Window singleton reference
-    public static   Window window;
+    public static Window window;
     //Default background colors for RGBA channels
-    protected final Color  colorBg = new Color(1, 1, 1, 1);
+    protected final Color colorBg = new Color(1, 1, 1, 1);
 
     // Window config
     private final Configuration config;
     //ImGui Layer used to render overlays.
-    private final IMGuiLayer    guiLayer;
+    private final IMGuiLayer guiLayer;
     //Actual resolution values for the window.
     float dt = -1.0f;
     // Provisioned identifier for the Window
-    private long  glfwWindow;
+    private long glfwWindow;
     // The active scene
     private Scene currentScene;
 
@@ -201,7 +201,7 @@ public class Window {
      */
     protected void initWindow() {
         GLFWErrorCallback.createPrint(System.err)
-                         .set();
+                .set();
 
         if (!glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
@@ -212,7 +212,7 @@ public class Window {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
         glfwWindow = glfwCreateWindow(config.getWidth(), config.getHeight(), config.getTitle(), MemoryUtil.NULL,
-                                      MemoryUtil.NULL);
+                MemoryUtil.NULL);
 
         if (glfwWindow == MemoryUtil.NULL) {
             throw new IllegalArgumentException("Failed to create the GLFW window");
@@ -230,7 +230,7 @@ public class Window {
             glfwGetWindowSize(glfwWindow, pWidth, pHeight);
             final GLFWVidMode vidmode = Objects.requireNonNull(glfwGetVideoMode(glfwGetPrimaryMonitor()));
             glfwSetWindowPos(glfwWindow, (vidmode.width() - pWidth.get(0)) / 2,
-                             (vidmode.height() - pHeight.get(0)) / 2);
+                    (vidmode.height() - pHeight.get(0)) / 2);
         }
 
         glfwMakeContextCurrent(glfwWindow);
@@ -288,7 +288,7 @@ public class Window {
         glfwDestroyWindow(glfwWindow);
         glfwTerminate();
         Objects.requireNonNull(glfwSetErrorCallback(null))
-               .free();
+                .free();
     }
 
     /**

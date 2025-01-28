@@ -28,29 +28,29 @@ public class RenderBatch implements Comparable<RenderBatch> {
     // ======
     // Pos              Color                           TexCoords       TexId
     // float, float,    float, float, float, float,     float, float,   float
-    private static final int POS_SIZE        = 2;
-    private static final int COLOR_SIZE      = 4;
+    private static final int POS_SIZE = 2;
+    private static final int COLOR_SIZE = 4;
     private static final int TEX_COORDS_SIZE = 2;
-    private static final int TEX_ID_SIZE     = 1;
+    private static final int TEX_ID_SIZE = 1;
 
-    private static final int POS_OFFSET        = 0;
-    private static final int COLOR_OFFSET      = POS_OFFSET + POS_SIZE * Float.BYTES;
+    private static final int POS_OFFSET = 0;
+    private static final int COLOR_OFFSET = POS_OFFSET + POS_SIZE * Float.BYTES;
     private static final int TEX_COORDS_OFFSET = COLOR_OFFSET + COLOR_SIZE * Float.BYTES;
-    private static final int TEX_ID_OFFSET     = TEX_COORDS_OFFSET + TEX_COORDS_SIZE * Float.BYTES;
+    private static final int TEX_ID_OFFSET = TEX_COORDS_OFFSET + TEX_COORDS_SIZE * Float.BYTES;
 
-    private static final int              VERTEX_SIZE       = POS_SIZE + COLOR_SIZE + TEX_COORDS_SIZE + TEX_ID_SIZE;
-    private static final int              VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
-    private static final int[]            texSlots          = {0, 1, 2, 3, 4, 5, 6, 7};
-    private final        SpriteRenderer[] sprites;
-    private final        float[]          vertices;
-    private final        List<Texture>    textures;
-    private final        int              maxBatchSize;
-    private final        Shader           shader;
-    private final        int              zIndex;
-    private              int              numSprites;
-    private              boolean          hasRoom;
-    private              int              vaoId;
-    private              int              vboId;
+    private static final int VERTEX_SIZE = POS_SIZE + COLOR_SIZE + TEX_COORDS_SIZE + TEX_ID_SIZE;
+    private static final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
+    private static final int[] texSlots = {0, 1, 2, 3, 4, 5, 6, 7};
+    private final SpriteRenderer[] sprites;
+    private final float[] vertices;
+    private final List<Texture> textures;
+    private final int maxBatchSize;
+    private final Shader shader;
+    private final int zIndex;
+    private int numSprites;
+    private boolean hasRoom;
+    private int vaoId;
+    private int vboId;
 
     /**
      * Default Constructor initializes specific renderBatch
@@ -180,11 +180,11 @@ public class RenderBatch implements Comparable<RenderBatch> {
         }
         shader.use();
         shader.uploadMat4f("uProjection", Window.getScene()
-                                                .getCamera()
-                                                .getProjectionMatrix());
+                .getCamera()
+                .getProjectionMatrix());
         shader.uploadMat4f("uView", Window.getScene()
-                                          .getCamera()
-                                          .getViewMatrix());
+                .getCamera()
+                .getViewMatrix());
 
         for (int i = 0; i < textures.size(); i++) {
             glActiveTexture(GL_TEXTURE0 + i + 1);
@@ -229,7 +229,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
         if (spr.getTexture() != null) {
             for (int i = 0; i < textures.size(); i++) {
                 if (textures.get(i)
-                            .equals(spr.getTexture())) {
+                        .equals(spr.getTexture())) {
                     texId = i + 1;
                     break;
                 }

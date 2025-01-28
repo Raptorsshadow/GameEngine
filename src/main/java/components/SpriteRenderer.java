@@ -16,14 +16,13 @@ import rubicon.Transform;
  */
 public class SpriteRenderer extends Component {
 
+    public static final Vector4f DEF_COLOR = new Vector4f(1, 1, 1, 1);
     // 4 bit Color variable (RGBA)
     private final Vector4f color;
-
+    protected Transform lastTransform;
     //Sprite containing texture data
     private Sprite sprite;
-
-    private Transform lastTransform;
-    private boolean   isDirty = false;
+    private boolean isDirty = false;
 
     /**
      * Default Constructor taking in color Vector
@@ -43,7 +42,7 @@ public class SpriteRenderer extends Component {
      */
     public SpriteRenderer(Sprite sprite) {
         this.sprite = sprite;
-        this.color = new Vector4f(1, 1, 1, 1);
+        this.color = new Vector4f(DEF_COLOR);
         this.isDirty = true;
     }
 

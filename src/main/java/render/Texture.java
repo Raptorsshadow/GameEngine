@@ -82,8 +82,8 @@ public class Texture {
 
             //Instruct the system to populate the provisioned space.
             glTexImage2D(GL_TEXTURE_2D, 0, colorType, widthBuffer.get(0), heightBuffer.get(0), 0, colorType,
-                         GL_UNSIGNED_BYTE,
-                         image);
+                    GL_UNSIGNED_BYTE,
+                    image);
         } else {
             assert false : "Error : Texture : Could not load Image: " + this.filePath;
         }

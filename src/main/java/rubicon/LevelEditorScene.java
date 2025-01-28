@@ -57,9 +57,9 @@ public class LevelEditorScene extends Scene {
         AssetPool.getShader("assets/shader/default.glsl");
 
         AssetPool.addSpriteSheet("assets/images/spritesheet.png",
-                                 new SpriteSheet(
-                                         Objects.requireNonNull(AssetPool.getTexture("assets/images/spritesheet.png")),
-                                         16, 16, 26, 0));
+                new SpriteSheet(
+                        Objects.requireNonNull(AssetPool.getTexture("assets/images/spritesheet.png")),
+                        16, 16, 26, 0));
     }
 
     /**

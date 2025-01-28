@@ -14,13 +14,13 @@ import java.util.List;
 public class GameObject {
 
     //Transform to be applied to this object when rendering
-    public final  Transform       transform;
+    public final Transform transform;
     //Name of component used for logging and management purposes
-    private final String          name;
+    private final String name;
     //All components managed by this object
     private final List<Component> components = new ArrayList<>();
     //Track zIndex relative to other game objects
-    private final int             zIndex;
+    private final int zIndex;
 
     /**
      * Constructor that names the object.

@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExampleCanvasEditor {
-    private static final List<ImVec2> pointList  = new ArrayList<>();
-    private static final ImVec2       scrolling  = new ImVec2();
-    public static        float        thickness  = 2.0f;
-    private static       boolean      addingLine = false;
+    private static final List<ImVec2> pointList = new ArrayList<>();
+    private static final ImVec2 scrolling = new ImVec2();
+    public static float thickness = 2.0f;
+    private static boolean addingLine = false;
 
     /**
      * Computes the floating-point remainder of a / b.
@@ -30,8 +30,8 @@ public class ExampleCanvasEditor {
     public static void show(final ImBoolean showCanvaWindow) {
         ImGui.setNextWindowSize(700, 400, ImGuiCond.Once);
         ImGui.setNextWindowPos(ImGui.getMainViewport()
-                                    .getPosX() + 200, ImGui.getMainViewport()
-                                                           .getPosY() + 200, ImGuiCond.Once);
+                .getPosX() + 200, ImGui.getMainViewport()
+                .getPosY() + 200, ImGuiCond.Once);
 
         if (ImGui.begin("Canvas Demo Window", showCanvaWindow)) {
             ImGui.text("This a demo for ImGui Canvas editor");
@@ -67,13 +67,13 @@ public class ExampleCanvasEditor {
             ImGuiIO io = ImGui.getIO();
             ImDrawList drawList = ImGui.getWindowDrawList();
             drawList.addRectFilled(canvasP0.x, canvasP0.y, canvasP1.x, canvasP1.y,
-                                   ImColor.rgba(50, 50, 50, 255));
+                    ImColor.rgba(50, 50, 50, 255));
             drawList.addRect(canvasP0.x, canvasP0.y, canvasP1.x, canvasP1.y,
-                             ImColor.rgba(255, 255, 255, 255));
+                    ImColor.rgba(255, 255, 255, 255));
 
             // This will catch our interactions
             ImGui.invisibleButton("canvas", canvasSize.x, canvasSize.y,
-                                  ImGuiButtonFlags.MouseButtonLeft | ImGuiButtonFlags.MouseButtonRight);
+                    ImGuiButtonFlags.MouseButtonLeft | ImGuiButtonFlags.MouseButtonRight);
 
             boolean isHovered = ImGui.isItemHovered(); // Hovered
             boolean isActive = ImGui.isItemActive();   // Held
@@ -114,16 +114,16 @@ public class ExampleCanvasEditor {
             float GRID_STEP = 64.0f;
             for (float x = fmodf(scrolling.x, GRID_STEP); x < canvasSize.x; x += GRID_STEP) {
                 drawList.addLine(canvasP0.x + x, canvasP0.y, canvasP0.x + x, canvasP1.y,
-                                 ImColor.rgba(200, 200, 200, 40));
+                        ImColor.rgba(200, 200, 200, 40));
             }
             for (float y = fmodf(scrolling.y, GRID_STEP); y < canvasSize.y; y += GRID_STEP) {
                 drawList.addLine(canvasP0.x, canvasP0.y + y, canvasP1.x, canvasP0.y + y,
-                                 ImColor.rgba(200, 200, 200, 40));
+                        ImColor.rgba(200, 200, 200, 40));
             }
             for (int n = 0; n < pointList.size(); n += 2) {
                 drawList.addLine(origin.x + pointList.get(n).x, origin.y + pointList.get(n).y,
-                                 origin.x + pointList.get(n + 1).x, origin.y + pointList.get(n + 1).y,
-                                 ImColor.rgba(255, 255, 0, 255), thickness);
+                        origin.x + pointList.get(n + 1).x, origin.y + pointList.get(n + 1).y,
+                        ImColor.rgba(255, 255, 0, 255), thickness);
             }
             drawList.popClipRect();
 

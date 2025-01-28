@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ExampleInputTextCallback {
-    private static final ImString          STR         = new ImString();
-    private static final StringBuilder     OUTPUT      = new StringBuilder();
+    private static final ImString STR = new ImString();
+    private static final StringBuilder OUTPUT = new StringBuilder();
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
     private static final ImGuiInputTextCallback CALLBACK = new ImGuiInputTextCallback() {
@@ -21,16 +21,16 @@ public class ExampleInputTextCallback {
             if (c == 'h' || c == 'H') {
                 data.setEventChar('!');
                 OUTPUT.append(DATE_FORMAT.format(LocalDateTime.now()))
-                      .append(" :: Replaced!\n");
+                        .append(" :: Replaced!\n");
             } else if (c == 'w' || c == 'W') {
                 data.setEventChar(0);
                 OUTPUT.append(DATE_FORMAT.format(LocalDateTime.now()))
-                      .append(" :: Discarded!\n");
+                        .append(" :: Discarded!\n");
             } else {
                 OUTPUT.append(DATE_FORMAT.format(LocalDateTime.now()))
-                      .append(" :: Typed: ")
-                      .append(c)
-                      .append('\n');
+                        .append(" :: Typed: ")
+                        .append(c)
+                        .append('\n');
             }
         }
     };
