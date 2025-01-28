@@ -39,7 +39,7 @@ public class LevelEditorScene extends Scene {
 
         this.camera = new Camera(new Vector2f());
         obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)), 1);
-        obj1.addComponent(new SpriteRenderer(new Vector4f(1.0f,0f,0f,0f)));
+        obj1.addComponent(new SpriteRenderer(new Vector4f(1.0f,0f,0f,1f)));
 
         this.addGameObjectToScene(obj1);
         this.actveGameObject = obj1;
@@ -69,7 +69,6 @@ public class LevelEditorScene extends Scene {
      */
     @Override
     public void update(float dt) {
-
 
         //update all gameobjects for the frame.
         this.gameObjects.forEach(go -> go.update(dt));
