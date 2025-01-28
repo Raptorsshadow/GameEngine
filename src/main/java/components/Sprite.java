@@ -13,6 +13,13 @@ import java.util.Objects;
  * Description: Manages an individual sprite resource
  */
 public class Sprite {
+    protected static final Vector2f[] DEF_VECTOR = new Vector2f[]{
+            new Vector2f(1, 1),
+            new Vector2f(1, 0),
+            new Vector2f(0, 0),
+            new Vector2f(0, 1)
+    };
+
     //The texture containing the sprite
     private final Texture    texture;
     //The bounding box of the sprite
@@ -42,12 +49,7 @@ public class Sprite {
      */
     public Sprite(Texture tex, Vector2f[] texCoords) {
         this.texture = tex;
-        this.texCoords = Objects.requireNonNullElseGet(texCoords, () -> new Vector2f[]{
-                new Vector2f(1, 1),
-                new Vector2f(1, 0),
-                new Vector2f(0, 0),
-                new Vector2f(0, 1)
-        });
+        this.texCoords = Objects.requireNonNullElseGet(texCoords, DEF_VECTOR::clone);
     }
 
     /**

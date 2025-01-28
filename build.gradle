@@ -3,6 +3,8 @@ import org.gradle.internal.os.OperatingSystem
 plugins {
     id 'java'
     id 'checkstyle'
+    id 'jacoco'
+
 }
 
 group = 'org.thinkersAndSolvers'
@@ -48,6 +50,7 @@ dependencies {
     //LWJGL Stuff
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.mockito:mockito-core:5.+'
 
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
@@ -73,3 +76,4 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+

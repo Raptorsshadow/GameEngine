@@ -34,20 +34,19 @@ public class Window {
 
     // Window config
     private final Configuration config;
-
+    //ImGui Layer used to render overlays.
+    private final IMGuiLayer    guiLayer;
     //Actual resolution values for the window.
     float dt = -1.0f;
     // Provisioned identifier for the Window
-    private long   glfwWindow;
+    private long  glfwWindow;
     // The active scene
-    private Scene  currentScene;
-    //ImGui Layer used to render overlays.
-    private final IMGuiLayer guiLayer;
+    private Scene currentScene;
 
     /**
      * Default Constructor taking window initialization params
      *
-     * @param config Window Configuration Data
+     * @param config   Window Configuration Data
      * @param guiLayer ImGuiLayer Object that manages ImGui resources
      */
     private Window(Configuration config, IMGuiLayer guiLayer) {
@@ -58,7 +57,7 @@ public class Window {
     /**
      * Instance accessor and retriever that passes a config and IMGuiLayer to initialize the window.
      *
-     * @param config Window Configuration Object
+     * @param config   Window Configuration Object
      * @param guiLayer ImGuiLayer Object that manages ImGui resources
      * @return Instance of the window
      */
@@ -98,11 +97,15 @@ public class Window {
 
         switch (sceneId) {
             case 0:
-                if(w.currentScene != null) w.currentScene.dispose();
+                if (w.currentScene != null) {
+                    w.currentScene.dispose();
+                }
                 w.currentScene = new LevelEditorScene();
                 break;
             case 1:
-                if(w.currentScene != null) w.currentScene.dispose();
+                if (w.currentScene != null) {
+                    w.currentScene.dispose();
+                }
                 w.currentScene = new LevelScene();
                 break;
             default:
@@ -151,7 +154,9 @@ public class Window {
         return get().config.getHeight();
     }
 
-    public static long getWindowId() {return get().glfwWindow;}
+    public static long getWindowId() {
+        return get().glfwWindow;
+    }
 
     /**
      * Accessor to retrieve Window Background Color
@@ -265,7 +270,6 @@ public class Window {
         GL11.glClearColor(colorBg.getRed(), colorBg.getGreen(), colorBg.getBlue(), colorBg.getAlpha());
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
-
 
 
     /**

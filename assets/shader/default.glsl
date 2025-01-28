@@ -32,7 +32,7 @@ uniform sampler2D uTextures[8];
 out vec4 color;
 
 void main() {
-  if (fTexId > 0) {
+    if (fTexId > 0) {
         int id = int(fTexId);
         color = fColor * texture(uTextures[id], fTexCoords);
         // color = vec4(fTexCoords, 0, 1);

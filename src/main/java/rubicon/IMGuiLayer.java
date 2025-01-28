@@ -5,12 +5,6 @@ import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Objects;
-
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
@@ -24,7 +18,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class IMGuiLayer {
     //Framework instances
     protected ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
-    protected ImGuiImplGl3 imGuiGl3  = new ImGuiImplGl3();
+    protected ImGuiImplGl3  imGuiGl3  = new ImGuiImplGl3();
 
     //Open GL Version Information
     private String glslVersion = null;
@@ -78,7 +72,7 @@ public class IMGuiLayer {
         // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
         //  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
         if (ImGui.getIO()
-                .hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
+                 .hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
             final long backupCurrentContext = glfwGetCurrentContext();
             ImGui.updatePlatformWindows();
             ImGui.renderPlatformWindowsDefault();
@@ -110,21 +104,22 @@ public class IMGuiLayer {
     private void initFonts(final ImGuiIO io) {
         // This enables FreeType font renderer, which is disabled by default.
         io.getFonts()
-                .setFreeTypeRenderer(true);
+          .setFreeTypeRenderer(true);
 
         // You can use the ImFontGlyphRangesBuilder helper to create glyph ranges based on text input.
         // For example: for a game where your script is known, if you can feed your entire script to it (using addText) and only build the characters the game needs.
         // Here we are using it just to combine all required glyphs in one place
         final ImFontGlyphRangesBuilder rangesBuilder = new ImFontGlyphRangesBuilder(); // Glyphs ranges provide
         rangesBuilder.addRanges(io.getFonts()
-                .getGlyphRangesDefault());
+                                  .getGlyphRangesDefault());
         rangesBuilder.addRanges(FontAwesomeIcons._IconRange);
 
         // Font config for additional fonts
         // This is a natively allocated struct so don't forget to call destroy after atlas is built
         final ImFontConfig fontConfig = new ImFontConfig();
 
-        io.getFonts().addFontFromFileTTF("assets/fonts/NimbusMonoPS-Regular.otf", 16, fontConfig);
+        io.getFonts()
+          .addFontFromFileTTF("assets/fonts/NimbusMonoPS-Regular.otf", 16, fontConfig);
 
         fontConfig.destroy();
     }
@@ -134,8 +129,8 @@ public class IMGuiLayer {
      */
     private void decideGlGlslVersions() {
         final boolean isMac = System.getProperty("os.name")
-                .toLowerCase()
-                .contains("mac");
+                                    .toLowerCase()
+                                    .contains("mac");
         if (isMac) {
             glslVersion = "#version 150";
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
