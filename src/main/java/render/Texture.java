@@ -1,12 +1,13 @@
 package render;
 
 import org.lwjgl.BufferUtils;
+import rubicon.GLWrapper;
+import rubicon.LWJGLWrapper;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.stb.STBImage.*;
 
 /**
  * Class: Texture
@@ -27,24 +28,37 @@ public class Texture {
     private int width;
     private int height;
 
+    private final GLWrapper gl;
+
     /**
      * Constructor responsible for configuring texture behavior and provisioning it in the system.
      *
      * @param filePath Texture file path
      */
     public Texture(String filePath) {
+        this(filePath, new LWJGLWrapper());
+    }
+
+    /**
+     * Constructor responsible for configuring texture behavior and provisioning it in the system.
+     *
+     * @param filePath Texture file path
+     * @param gl wrapper that handles all native GLFW Calls
+     */
+    public Texture(String filePath, GLWrapper gl) {
+        this.gl = gl;
         this.filePath = filePath;
         // Generate and bind texture
-        textureId = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, textureId);
+        textureId = gl.glGenTextures();
+        gl.glBindTexture(GL_TEXTURE_2D, textureId);
 
         //Implements Tile behavior across X and Y Axis
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
         //Define resize behavior of individual pixels
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
         //Load and provision the texture.
         loadTexture();
@@ -61,10 +75,10 @@ public class Texture {
         IntBuffer channels = BufferUtils.createIntBuffer(1);
 
         //When read into the system, it's loaded as a vertical mirror.  This flips it back.
-        stbi_set_flip_vertically_on_load(true);
+        gl.stbi_set_flip_vertically_on_load(true);
 
         //Load the file and leverage the buffers to store relevant data.
-        ByteBuffer image = stbi_load(filePath, widthBuffer, heightBuffer, channels, 0);
+        ByteBuffer image = gl.stbi_load(filePath, widthBuffer, heightBuffer, channels, 0);
 
         //If we loaded an image, ensure we select the appropriate color channel so we display it correctly.
         if (image != null) {
@@ -81,7 +95,7 @@ public class Texture {
             this.height = heightBuffer.get(0);
 
             //Instruct the system to populate the provisioned space.
-            glTexImage2D(GL_TEXTURE_2D, 0, colorType, widthBuffer.get(0), heightBuffer.get(0), 0, colorType,
+            gl.glTexImage2D(GL_TEXTURE_2D, 0, colorType, widthBuffer.get(0), heightBuffer.get(0), 0, colorType,
                     GL_UNSIGNED_BYTE,
                     image);
         } else {
@@ -89,21 +103,21 @@ public class Texture {
         }
 
         // Release the stbi buffers
-        stbi_image_free(image);
+        gl.stbi_image_free(image);
     }
 
     /**
      * Instruct the system to enable the texture.
      */
     public void bind() {
-        glBindTexture(GL_TEXTURE_2D, textureId);
+        gl.glBindTexture(GL_TEXTURE_2D, textureId);
     }
 
     /**
      * Instruct the system to disable the texture.
      */
     public void unbind() {
-        glBindTexture(GL_TEXTURE_2D, 0);
+        gl.glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     /**

@@ -4,6 +4,8 @@ import components.SpriteRenderer;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
+import rubicon.GLWrapper;
+import rubicon.LWJGLWrapper;
 import rubicon.Window;
 import util.AssetPool;
 
@@ -11,9 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL15C.*;
-import static org.lwjgl.opengl.GL20C.*;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
 
 /**
  * Class: RenderBatch
@@ -52,12 +51,25 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private int vaoId;
     private int vboId;
 
+    private final GLWrapper gl;
+
+    /**
+     * Default constructor that uses the LWJGLWrapper internally.
+     * @param maxBatchSize max number of renders per batch
+     * @param zIndex zIndex layer to render on
+     */
+    public RenderBatch(int maxBatchSize, int zIndex) {
+        this(maxBatchSize, zIndex, new LWJGLWrapper());
+    }
     /**
      * Default Constructor initializes specific renderBatch
      *
-     * @param maxBatchSize maximum number of renders per batch.
+     * @param maxBatchSize max number of renders per batch
+     * @param zIndex zIndex layer to render on
+     * @param gl wrapper that handles all native GLFW Calls
      */
-    public RenderBatch(int maxBatchSize, int zIndex) {
+    public RenderBatch(int maxBatchSize, int zIndex, GLWrapper gl) {
+        this.gl = gl;
         this.shader = AssetPool.getShader("assets/shader/default.glsl");
         this.sprites = new SpriteRenderer[maxBatchSize];
         this.textures = new ArrayList<>();
@@ -73,31 +85,31 @@ public class RenderBatch implements Comparable<RenderBatch> {
      */
     public void start() {
         //Generate and bind a Vertex Array Object
-        vaoId = glGenVertexArrays();
-        glBindVertexArray(vaoId);
+        vaoId = gl.glGenVertexArrays();
+        gl.glBindVertexArray(vaoId);
 
         //Allocate space for vertices
-        vboId = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ARRAY_BUFFER, (long) vertices.length * Float.BYTES, GL_DYNAMIC_DRAW);
+        vboId = gl.glGenBuffers();
+        gl.glBindBuffer(GL_ARRAY_BUFFER, vboId);
+        gl.glBufferData(GL_ARRAY_BUFFER, (long) vertices.length * Float.BYTES, GL_DYNAMIC_DRAW);
 
         //Create and upload indices buffer
-        int eboId = glGenBuffers();
+        int eboId = gl.glGenBuffers();
         int[] indices = generateIndices();
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboId);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
+        gl.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboId);
+        gl.glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
 
-        glVertexAttribPointer(0, POS_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, POS_OFFSET);
-        glEnableVertexAttribArray(0);
+        gl.glVertexAttribPointer(0, POS_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, POS_OFFSET);
+        gl.glEnableVertexAttribArray(0);
 
-        glVertexAttribPointer(1, COLOR_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, COLOR_OFFSET);
-        glEnableVertexAttribArray(1);
+        gl.glVertexAttribPointer(1, COLOR_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, COLOR_OFFSET);
+        gl.glEnableVertexAttribArray(1);
 
-        glVertexAttribPointer(2, TEX_COORDS_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEX_COORDS_OFFSET);
-        glEnableVertexAttribArray(2);
+        gl.glVertexAttribPointer(2, TEX_COORDS_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEX_COORDS_OFFSET);
+        gl.glEnableVertexAttribArray(2);
 
-        glVertexAttribPointer(3, TEX_ID_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEX_ID_OFFSET);
-        glEnableVertexAttribArray(3);
+        gl.glVertexAttribPointer(3, TEX_ID_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEX_ID_OFFSET);
+        gl.glEnableVertexAttribArray(3);
     }
 
     /**
@@ -175,8 +187,8 @@ public class RenderBatch implements Comparable<RenderBatch> {
         }
         //If rebuffered, send the data to the GPU
         if (rebufferData) {
-            glBindBuffer(GL_ARRAY_BUFFER, vboId);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+            gl.glBindBuffer(GL_ARRAY_BUFFER, vboId);
+            gl.glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
         }
         shader.use();
         shader.uploadMat4f("uProjection", Window.getScene()
@@ -187,25 +199,25 @@ public class RenderBatch implements Comparable<RenderBatch> {
                 .getViewMatrix());
 
         for (int i = 0; i < textures.size(); i++) {
-            glActiveTexture(GL_TEXTURE0 + i + 1);
+            gl.glActiveTexture(GL_TEXTURE0 + i + 1);
             textures.get(i)
                     .bind();
         }
         shader.uploadIntArray("uTextures", texSlots);
 
-        glBindVertexArray(vaoId);
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-        glEnableVertexAttribArray(2);
-        glEnableVertexAttribArray(3);
+        gl.glBindVertexArray(vaoId);
+        gl.glEnableVertexAttribArray(0);
+        gl.glEnableVertexAttribArray(1);
+        gl.glEnableVertexAttribArray(2);
+        gl.glEnableVertexAttribArray(3);
 
-        glDrawElements(GL_TRIANGLES, this.numSprites * 6, GL_UNSIGNED_INT, 0);
+        gl.glDrawElements(GL_TRIANGLES, this.numSprites * 6, GL_UNSIGNED_INT, 0);
 
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glDisableVertexAttribArray(2);
-        glDisableVertexAttribArray(3);
-        glBindVertexArray(0);
+        gl.glDisableVertexAttribArray(0);
+        gl.glDisableVertexAttribArray(1);
+        gl.glDisableVertexAttribArray(2);
+        gl.glDisableVertexAttribArray(3);
+        gl.glBindVertexArray(0);
 
         for (Texture texture : textures) {
             texture.unbind();

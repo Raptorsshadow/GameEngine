@@ -3,11 +3,8 @@ package rubicon;
 import imgui.app.Color;
 import imgui.app.Configuration;
 import org.lwjgl.Version;
-import org.lwjgl.glfw.Callbacks;
-import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
-import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -15,8 +12,8 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.IntBuffer;
 import java.util.Objects;
 
-import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.glfw.GLFW.*;
 
 /**
  * Class: Window
@@ -43,6 +40,8 @@ public class Window {
     // The active scene
     private Scene currentScene;
 
+    private final GLWrapper gl;
+
     /**
      * Default Constructor taking window initialization params
      *
@@ -50,8 +49,36 @@ public class Window {
      * @param guiLayer ImGuiLayer Object that manages ImGui resources
      */
     private Window(Configuration config, IMGuiLayer guiLayer) {
+        this(config, guiLayer, new LWJGLWrapper());
+    }
+    /**
+     * Default Constructor taking window initialization params
+     *
+     * @param config   Window Configuration Data
+     * @param guiLayer ImGuiLayer Object that manages ImGui resources
+     * @param gl wrapper that handles all native GLFW Calls
+     */
+    private Window(Configuration config, IMGuiLayer guiLayer, GLWrapper gl) {
+        this.gl = gl;
         this.config = config;
         this.guiLayer = guiLayer;
+    }
+
+    /**
+     * Instance accessor and retriever that passes a config and IMGuiLayer to initialize the window.
+     *
+     * @param config   Window Configuration Object
+     * @param guiLayer ImGuiLayer Object that manages ImGui resources
+     * @param gl wrapper that handles all native GLFW Calls
+     * @return Instance of the window
+     */
+    public static Window get(Configuration config, IMGuiLayer guiLayer, GLWrapper gl) {
+        if (Window.window == null) {
+            Window.window = new Window(config, guiLayer, gl);
+            Window.window.init();
+        }
+
+        return Window.window;
     }
 
     /**
@@ -200,25 +227,24 @@ public class Window {
      * Initialize and configure the Window
      */
     protected void initWindow() {
-        GLFWErrorCallback.createPrint(System.err)
-                .set();
+        gl.enableErrors();
 
-        if (!glfwInit()) {
+        if (!gl.glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
 
 
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
-        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
-        glfwWindow = glfwCreateWindow(config.getWidth(), config.getHeight(), config.getTitle(), MemoryUtil.NULL,
+        gl.glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        gl.glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
+        gl.glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+        glfwWindow = gl.glfwCreateWindow(config.getWidth(), config.getHeight(), config.getTitle(), MemoryUtil.NULL,
                 MemoryUtil.NULL);
 
         if (glfwWindow == MemoryUtil.NULL) {
             throw new IllegalArgumentException("Failed to create the GLFW window");
         }
 
-        glfwDefaultWindowHints(); // optional, the current window hints are already the default
+        gl.glfwDefaultWindowHints(); // optional, the current window hints are already the default
 
         //Register listeners to window
         registerListeners();
@@ -227,34 +253,34 @@ public class Window {
             final IntBuffer pWidth = stack.mallocInt(1); // int*
             final IntBuffer pHeight = stack.mallocInt(1); // int*
 
-            glfwGetWindowSize(glfwWindow, pWidth, pHeight);
-            final GLFWVidMode vidmode = Objects.requireNonNull(glfwGetVideoMode(glfwGetPrimaryMonitor()));
-            glfwSetWindowPos(glfwWindow, (vidmode.width() - pWidth.get(0)) / 2,
+            gl.glfwGetWindowSize(glfwWindow, pWidth, pHeight);
+            final GLFWVidMode vidmode = Objects.requireNonNull(gl.glfwGetVideoMode(gl.glfwGetPrimaryMonitor()));
+            gl.glfwSetWindowPos(glfwWindow, (vidmode.width() - pWidth.get(0)) / 2,
                     (vidmode.height() - pHeight.get(0)) / 2);
         }
 
-        glfwMakeContextCurrent(glfwWindow);
+        gl.glfwMakeContextCurrent(glfwWindow);
 
-        GL.createCapabilities();
+        gl.createCapabilities();
 
-        glfwSwapInterval(GLFW_TRUE);
+        gl.glfwSwapInterval(GLFW_TRUE);
 
         if (config.isFullScreen()) {
-            glfwMaximizeWindow(glfwWindow);
+            gl.glfwMaximizeWindow(glfwWindow);
         } else {
-            glfwShowWindow(glfwWindow);
+            gl.glfwShowWindow(glfwWindow);
         }
 
         //Enable Alpha blending.
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        gl.glEnable(GL_BLEND);
+        gl.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
         Window.changeScene(0);
 
         clearBuffer();
         renderBuffer();
 
-        glfwSetWindowSizeCallback(glfwWindow, new GLFWWindowSizeCallback() {
+        gl.glfwSetWindowSizeCallback(glfwWindow, new GLFWWindowSizeCallback() {
             @Override
             public void invoke(final long window, final int width, final int height) {
                 runFrame(dt);
@@ -267,8 +293,8 @@ public class Window {
      * Method used to clear the OpenGL buffer.
      */
     private void clearBuffer() {
-        GL11.glClearColor(colorBg.getRed(), colorBg.getGreen(), colorBg.getBlue(), colorBg.getAlpha());
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        gl.glClearColor(colorBg.getRed(), colorBg.getGreen(), colorBg.getBlue(), colorBg.getAlpha());
+        gl.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
 
 
@@ -276,19 +302,18 @@ public class Window {
      * Method to render the OpenGL buffer and poll window events.
      */
     private void renderBuffer() {
-        glfwSwapBuffers(glfwWindow);
-        glfwPollEvents();
+        gl.glfwSwapBuffers(glfwWindow);
+        gl.glfwPollEvents();
     }
 
     /**
      * Method to destroy GLFW window.
      */
     protected void disposeWindow() {
-        Callbacks.glfwFreeCallbacks(glfwWindow);
-        glfwDestroyWindow(glfwWindow);
-        glfwTerminate();
-        Objects.requireNonNull(glfwSetErrorCallback(null))
-                .free();
+        gl.freeCallbacks(glfwWindow);
+        gl.glfwDestroyWindow(glfwWindow);
+        gl.glfwTerminate();
+        gl.disableErrors();
     }
 
     /**
@@ -296,24 +321,24 @@ public class Window {
      */
     private void registerListeners() {
         //Register Event Listeners
-        glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);
-        glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
-        glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
-        glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
-        glfwSetWindowSizeCallback(glfwWindow, Window::sizeListener);
+        gl.glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);
+        gl.glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
+        gl.glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
+        gl.glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
+        gl.glfwSetWindowSizeCallback(glfwWindow, Window::sizeListener);
     }
 
     /**
      * Main application loop.
      */
     protected void loop() {
-        float beginTime = (float) glfwGetTime();
+        float beginTime = (float) gl.glfwGetTime();
         float endTime;
-        while (!glfwWindowShouldClose(glfwWindow)) {
+        while (!gl.glfwWindowShouldClose(glfwWindow)) {
             runFrame(dt);
 
             //Calculate Delta Time
-            endTime = (float) glfwGetTime();
+            endTime = (float) gl.glfwGetTime();
             dt = endTime - beginTime;
             beginTime = endTime;
         }

@@ -100,9 +100,7 @@ public class AssetPool {
      */
     public static SpriteSheet getSpriteSheet(String resourceName) {
         File file = new File(resourceName);
-        if (!spriteSheetMap.containsKey(file.getAbsolutePath())) {
-            assert false : "ERROR : AssetPool : SpriteSheet with given resourceName not found.";
-        }
+        assert spriteSheetMap.containsKey(file.getAbsolutePath()) : "ERROR : AssetPool : SpriteSheet with given resourceName not found.";
         return AssetPool.spriteSheetMap.getOrDefault(file.getAbsolutePath(), null);
     }
 }
