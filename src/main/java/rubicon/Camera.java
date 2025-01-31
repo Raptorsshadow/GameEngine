@@ -13,6 +13,10 @@ import org.joml.Vector3f;
  */
 public class Camera {
 
+    public static final float RIGHT_LENGTH = 32f * 40f;
+    public static final float TOP_LENGTH = 32f * 21f;
+    public static final float NEAR_DIST = 0f;
+    public static final float FAR_DIST = 100f;
     //Defines the projection matrix used to describe the scene canvas
     private final Matrix4f projectionMatrix;
 
@@ -42,7 +46,7 @@ public class Camera {
         projectionMatrix.identity();
 
         //Configured the Projection matrix to be an orthogonal plane.
-        projectionMatrix.ortho(0.0f, 32.0f * 40.0f, 0.0f, 32.0f * 21.0f, 0.0f, 100.0f);
+        projectionMatrix.ortho(0.0f, RIGHT_LENGTH, 0.0f, TOP_LENGTH, NEAR_DIST, FAR_DIST);
     }
 
     /**

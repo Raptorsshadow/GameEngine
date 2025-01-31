@@ -115,4 +115,10 @@ public class GameObject {
     public void imgui() {
         this.components.forEach(Component::imgui);
     }
+
+    /**
+     * Return the name of this game object
+     * @return name
+     */
+    public String getName() { return this.name;}
 }
