@@ -1,5 +1,7 @@
 package rubicon;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import components.Sprite;
 import components.SpriteRenderer;
 import components.SpriteSheet;
@@ -22,6 +24,7 @@ public class LevelEditorScene extends Scene {
     float lastChange = 0;
     private GameObject obj1;
 
+    private SpriteRenderer spriteRenderer;
     /**
      * Default constructor used to initialize the scene pieces
      */
@@ -39,15 +42,30 @@ public class LevelEditorScene extends Scene {
 
         this.camera = new Camera(new Vector2f());
         obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)), 1);
-        obj1.addComponent(new SpriteRenderer(new Vector4f(1.0f, 0f, 0f, 1f)));
+        spriteRenderer = new SpriteRenderer();
+        spriteRenderer.setColor(new Vector4f(1.0f, 0f, 0f, 1f));
+        obj1.addComponent(spriteRenderer);
 
         this.addGameObjectToScene(obj1);
         this.actveGameObject = obj1;
 
         GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), 2);
-        obj2.addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("assets/images/blendImage2.png"))));
+        SpriteRenderer textureRenderer = new SpriteRenderer();
+        Sprite sprite = new Sprite();
+        sprite.setTexture(AssetPool.getTexture("assets/images/blendImage2.png"));
+        textureRenderer.setSprite(sprite);
+        obj2.addComponent(textureRenderer);
 
         this.addGameObjectToScene(obj2);
+
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+        String ser = gson.toJson(obj1);
+        System.out.println(ser);
+        GameObject vec = gson.fromJson(ser, GameObject.class);
+        System.out.println(vec);
+
     }
 
     /**

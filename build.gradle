@@ -4,6 +4,7 @@ plugins {
     id 'java'
     id 'checkstyle'
     id 'jacoco'
+    id("io.freefair.lombok") version "8.12"
 
 }
 
@@ -37,6 +38,12 @@ repositories {
 }
 
 dependencies {
+
+    //GSON
+    implementation 'com.google.code.gson:gson:2.12.1'
+
+    //Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.36'
 
     //IMGui Stuff
     implementation 'io.github.spair:imgui-java-app:1.88.0'

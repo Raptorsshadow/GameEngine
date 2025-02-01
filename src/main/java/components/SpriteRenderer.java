@@ -1,11 +1,14 @@
 package components;
 
 import imgui.ImGui;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import render.Texture;
 import rubicon.Component;
 import rubicon.Transform;
+
 
 /**
  * Class: SpriteRenderer
@@ -14,37 +17,17 @@ import rubicon.Transform;
  * Project: GameEngine
  * Description: Component responsible for rendering Text to a Scene
  */
+@NoArgsConstructor
 public class SpriteRenderer extends Component {
 
     public static final Vector4f DEF_COLOR = new Vector4f(1, 1, 1, 1);
     // 4 bit Color variable (RGBA)
-    private final Vector4f color;
-    protected Transform lastTransform;
+    @Getter
+    private final Vector4f color = new Vector4f(1,1,1,1);
+    protected transient Transform lastTransform;
     //Sprite containing texture data
-    private Sprite sprite;
-    private boolean isDirty = false;
-
-    /**
-     * Default Constructor taking in color Vector
-     *
-     * @param color Color Vector
-     */
-    public SpriteRenderer(Vector4f color) {
-        this.color = color;
-        this.sprite = new Sprite(null);
-        this.isDirty = true;
-    }
-
-    /**
-     * Default Constructor taking in a Texture resource
-     *
-     * @param sprite Sprite to use
-     */
-    public SpriteRenderer(Sprite sprite) {
-        this.sprite = sprite;
-        this.color = new Vector4f(DEF_COLOR);
-        this.isDirty = true;
-    }
+    private Sprite sprite = new Sprite();
+    private transient boolean isDirty = true;
 
     /**
      * {@inheritDoc}
@@ -69,15 +52,6 @@ public class SpriteRenderer extends Component {
             this.gameObject.transform.copyTo(lastTransform);
             this.isDirty = true;
         }
-    }
-
-    /**
-     * Returns color vector.
-     *
-     * @return color
-     */
-    public Vector4f getColor() {
-        return color;
     }
 
     /**

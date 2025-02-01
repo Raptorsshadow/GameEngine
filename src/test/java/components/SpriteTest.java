@@ -31,7 +31,8 @@ class SpriteTest {
     @Test
     void texture() {
         Texture t = Mockito.mock(Texture.class);
-        Sprite s = new Sprite(t);
+        Sprite s = new Sprite();
+        s.setTexture(t);
         assertEquals(t, s.getTexture());
         assertEquals(Sprite.DEF_VECTOR.length, s.getTexCoords().length);
         for (int i = 0; i < Sprite.DEF_VECTOR.length; i++) {
@@ -48,7 +49,9 @@ class SpriteTest {
                 new Vector2f(3, 3)
         };
         Texture t = Mockito.mock(Texture.class);
-        Sprite s = new Sprite(t, coords);
+        Sprite s = new Sprite();
+        s.setTexture(t);
+        s.setTexCoords(coords);
         assertEquals(t, s.getTexture());
         assertEquals(coords, s.getTexCoords());
     }

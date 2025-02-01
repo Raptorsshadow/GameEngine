@@ -19,33 +19,18 @@ import static org.lwjgl.opengl.GL11.*;
 public class Texture {
 
     // Filepath of the Texture
-    private final String filePath;
+    private String filePath;
 
     // TextureId of registered resources
-    private final int textureId;
+    private int textureId;
 
     //Width and Height of the Texture file
     private int width;
     private int height;
 
-    private final GLWrapper gl;
+    private GLWrapper gl = new LWJGLWrapper();
 
-    /**
-     * Constructor responsible for configuring texture behavior and provisioning it in the system.
-     *
-     * @param filePath Texture file path
-     */
-    public Texture(String filePath) {
-        this(filePath, new LWJGLWrapper());
-    }
-
-    /**
-     * Constructor responsible for configuring texture behavior and provisioning it in the system.
-     *
-     * @param filePath Texture file path
-     * @param gl wrapper that handles all native GLFW Calls
-     */
-    public Texture(String filePath, GLWrapper gl) {
+    public void init(String filePath, GLWrapper gl) {
         this.gl = gl;
         this.filePath = filePath;
         // Generate and bind texture
@@ -63,7 +48,9 @@ public class Texture {
         //Load and provision the texture.
         loadTexture();
     }
-
+public void init(String filePath) {
+    this.init(filePath, new LWJGLWrapper());
+}
     /**
      * Responsible for loading and provisioning the texture.
      */

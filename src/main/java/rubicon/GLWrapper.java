@@ -115,13 +115,13 @@ public interface GLWrapper {
 
     void glfwMaximizeWindow(long window);
 
-    void glfwSetWindowSizeCallback(long window, GLFWWindowSizeCallbackI cbFun);
+    GLFWWindowSizeCallback glfwSetWindowSizeCallback(long window, GLFWWindowSizeCallbackI cbFun);
 
     void glEnable(int target);
 
     void glBlendFunc(int sFactor, int dFactor);
 
-    void enableErrors();
+    GLFWErrorCallback enableErrors();
 
     void glClearColor(float red, float green, float blue, float alpha);
 
@@ -139,13 +139,13 @@ public interface GLWrapper {
 
     void glfwTerminate();
 
-    void glfwSetCursorPosCallback(long window, GLFWCursorPosCallbackI cbfun);
+    GLFWCursorPosCallback glfwSetCursorPosCallback(long window, GLFWCursorPosCallbackI cbfun);
 
-    void glfwSetMouseButtonCallback(long window, GLFWMouseButtonCallbackI cbfun);
+    GLFWMouseButtonCallback glfwSetMouseButtonCallback(long window, GLFWMouseButtonCallbackI cbfun);
 
-    void glfwSetScrollCallback(long window, GLFWScrollCallbackI cbfun);
+    GLFWScrollCallback glfwSetScrollCallback(long window, GLFWScrollCallbackI cbfun);
 
-    void glfwSetKeyCallback(long window, GLFWKeyCallbackI cbfun);
+    GLFWKeyCallback glfwSetKeyCallback(long window, GLFWKeyCallbackI cbfun);
 
     boolean glfwWindowShouldClose(long window);
 

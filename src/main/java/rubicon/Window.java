@@ -6,10 +6,14 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.system.Callback;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.IntBuffer;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -40,8 +44,8 @@ public class Window {
     // The active scene
     private Scene currentScene;
 
-    private final GLWrapper gl;
-
+    private final GLWrapper      gl;
+    final         List<Callback> callbacks = new ArrayList<>();
     /**
      * Default Constructor taking window initialization params
      *
@@ -161,6 +165,7 @@ public class Window {
     private static void sizeListener(long window, int width, int height) {
         Window.get().config.setWidth(width);
         Window.get().config.setHeight(height);
+        Window.get().runFrame(Window.get().dt);
     }
 
     /**
@@ -280,12 +285,6 @@ public class Window {
         clearBuffer();
         renderBuffer();
 
-        gl.glfwSetWindowSizeCallback(glfwWindow, new GLFWWindowSizeCallback() {
-            @Override
-            public void invoke(final long window, final int width, final int height) {
-                runFrame(dt);
-            }
-        });
     }
 
 
@@ -314,6 +313,14 @@ public class Window {
         gl.glfwDestroyWindow(glfwWindow);
         gl.glfwTerminate();
         gl.disableErrors();
+
+        //gl.freeCallbacks should do this.  If we
+        callbacks.forEach(c -> {
+            if(c != null) {
+                System.out.println("This shouldn't trip.  If this shows up an event listener was bound twice and may not have released properly or caused a memory leak or other resource issue in game.");
+                c.close();
+            }
+        });
     }
 
     /**
@@ -321,11 +328,11 @@ public class Window {
      */
     private void registerListeners() {
         //Register Event Listeners
-        gl.glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);
-        gl.glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
-        gl.glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
-        gl.glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
-        gl.glfwSetWindowSizeCallback(glfwWindow, Window::sizeListener);
+        callbacks.add(gl.glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback));
+        callbacks.add(gl.glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback));
+        callbacks.add(gl.glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback));
+        callbacks.add(gl.glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback));
+        callbacks.add(gl.glfwSetWindowSizeCallback(glfwWindow, Window::sizeListener));
     }
 
     /**

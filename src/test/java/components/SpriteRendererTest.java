@@ -18,7 +18,8 @@ class SpriteRendererTest {
     @Test
     void colorConstructor() {
         Vector4f vec = new Vector4f(1.0f, 2.0f, 3.0f, 4.0f);
-        SpriteRenderer sr = new SpriteRenderer(vec);
+        SpriteRenderer sr = new SpriteRenderer();
+        sr.setColor(vec);
         assertNotNull(sr.getColor());
         assertEquals(vec, sr.getColor());
         assertTrue(sr.isDirty());
@@ -28,8 +29,10 @@ class SpriteRendererTest {
     @Test
     void spriteConstructor() {
         Texture t = Mockito.mock(Texture.class);
-        Sprite sprite = new Sprite(t);
-        SpriteRenderer sr = new SpriteRenderer(sprite);
+        Sprite sprite = new Sprite();
+        sprite.setTexture(t);
+        SpriteRenderer sr = new SpriteRenderer();
+        sr.setSprite(sprite);
         assertNotNull(sr.getColor());
         assertEquals(SpriteRenderer.DEF_COLOR, sr.getColor());
         assertTrue(sr.isDirty());
@@ -41,7 +44,7 @@ class SpriteRendererTest {
 
     @Test
     void startTest() {
-        SpriteRenderer spr = new SpriteRenderer(SpriteRenderer.DEF_COLOR);
+        SpriteRenderer spr = new SpriteRenderer();
         spr.gameObject = new GameObject("Test", new Transform(new Vector2f(123, 456)), 1);
         assertNull(spr.lastTransform);
         spr.start();
@@ -51,7 +54,7 @@ class SpriteRendererTest {
 
     @Test
     void updateTest() {
-        SpriteRenderer spr = new SpriteRenderer(SpriteRenderer.DEF_COLOR);
+        SpriteRenderer spr = new SpriteRenderer();
         spr.gameObject = new GameObject("Test", new Transform(new Vector2f(123, 456)), 1);
         spr.start();
         assertTrue(spr.isDirty());
@@ -70,7 +73,7 @@ class SpriteRendererTest {
 
     @Test
     void setColor() {
-        SpriteRenderer spr = new SpriteRenderer(SpriteRenderer.DEF_COLOR);
+        SpriteRenderer spr = new SpriteRenderer();
         spr.setClean();
         spr.setColor(SpriteRenderer.DEF_COLOR);
         assertFalse(spr.isDirty());
@@ -82,8 +85,7 @@ class SpriteRendererTest {
 
     @Test
     void getTexture() {
-        Sprite s = null;
-        SpriteRenderer spr = new SpriteRenderer(s);
+        SpriteRenderer spr = new SpriteRenderer();
         try {
             spr.setSprite(null);
             spr.getTexture();
@@ -96,7 +98,7 @@ class SpriteRendererTest {
     @Test
     void getTextureCoords() {
         Sprite s = null;
-        SpriteRenderer spr = new SpriteRenderer(s);
+        SpriteRenderer spr = new SpriteRenderer();
         try {
             spr.setSprite(null);
             spr.getTexCoords();
@@ -110,7 +112,7 @@ class SpriteRendererTest {
     void imguiTrue() {
         try (MockedStatic<ImGui> utilities = Mockito.mockStatic(ImGui.class)) {
             utilities.when(() -> ImGui.colorPicker4(any(), any())).thenReturn(true);
-            SpriteRenderer spr = new SpriteRenderer(SpriteRenderer.DEF_COLOR);
+            SpriteRenderer spr = new SpriteRenderer();
             spr.setClean();
             spr.imgui();
             assertTrue(spr.isDirty());
@@ -122,7 +124,7 @@ class SpriteRendererTest {
     void imguiFalse() {
         try (MockedStatic<ImGui> utilities = Mockito.mockStatic(ImGui.class)) {
             utilities.when(() -> ImGui.colorPicker4(any(), any())).thenReturn(false);
-            SpriteRenderer spr = new SpriteRenderer(SpriteRenderer.DEF_COLOR);
+            SpriteRenderer spr = new SpriteRenderer();
             spr.setClean();
             spr.imgui();
             assertEquals(SpriteRenderer.DEF_COLOR.x, spr.getColor().x);

@@ -270,8 +270,8 @@ public class LWJGLWrapper implements GLWrapper {
     }
 
     @Override
-    public void glfwSetWindowSizeCallback(long window, GLFWWindowSizeCallbackI cbFun) {
-        GLFW.glfwSetWindowSizeCallback(window, cbFun);
+    public GLFWWindowSizeCallback glfwSetWindowSizeCallback(long window, GLFWWindowSizeCallbackI cbFun) {
+        return GLFW.glfwSetWindowSizeCallback(window, cbFun);
     }
 
     @Override
@@ -285,9 +285,8 @@ public class LWJGLWrapper implements GLWrapper {
     }
 
     @Override
-    public void enableErrors() {
-        GLFWErrorCallback.createPrint(System.err)
-                         .set();
+    public GLFWErrorCallback enableErrors() {
+        return GLFWErrorCallback.createPrint(System.err).set();
     }
 
     @Override
@@ -332,23 +331,23 @@ public class LWJGLWrapper implements GLWrapper {
     }
 
     @Override
-    public void glfwSetCursorPosCallback(long window, GLFWCursorPosCallbackI cbfun) {
-        GLFW.glfwSetCursorPosCallback(window, cbfun);
+    public GLFWCursorPosCallback glfwSetCursorPosCallback(long window, GLFWCursorPosCallbackI cbfun) {
+        return GLFW.glfwSetCursorPosCallback(window, cbfun);
     }
 
     @Override
-    public void glfwSetMouseButtonCallback(long window, GLFWMouseButtonCallbackI cbfun) {
-        GLFW.glfwSetMouseButtonCallback(window, cbfun);
+    public GLFWMouseButtonCallback glfwSetMouseButtonCallback(long window, GLFWMouseButtonCallbackI cbfun) {
+        return GLFW.glfwSetMouseButtonCallback(window, cbfun);
     }
 
     @Override
-    public void glfwSetScrollCallback(long window, GLFWScrollCallbackI cbfun) {
-        GLFW.glfwSetScrollCallback(window, cbfun);
+    public GLFWScrollCallback glfwSetScrollCallback(long window, GLFWScrollCallbackI cbfun) {
+        return GLFW.glfwSetScrollCallback(window, cbfun);
     }
 
     @Override
-    public void glfwSetKeyCallback(long window, GLFWKeyCallbackI cbfun) {
-        GLFW.glfwSetKeyCallback(window, cbfun);
+    public GLFWKeyCallback glfwSetKeyCallback(long window, GLFWKeyCallbackI cbfun) {
+        return GLFW.glfwSetKeyCallback(window, cbfun);
     }
 
     @Override

@@ -8,7 +8,7 @@ package rubicon;
  * Description: Abstract class for managing the component lifecycle for the Entity Component System.
  */
 public abstract class Component {
-    public GameObject gameObject;
+    public transient GameObject gameObject;
 
     /**
      * Responsible for performing an update operation on each "tick" to be defined by concrete classes.

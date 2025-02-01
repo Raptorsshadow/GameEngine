@@ -52,7 +52,10 @@ public class SpriteSheet {
                     new Vector2f(leftX, topY)
             };
             //Build and store the Sprite
-            sprites.add(new Sprite(this.texture, texCoords));
+            Sprite sprite = new Sprite();
+            sprite.setTexture(this.texture);
+            sprite.setTexCoords(texCoords);
+            sprites.add(sprite);
 
             //Increment the positional bits
             currentX += spriteWidth + spaceBuffer;

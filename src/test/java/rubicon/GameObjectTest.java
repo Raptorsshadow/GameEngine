@@ -54,7 +54,8 @@ public class GameObjectTest {
     void lifecycle() {
         float delta = .25f;
         GameObject t = new GameObject("test");
-        SpriteRenderer spr = new SpriteRenderer(new Vector4f());
+        SpriteRenderer spr = new SpriteRenderer();
+        spr.setColor(new Vector4f());
         SpriteRenderer s = Mockito.spy(spr);
         t.addComponent(s);
         assertEquals(t, s.gameObject);
@@ -73,7 +74,8 @@ public class GameObjectTest {
     @Test
     void removeComponent() {
         GameObject t = new GameObject("test");
-        SpriteRenderer spr = new SpriteRenderer(new Vector4f());
+        SpriteRenderer spr = new SpriteRenderer();
+        spr.setColor(new Vector4f());
         assertDoesNotThrow(() -> t.removeComponent(spr.getClass()));
         t.addComponent(spr);
         assertDoesNotThrow(() -> t.removeComponent(FontRenderer.class));

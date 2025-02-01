@@ -119,7 +119,7 @@ public class IMGuiLayer {
         final ImFontConfig fontConfig = new ImFontConfig();
 
         io.getFonts()
-                .addFontFromFileTTF("assets/fonts/NimbusMonoPS-Regular.otf", 16, fontConfig);
+                .addFontFromFileTTF("assets/fonts/NimbusMonoPS-Regular.otf", 18, fontConfig);
 
         fontConfig.destroy();
     }
