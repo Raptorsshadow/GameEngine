@@ -1,5 +1,6 @@
 package rubicon;
 
+import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.stream.IntStream;
@@ -191,6 +192,32 @@ public class MouseListener {
             return get().mouseButtonPressed[button];
         }
         return false;
+    }
+
+    /**
+     * Return the OrthoX coordinates of the mouse.  Inverts the math we do in the shader and camera to get real
+     * X pixel coordinates
+     * @return orthoX window value
+     */
+    public static float getOrthoX() {
+        float currentX = getX();
+        currentX = (currentX / (Window.getWidth())) * 2 - 1;
+        Vector4f tmp = new Vector4f(currentX, 0, 0, 1);
+        tmp.mul(Window.getScene().getCamera().getInverseProjection()).mul(Window.getScene().getCamera().getInverseView());
+        return tmp.x;
+    }
+
+    /**
+     * Return the OrthoY coordinates of the mouse.  Inverts the math we do in the shader and camera to get real
+     * Y pixel coordinates.
+     * @return orthoY window value.
+     */
+    public static float getOrthoY() {
+        float currentY = getY();
+        currentY = currentY / Window.getHeight() * 2 - 1;
+        Vector4f tmp = new Vector4f(0, currentY, 0, 1);
+        tmp.mul(Window.getScene().getCamera().getInverseProjection()).mul(Window.getScene().getCamera().getInverseView());
+        return tmp.y;
     }
 
 

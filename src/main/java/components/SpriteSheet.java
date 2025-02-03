@@ -55,6 +55,8 @@ public class SpriteSheet {
             Sprite sprite = new Sprite();
             sprite.setTexture(this.texture);
             sprite.setTexCoords(texCoords);
+            sprite.setWidth(spriteWidth);
+            sprite.setHeight(spriteHeight);
             sprites.add(sprite);
 
             //Increment the positional bits
@@ -75,5 +77,13 @@ public class SpriteSheet {
      */
     public Sprite getSprite(int index) {
         return this.sprites.get(index);
+    }
+
+    /**
+     * Return the number of sprites in spritesheet
+     * @return sprite count.
+     */
+    public int size() {
+        return sprites.size();
     }
 }

@@ -4,14 +4,12 @@ import imgui.app.Color;
 import imgui.app.Configuration;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.IntBuffer;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -142,6 +140,7 @@ public class Window {
             default:
                 assert false : String.format("Unrecognized scene: %d", sceneId);
         }
+        w.currentScene.load();
         w.currentScene.init();
         w.currentScene.start();
     }
@@ -349,6 +348,7 @@ public class Window {
             dt = endTime - beginTime;
             beginTime = endTime;
         }
+        currentScene.saveExit();
     }
 
     /**
@@ -359,8 +359,7 @@ public class Window {
         preProcess(dt);
         process(dt);
         postProcess(dt);
-        renderBuffer();
-    }
+        renderBuffer();}
 
     /**
      * Perform pre-render setup if necessary

@@ -1,6 +1,7 @@
 package render;
 
 import components.SpriteRenderer;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -45,6 +46,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private final List<Texture> textures;
     private final int maxBatchSize;
     private final Shader shader;
+    @Getter
     private final int zIndex;
     private int numSprites;
     private boolean hasRoom;
@@ -266,8 +268,8 @@ public class RenderBatch implements Comparable<RenderBatch> {
             }
 
             //Set Position Data
-            vertices[offset] = spr.gameObject.transform.position.x + (xAdd * spr.gameObject.transform.scale.x);
-            vertices[offset + 1] = spr.gameObject.transform.position.y + (yAdd * spr.gameObject.transform.scale.y);
+            vertices[offset] = spr.getGameObject().transform.position.x + (xAdd * spr.getGameObject().transform.scale.x);
+            vertices[offset + 1] = spr.getGameObject().transform.position.y + (yAdd * spr.getGameObject().transform.scale.y);
 
             //Set Color Data
             vertices[offset + 2] = color.x;
@@ -303,12 +305,18 @@ public class RenderBatch implements Comparable<RenderBatch> {
         return this.textures.contains(t);
     }
 
-    public int getzIndex() {
-        return this.zIndex;
-    }
-
     @Override
     public int compareTo(@NotNull RenderBatch o) {
         return Integer.compare(this.zIndex, o.zIndex);
+    }
+
+    @Override
+    public boolean equals(Object renderBatch) {
+        return renderBatch instanceof RenderBatch rb && this.zIndex == rb.zIndex;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.valueOf(zIndex).hashCode();
     }
 }

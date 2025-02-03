@@ -45,30 +45,30 @@ class SpriteRendererTest {
     @Test
     void startTest() {
         SpriteRenderer spr = new SpriteRenderer();
-        spr.gameObject = new GameObject("Test", new Transform(new Vector2f(123, 456)), 1);
+        spr.setGameObject(new GameObject("Test", new Transform(new Vector2f(123, 456)), 1));
         assertNull(spr.lastTransform);
         spr.start();
-        assertEquals(spr.gameObject.transform.position.x, spr.lastTransform.position.x);
-        assertEquals(spr.gameObject.transform.position.y, spr.lastTransform.position.y);
+        assertEquals(spr.getGameObject().transform.position.x, spr.lastTransform.position.x);
+        assertEquals(spr.getGameObject().transform.position.y, spr.lastTransform.position.y);
     }
 
     @Test
     void updateTest() {
         SpriteRenderer spr = new SpriteRenderer();
-        spr.gameObject = new GameObject("Test", new Transform(new Vector2f(123, 456)), 1);
+        spr.setGameObject(new GameObject("Test", new Transform(new Vector2f(123, 456)), 1));
         spr.start();
         assertTrue(spr.isDirty());
         spr.setClean();
         assertFalse((spr.isDirty()));
         spr.update(1);
         assertFalse(spr.isDirty());
-        spr.gameObject.transform.position.set(2);
-        assertNotEquals(spr.gameObject.transform.position.x, spr.lastTransform.position.x);
-        assertNotEquals(spr.gameObject.transform.position.y, spr.lastTransform.position.y);
+        spr.getGameObject().transform.position.set(2);
+        assertNotEquals(spr.getGameObject().transform.position.x, spr.lastTransform.position.x);
+        assertNotEquals(spr.getGameObject().transform.position.y, spr.lastTransform.position.y);
         spr.update(2);
         assertTrue(spr.isDirty());
-        assertEquals(spr.gameObject.transform.position.x, spr.lastTransform.position.x);
-        assertEquals(spr.gameObject.transform.position.y, spr.lastTransform.position.y);
+        assertEquals(spr.getGameObject().transform.position.x, spr.lastTransform.position.x);
+        assertEquals(spr.getGameObject().transform.position.y, spr.lastTransform.position.y);
     }
 
     @Test
@@ -97,7 +97,6 @@ class SpriteRendererTest {
 
     @Test
     void getTextureCoords() {
-        Sprite s = null;
         SpriteRenderer spr = new SpriteRenderer();
         try {
             spr.setSprite(null);

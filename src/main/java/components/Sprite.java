@@ -13,6 +13,10 @@ import render.Texture;
  */
 @Data
 public class Sprite {
+    //Width of the Sprite
+    private float width;
+    //Height of the Sprite
+    private float height;
     protected static final Vector2f[] DEF_VECTOR = new Vector2f[]{
             new Vector2f(1, 1),
             new Vector2f(1, 0),
@@ -24,4 +28,12 @@ public class Sprite {
     private Texture    texture   = null;
     //The bounding box of the sprite
     private Vector2f[] texCoords = DEF_VECTOR;
+
+    /**
+     * Return the Textures Id
+     * @return texture Id or -1 if texture is null.
+     */
+    public int getTexId() {
+        return texture != null ? texture.getTextureId() : -1;
+    }
 }

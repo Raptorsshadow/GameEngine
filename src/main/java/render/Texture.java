@@ -1,9 +1,11 @@
 package render;
 
+import lombok.Data;
 import org.lwjgl.BufferUtils;
 import rubicon.GLWrapper;
 import rubicon.LWJGLWrapper;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -16,7 +18,8 @@ import static org.lwjgl.opengl.GL11.*;
  * Project: GameEngine
  * Description: Texture definition file responsible for loading and parsing the Texture for use in Scene.
  */
-public class Texture {
+@Data
+public class Texture implements Serializable {
 
     // Filepath of the Texture
     private String filePath;
@@ -28,7 +31,7 @@ public class Texture {
     private int width;
     private int height;
 
-    private GLWrapper gl = new LWJGLWrapper();
+    private transient GLWrapper gl = new LWJGLWrapper();
 
     public void init(String filePath, GLWrapper gl) {
         this.gl = gl;
@@ -107,21 +110,4 @@ public void init(String filePath) {
         gl.glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    /**
-     * Return the width of the texture
-     *
-     * @return texture width
-     */
-    public int getWidth() {
-        return this.width;
-    }
-
-    /**
-     * Return the height of the texture
-     *
-     * @return texture height
-     */
-    public int getHeight() {
-        return this.height;
-    }
 }

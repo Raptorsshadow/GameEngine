@@ -1,11 +1,11 @@
 package rubicon;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import components.RigidBody;
 import components.Sprite;
 import components.SpriteRenderer;
 import components.SpriteSheet;
 import imgui.ImGui;
+import imgui.ImVec2;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import util.AssetPool;
@@ -21,10 +21,9 @@ import java.util.Objects;
  */
 public class LevelEditorScene extends Scene {
 
-    float lastChange = 0;
-    private GameObject obj1;
-
-    private SpriteRenderer spriteRenderer;
+    private final SpriteSheet spriteSheet = new SpriteSheet(
+            Objects.requireNonNull(AssetPool.getTexture("assets/images/spritesheets/decorationsAndBlocks.png")),
+            16, 16, 81, 0);
     /**
      * Default constructor used to initialize the scene pieces
      */
@@ -39,15 +38,20 @@ public class LevelEditorScene extends Scene {
     public void init() {
         super.init();
         loadResources();
+        this.camera = new Camera(new Vector2f(-250, 0));
 
-        this.camera = new Camera(new Vector2f());
-        obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)), 1);
-        spriteRenderer = new SpriteRenderer();
+        if(this.levelLoaded) {
+            this.activeGameObject = this.gameObjects.getFirst();
+            System.out.println(this.activeGameObject.getName());
+            return;
+        }
+        GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)), 1);
+        SpriteRenderer spriteRenderer = new SpriteRenderer();
         spriteRenderer.setColor(new Vector4f(1.0f, 0f, 0f, 1f));
         obj1.addComponent(spriteRenderer);
-
+        obj1.addComponent(new RigidBody());
         this.addGameObjectToScene(obj1);
-        this.actveGameObject = obj1;
+        this.activeGameObject = obj1;
 
         GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), 2);
         SpriteRenderer textureRenderer = new SpriteRenderer();
@@ -57,15 +61,6 @@ public class LevelEditorScene extends Scene {
         obj2.addComponent(textureRenderer);
 
         this.addGameObjectToScene(obj2);
-
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
-        String ser = gson.toJson(obj1);
-        System.out.println(ser);
-        GameObject vec = gson.fromJson(ser, GameObject.class);
-        System.out.println(vec);
-
     }
 
     /**
@@ -74,10 +69,9 @@ public class LevelEditorScene extends Scene {
     private void loadResources() {
         AssetPool.getShader("assets/shader/default.glsl");
 
-        AssetPool.addSpriteSheet("assets/images/spritesheet.png",
-                new SpriteSheet(
-                        Objects.requireNonNull(AssetPool.getTexture("assets/images/spritesheet.png")),
-                        16, 16, 26, 0));
+        AssetPool.addSpriteSheet("assets/images/spritesheets/decorationsAndBlocks.png",
+                spriteSheet);
+        AssetPool.getTexture("assets/images/blendImage2.png");
     }
 
     /**
@@ -88,6 +82,7 @@ public class LevelEditorScene extends Scene {
     @Override
     public void update(float dt) {
 
+        System.out.println(MouseListener.getOrthoY());
         //update all gameobjects for the frame.
         this.gameObjects.forEach(go -> go.update(dt));
 
@@ -98,8 +93,34 @@ public class LevelEditorScene extends Scene {
     @Override
     public void imgui() {
         ImGui.begin("LES Window");
-        if (ImGui.button("LevelEditorScene")) {
-            ImGui.text("It works");
+
+        ImVec2 windowPos = new ImVec2();
+        ImGui.getWindowPos(windowPos);
+        ImVec2 windowSize = new ImVec2();
+        ImGui.getWindowSize(windowSize);
+        ImVec2 itemSpacing = new ImVec2();
+        ImGui.getStyle().getItemSpacing(itemSpacing);
+
+        float windowX2 = windowPos.x + windowSize.x;
+        for(int i = 0; i < spriteSheet.size(); i++) {
+            Sprite sprite = spriteSheet.getSprite(i);
+            float sWidth = sprite.getWidth() * 4;
+            float sHeight = sprite.getHeight() * 4;
+            int id = sprite.getTexId();
+            Vector2f[] texCoords = sprite.getTexCoords();
+
+            ImGui.pushID(i);
+            if(ImGui.imageButton(id, sWidth, sHeight, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
+                System.out.println("Button " + i + " clicked");
+            }
+            ImGui.popID();
+            ImVec2 lastButtonPos = new ImVec2();
+            ImGui.getItemRectMax(lastButtonPos);
+            float lastButtonX2 = lastButtonPos.x;
+            float nextButtonX2 = lastButtonX2 + itemSpacing.x + sWidth;
+            if(i + 1 < spriteSheet.size() && nextButtonX2 < windowX2) {
+                ImGui.sameLine();
+            }
         }
         ImGui.end();
     }

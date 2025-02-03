@@ -42,7 +42,7 @@ public class Renderer {
     private void add(SpriteRenderer spr) {
         boolean isAdded = false;
         for (RenderBatch batch : batches) {
-            if (batch.hasRoom() && batch.getzIndex() == spr.gameObject.getzIndex()) {
+            if (batch.hasRoom() && batch.getZIndex() == spr.getGameObject().getzIndex()) {
                 Texture tex = spr.getTexture();
                 if (tex == null || (batch.hasSprite(tex) || batch.hasSpriteRoom())) {
                     batch.addSprite(spr);
@@ -52,7 +52,7 @@ public class Renderer {
             }
         }
         if (!isAdded) {
-            RenderBatch rb = new RenderBatch(MAX_BATCH_SIZE, spr.gameObject.getzIndex());
+            RenderBatch rb = new RenderBatch(MAX_BATCH_SIZE, spr.getGameObject().getzIndex());
             rb.start();
             batches.add(rb);
             rb.addSprite(spr);
