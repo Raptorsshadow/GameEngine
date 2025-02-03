@@ -1,6 +1,6 @@
 package util;
 
-import components.SpriteSheet;
+import component.SpriteSheet;
 import render.Shader;
 import render.Texture;
 

@@ -1,6 +1,7 @@
 package rubicon;
 
 import com.google.gson.*;
+import component.Component;
 
 import java.lang.reflect.Type;
 

@@ -1,4 +1,6 @@
-package rubicon;
+package scene;
+
+import rubicon.Window;
 
 /**
  * Class: LevelScene

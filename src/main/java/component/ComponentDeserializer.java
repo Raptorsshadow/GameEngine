@@ -1,4 +1,4 @@
-package rubicon;
+package component;
 
 import com.google.gson.*;
 

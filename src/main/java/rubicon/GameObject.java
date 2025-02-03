@@ -1,5 +1,8 @@
 package rubicon;
 
+import component.Component;
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +14,7 @@ import java.util.List;
  * Description: Part of the Entity Component System.  This object is used to group related components of a scene into a
  * single collection and manages the lifecycle of those components in a single place.
  */
+@Data
 public class GameObject {
 
     //Transform to be applied to this object when rendering
@@ -22,6 +26,8 @@ public class GameObject {
     //Track zIndex relative to other game objects
     private final int zIndex;
 
+    private static int ID_COUNTER = 0;
+    private int uid = -1;
     /**
      * Constructor that names the object.
      *
@@ -41,6 +47,7 @@ public class GameObject {
         this.name = name;
         this.transform = transform;
         this.zIndex = zIndex;
+        this.uid = ID_COUNTER++;
     }
 
     /**
@@ -80,8 +87,9 @@ public class GameObject {
      * @param c the component to register
      */
     public void addComponent(Component c) {
+        c.generateId();
         this.components.add(c);
-        c.gameObject = this;
+        c.setGameObject(this);
     }
 
     /**
@@ -101,24 +109,13 @@ public class GameObject {
     }
 
     /**
-     * Return the zIndex of the GameObject to be used in rendering
-     *
-     * @return zIndex
-     */
-    public int getzIndex() {
-        return this.zIndex;
-    }
-
-    /**
      * Render all the component ImGui management overlays.
      */
     public void imgui() {
         this.components.forEach(Component::imgui);
     }
 
-    /**
-     * Return the name of this game object
-     * @return name
-     */
-    public String getName() { return this.name;}
+    public static void init(int maxId) {
+        ID_COUNTER = maxId;
+    }
 }

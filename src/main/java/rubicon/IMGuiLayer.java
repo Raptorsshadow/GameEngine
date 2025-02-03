@@ -4,6 +4,7 @@ import imgui.*;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
+import scene.Scene;
 
 import static org.lwjgl.glfw.GLFW.*;
 

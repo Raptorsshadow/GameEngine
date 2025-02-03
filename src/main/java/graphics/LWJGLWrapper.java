@@ -1,4 +1,4 @@
-package rubicon;
+package graphics;
 
 
 import org.lwjgl.glfw.*;

@@ -1,13 +1,14 @@
-package rubicon;
+package scene;
 
-import components.RigidBody;
-import components.Sprite;
-import components.SpriteRenderer;
-import components.SpriteSheet;
+import component.*;
 import imgui.ImGui;
 import imgui.ImVec2;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
+import rubicon.Camera;
+import rubicon.GameObject;
+import rubicon.Prefabs;
+import rubicon.Transform;
 import util.AssetPool;
 
 import java.util.Objects;
@@ -21,6 +22,7 @@ import java.util.Objects;
  */
 public class LevelEditorScene extends Scene {
 
+    private final MouseControls mc = new MouseControls();
     private final SpriteSheet spriteSheet = new SpriteSheet(
             Objects.requireNonNull(AssetPool.getTexture("assets/images/spritesheets/decorationsAndBlocks.png")),
             16, 16, 81, 0);
@@ -36,13 +38,11 @@ public class LevelEditorScene extends Scene {
      */
     @Override
     public void init() {
-        super.init();
         loadResources();
         this.camera = new Camera(new Vector2f(-250, 0));
 
         if(this.levelLoaded) {
             this.activeGameObject = this.gameObjects.getFirst();
-            System.out.println(this.activeGameObject.getName());
             return;
         }
         GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)), 1);
@@ -82,7 +82,7 @@ public class LevelEditorScene extends Scene {
     @Override
     public void update(float dt) {
 
-        System.out.println(MouseListener.getOrthoY());
+        mc.update(dt);
         //update all gameobjects for the frame.
         this.gameObjects.forEach(go -> go.update(dt));
 
@@ -111,7 +111,9 @@ public class LevelEditorScene extends Scene {
 
             ImGui.pushID(i);
             if(ImGui.imageButton(id, sWidth, sHeight, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
-                System.out.println("Button " + i + " clicked");
+                GameObject block = Prefabs.generateSpriteObject(sprite, sWidth, sHeight);
+                //Attach to the mouse cursor
+                mc.pickupObject(block);
             }
             ImGui.popID();
             ImVec2 lastButtonPos = new ImVec2();

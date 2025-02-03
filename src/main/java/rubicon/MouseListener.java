@@ -18,7 +18,7 @@ public class MouseListener {
     private static MouseListener instance;
 
     //Status array for tracking the pressed buttons
-    private final boolean[] mouseButtonPressed = new boolean[3];
+    private final boolean[] mouseButtonPressed = new boolean[9];
 
     //Positional tracking variables for x/y
     private double lastX;
@@ -187,7 +187,7 @@ public class MouseListener {
      * @param button the mouse button we wish to check.
      * @return true if button is pressed, false if not.
      */
-    static boolean isMouseButtonDown(int button) {
+    public static boolean isMouseButtonDown(int button) {
         if (button < get().mouseButtonPressed.length) {
             return get().mouseButtonPressed[button];
         }
@@ -201,10 +201,11 @@ public class MouseListener {
      */
     public static float getOrthoX() {
         float currentX = getX();
-        currentX = (currentX / (Window.getWidth())) * 2 - 1;
+        currentX = (currentX / (Window.getWidth())) * 2f - 1f;
         Vector4f tmp = new Vector4f(currentX, 0, 0, 1);
         tmp.mul(Window.getScene().getCamera().getInverseProjection()).mul(Window.getScene().getCamera().getInverseView());
-        return tmp.x;
+        currentX = tmp.x;
+        return currentX;
     }
 
     /**
@@ -213,11 +214,12 @@ public class MouseListener {
      * @return orthoY window value.
      */
     public static float getOrthoY() {
-        float currentY = getY();
-        currentY = currentY / Window.getHeight() * 2 - 1;
+        float currentY = Window.getHeight() - getY();
+        currentY = (currentY / Window.getHeight()) * 2f - 1f;
         Vector4f tmp = new Vector4f(0, currentY, 0, 1);
         tmp.mul(Window.getScene().getCamera().getInverseProjection()).mul(Window.getScene().getCamera().getInverseView());
-        return tmp.y;
+        currentY = tmp.y;
+        return currentY;
     }
 
 

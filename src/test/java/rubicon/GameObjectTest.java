@@ -1,7 +1,7 @@
 package rubicon;
 
-import components.FontRenderer;
-import components.SpriteRenderer;
+import component.FontRenderer;
+import component.SpriteRenderer;
 import imgui.ImGui;
 import org.joml.Vector2f;
 import org.joml.Vector4f;

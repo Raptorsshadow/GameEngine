@@ -1,12 +1,12 @@
 package render;
 
-import components.SpriteRenderer;
+import component.SpriteRenderer;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import rubicon.GLWrapper;
-import rubicon.LWJGLWrapper;
+import graphics.GLWrapper;
+import graphics.LWJGLWrapper;
 import rubicon.Window;
 import util.AssetPool;
 

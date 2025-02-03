@@ -1,10 +1,11 @@
-package rubicon;
+package component;
 
 import imgui.ImGui;
 import lombok.Getter;
 import lombok.Setter;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import rubicon.GameObject;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -21,6 +22,9 @@ import java.lang.reflect.Modifier;
 @Getter
 public abstract class Component implements Serializable {
     protected transient GameObject gameObject;
+
+    private static int ID_COUNTER = 0;
+    private int uid = -1;
 
     /**
      * Responsible for performing an update operation on each "tick" to be defined by concrete classes.
@@ -100,5 +104,15 @@ public abstract class Component implements Serializable {
         } catch(IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    public void generateId() {
+        if (this.uid == -1) {
+            this.uid = ID_COUNTER++;
+        }
+    }
+
+    public static void init(int maxId) {
+        ID_COUNTER = maxId;
     }
 }

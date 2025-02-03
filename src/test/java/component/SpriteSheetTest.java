@@ -1,4 +1,4 @@
-package components;
+package component;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

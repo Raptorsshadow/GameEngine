@@ -1,10 +1,15 @@
-package rubicon;
+package scene;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import component.Component;
+import component.ComponentDeserializer;
 import imgui.ImGui;
 import lombok.Getter;
 import render.Renderer;
+import rubicon.Camera;
+import rubicon.GameObject;
+import rubicon.GameObjectDeserializer;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,7 +33,7 @@ public abstract class Scene {
 
     // Camera responsible for displaying the scene
     @Getter
-    protected       Camera           camera;
+    protected Camera camera;
     // Renderer used to draw the scene
     protected       Renderer         renderer = new Renderer();
     //Currently Selected activeGameObject used to render specific ImGui Overlays
@@ -137,9 +142,22 @@ public abstract class Scene {
         }
 
         if (!inFile.isEmpty()) {
+            int maxGoId = -1;
+            int maxCompId = -1;
             GameObject[] objs = gson.fromJson(inFile, GameObject[].class);
-            Arrays.stream(objs).forEach(this::addGameObjectToScene);
-            this.activeGameObject = this.gameObjects.getFirst();
+            for(GameObject go : objs) {
+                addGameObjectToScene(go);
+                for(Component c : go.getComponents()) {
+                    maxCompId = Math.max(c.getUid(), maxCompId);
+                }
+                maxGoId = Math.max(go.getUid(), maxGoId);
+            }
+
+            GameObject.init(++maxGoId);
+            Component.init(++maxCompId);
+            System.out.println("MGO : " + maxGoId);
+            System.out.println("MComp : " + maxCompId);
+
             this.levelLoaded = true;
         }
     }

@@ -1,11 +1,10 @@
-package components;
+package component;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import rubicon.Component;
 
 /**
  *

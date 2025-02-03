@@ -1,4 +1,4 @@
-package components;
+package component;
 
 import imgui.ImGui;
 import lombok.Getter;
@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import render.Texture;
-import rubicon.Component;
 import rubicon.Transform;
 
 

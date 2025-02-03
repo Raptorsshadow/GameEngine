@@ -1,5 +1,7 @@
 package rubicon;
 
+import graphics.GLWrapper;
+import graphics.LWJGLWrapper;
 import imgui.app.Color;
 import imgui.app.Configuration;
 import org.lwjgl.Version;
@@ -8,6 +10,9 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
+import scene.LevelEditorScene;
+import scene.LevelScene;
+import scene.Scene;
 
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -42,7 +47,7 @@ public class Window {
     // The active scene
     private Scene currentScene;
 
-    private final GLWrapper      gl;
+    private final GLWrapper gl;
     final         List<Callback> callbacks = new ArrayList<>();
     /**
      * Default Constructor taking window initialization params
@@ -164,7 +169,7 @@ public class Window {
     private static void sizeListener(long window, int width, int height) {
         Window.get().config.setWidth(width);
         Window.get().config.setHeight(height);
-        Window.get().runFrame(Window.get().dt);
+        //Window.get().runFrame(Window.get().dt);
     }
 
     /**
@@ -239,8 +244,8 @@ public class Window {
 
 
         gl.glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        gl.glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
-        gl.glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+        gl.glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // the window will be resizable
+        gl.glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
         glfwWindow = gl.glfwCreateWindow(config.getWidth(), config.getHeight(), config.getTitle(), MemoryUtil.NULL,
                 MemoryUtil.NULL);
 

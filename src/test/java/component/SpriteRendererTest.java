@@ -1,4 +1,4 @@
-package components;
+package component;
 
 import imgui.ImGui;
 import org.joml.Vector2f;

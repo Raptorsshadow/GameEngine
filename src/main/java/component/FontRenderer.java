@@ -1,6 +1,4 @@
-package components;
-
-import rubicon.Component;
+package component;
 
 /**
  * Class: FontRenderer

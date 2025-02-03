@@ -2,8 +2,8 @@ package render;
 
 import org.joml.*;
 import org.lwjgl.BufferUtils;
-import rubicon.GLWrapper;
-import rubicon.LWJGLWrapper;
+import graphics.GLWrapper;
+import graphics.LWJGLWrapper;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
