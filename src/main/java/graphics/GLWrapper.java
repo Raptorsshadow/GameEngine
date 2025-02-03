@@ -154,4 +154,8 @@ public interface GLWrapper {
     long glfwGetPrimaryMonitor();
 
     GLFWVidMode glfwGetVideoMode(long monitor);
+
+    void glDrawArrays(int mode, int first, int count);
+
+    void glLineWidth(float width);
 }

@@ -4,7 +4,9 @@ import component.*;
 import imgui.ImGui;
 import imgui.ImVec2;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
+import render.DebugDraw;
 import rubicon.Camera;
 import rubicon.GameObject;
 import rubicon.Prefabs;
@@ -40,6 +42,8 @@ public class LevelEditorScene extends Scene {
     public void init() {
         loadResources();
         this.camera = new Camera(new Vector2f(-250, 0));
+
+        DebugDraw.addLine2D(new Vector2f(0f, 0f), new Vector2f(800f, 800f), new Vector3f(1f,0f,1f));
 
         if(this.levelLoaded) {
             this.activeGameObject = this.gameObjects.getFirst();

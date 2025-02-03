@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
+import render.DebugDraw;
 import scene.LevelEditorScene;
 import scene.LevelScene;
 import scene.Scene;
@@ -34,7 +35,7 @@ public class Window {
     // Window singleton reference
     public static Window window;
     //Default background colors for RGBA channels
-    protected final Color colorBg = new Color(1, 1, 1, 1);
+    protected final Color colorBg = new Color(1, 1, 1, 0);
 
     // Window config
     private final Configuration config;
@@ -296,6 +297,7 @@ public class Window {
      * Method used to clear the OpenGL buffer.
      */
     private void clearBuffer() {
+        DebugDraw.beginFrame();
         gl.glClearColor(colorBg.getRed(), colorBg.getGreen(), colorBg.getBlue(), colorBg.getAlpha());
         gl.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
@@ -345,6 +347,7 @@ public class Window {
     protected void loop() {
         float beginTime = (float) gl.glfwGetTime();
         float endTime;
+
         while (!gl.glfwWindowShouldClose(glfwWindow)) {
             runFrame(dt);
 
@@ -372,7 +375,6 @@ public class Window {
      * @param dt delta time of frame
      */
     private void preProcess(float dt) {
-        //Not Implemented
     }
 
     /**
@@ -383,6 +385,7 @@ public class Window {
     private void process(float dt) {
         //If dt isn't 0, we call update on the scene.
         if (dt >= 0) {
+            DebugDraw.draw();
             currentScene.update(dt);
         }
         this.guiLayer.update(dt, currentScene);

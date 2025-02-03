@@ -369,4 +369,14 @@ public class LWJGLWrapper implements GLWrapper {
     public GLFWVidMode glfwGetVideoMode(long monitor) {
         return GLFW.glfwGetVideoMode(monitor);
     }
+
+    @Override
+    public void glDrawArrays(int mode, int first, int count) {
+        GL11.glDrawArrays(mode, first, count);
+    }
+
+    @Override
+    public void glLineWidth(float width) {
+        GL11.glLineWidth(width);
+    }
 }
