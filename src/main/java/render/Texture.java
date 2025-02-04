@@ -65,10 +65,10 @@ public void init(String filePath) {
         IntBuffer channels = BufferUtils.createIntBuffer(1);
 
         //When read into the system, it's loaded as a vertical mirror.  This flips it back.
-        gl.stbi_set_flip_vertically_on_load(true);
+        gl.stbiSetFlipVerticallyOnLoad(true);
 
         //Load the file and leverage the buffers to store relevant data.
-        ByteBuffer image = gl.stbi_load(filePath, widthBuffer, heightBuffer, channels, 0);
+        ByteBuffer image = gl.stbiLoad(filePath, widthBuffer, heightBuffer, channels, 0);
 
         //If we loaded an image, ensure we select the appropriate color channel so we display it correctly.
         if (image != null) {
@@ -93,7 +93,7 @@ public void init(String filePath) {
         }
 
         // Release the stbi buffers
-        gl.stbi_image_free(image);
+        gl.stbiImageFree(image);
     }
 
     /**

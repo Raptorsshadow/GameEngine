@@ -30,12 +30,12 @@ public class LWJGLWrapper implements GLWrapper {
     }
 
     @Override
-    public void stbi_set_flip_vertically_on_load(boolean shouldFlip) {
+    public void stbiSetFlipVerticallyOnLoad(boolean shouldFlip) {
         org.lwjgl.stb.STBImage.stbi_set_flip_vertically_on_load(shouldFlip);
     }
 
     @Override
-    public ByteBuffer stbi_load(String fileName, IntBuffer x, IntBuffer y, IntBuffer channels, int channelCount) {
+    public ByteBuffer stbiLoad(String fileName, IntBuffer x, IntBuffer y, IntBuffer channels, int channelCount) {
         return org.lwjgl.stb.STBImage.stbi_load(fileName, x, y, channels, channelCount);
     }
 
@@ -45,7 +45,7 @@ public class LWJGLWrapper implements GLWrapper {
     }
 
     @Override
-    public void stbi_image_free(ByteBuffer image) {
+    public void stbiImageFree(ByteBuffer image) {
         org.lwjgl.stb.STBImage.stbi_image_free(image);
     }
 

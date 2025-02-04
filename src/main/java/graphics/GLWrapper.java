@@ -19,13 +19,13 @@ public interface GLWrapper {
 
     void glTexParameteri(int target, int pName, int pVal);
 
-    void stbi_set_flip_vertically_on_load(boolean shouldFlip);
+    void stbiSetFlipVerticallyOnLoad(boolean shouldFlip);
 
-    ByteBuffer stbi_load(String fileName, IntBuffer x, IntBuffer y, IntBuffer channels, int channelCount);
+    ByteBuffer stbiLoad(String fileName, IntBuffer x, IntBuffer y, IntBuffer channels, int channelCount);
 
     void glTexImage2D(int target, int level, int internalFormat, int width, int height, int border, int format, int type, ByteBuffer pixels);
 
-    void stbi_image_free(ByteBuffer image);
+    void stbiImageFree(ByteBuffer image);
 
     int glGenTextures();
 
