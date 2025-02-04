@@ -43,7 +43,7 @@ public class LevelEditorScene extends Scene {
         loadResources();
         this.camera = new Camera(new Vector2f(-250, 0));
 
-        DebugDraw.addLine2D(new Vector2f(0f, 0f), new Vector2f(800f, 800f), new Vector3f(1f,0f,1f));
+        DebugDraw.addLine2D(new Vector2f(0f, 0f), new Vector2f(800f, 800f), new Vector3f(1f,0f,0f), 120);
 
         if(this.levelLoaded) {
             this.activeGameObject = this.gameObjects.getFirst();
@@ -87,6 +87,7 @@ public class LevelEditorScene extends Scene {
     public void update(float dt) {
 
         mc.update(dt);
+
         //update all gameobjects for the frame.
         this.gameObjects.forEach(go -> go.update(dt));
 

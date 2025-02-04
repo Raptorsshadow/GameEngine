@@ -1,5 +1,7 @@
 package executable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import rubicon.Window;
 
 /**
@@ -10,9 +12,15 @@ import rubicon.Window;
  * Description: Main entry point of the Game engine.
  */
 public class Main {
+
     public static void main(String... args) {
+        Logger log = LogManager.getLogger(Main.class);
         //Create a window and run it.
-        Window window = Window.get();
-        window.run();
+        try {
+            Window window = Window.get();
+            window.run();
+        } catch(Exception e) {
+            log.error("A Fatal Exception was encountered", e);
+        }
     }
 }

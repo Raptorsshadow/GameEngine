@@ -4,6 +4,8 @@ import graphics.GLWrapper;
 import graphics.LWJGLWrapper;
 import imgui.app.Color;
 import imgui.app.Configuration;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL11;
@@ -32,10 +34,12 @@ import static org.lwjgl.glfw.GLFW.*;
  * scenes as necessary.
  */
 public class Window {
+    Logger log = LogManager.getLogger(Window.class);
+
     // Window singleton reference
-    public static Window window;
+    private static Window window;
     //Default background colors for RGBA channels
-    protected final Color colorBg = new Color(1, 1, 1, 0);
+    protected final Color colorBg = new Color(1, 1, 1, 1);
 
     // Window config
     private final Configuration config;
@@ -144,7 +148,7 @@ public class Window {
                 w.currentScene = new LevelScene();
                 break;
             default:
-                assert false : String.format("Unrecognized scene: %d", sceneId);
+                throw new IllegalArgumentException(String.format("Unrecognized scene: %d", sceneId));
         }
         w.currentScene.load();
         w.currentScene.init();
@@ -170,7 +174,6 @@ public class Window {
     private static void sizeListener(long window, int width, int height) {
         Window.get().config.setWidth(width);
         Window.get().config.setHeight(height);
-        //Window.get().runFrame(Window.get().dt);
     }
 
     /**
@@ -224,7 +227,7 @@ public class Window {
      * Method responsible for allocating the window, looping the runtime and freeing resources on close.
      */
     public void run() {
-        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
+        log.info("Hello LWJGL {}!", Version.getVersion());
 
         //Loop until exit.
         this.loop();
@@ -323,7 +326,7 @@ public class Window {
         //gl.freeCallbacks should do this.  If we
         callbacks.forEach(c -> {
             if(c != null) {
-                System.out.println("This shouldn't trip.  If this shows up an event listener was bound twice and may not have released properly or caused a memory leak or other resource issue in game.");
+                log.warn("This shouldn't trip.  If this shows up an event listener was bound twice and may not have released properly or caused a memory leak or other resource issue in game.");
                 c.close();
             }
         });
@@ -374,7 +377,8 @@ public class Window {
      *
      * @param dt delta time of frame
      */
-    private void preProcess(float dt) {
+    protected void preProcess(float dt) {
+        //Not implemented
     }
 
     /**
@@ -399,7 +403,7 @@ public class Window {
      *
      * @param dt delta time of frame
      */
-    private void postProcess(float dt) {
+    protected void postProcess(float dt) {
         //Not Implemented
     }
 }

@@ -28,6 +28,9 @@ public class DebugDraw {
     private static boolean isStarted = false;
     private static GLWrapper gl = new LWJGLWrapper();
 
+    private DebugDraw() {
+        //Static Class, No Default.
+    }
     /**
      * Initialize the vao and vbo resources.
      */
@@ -47,7 +50,7 @@ public class DebugDraw {
         gl.glVertexAttribPointer(1, 3, GL_FLOAT, false, 6 * Float.BYTES, 3 * Float.BYTES);
         gl.glEnableVertexAttribArray(1);
 
-        gl.glLineWidth(10f);
+        gl.glLineWidth(2f);
     }
 
     /**
@@ -60,12 +63,7 @@ public class DebugDraw {
         }
 
         //Remove Dead Lines
-        for(int i = 0; i < lines.size(); i++) {
-            if(lines.get(i).beginFrame() < 0) {
-                lines.remove(i);
-                i--;
-            }
-        }
+        lines.removeIf(line -> line.beginFrame() < 0);
     }
 
     /**
@@ -76,7 +74,6 @@ public class DebugDraw {
             return;
         }
 
-        System.out.println("Drawing Lines : " + lines.size());
         //Generate vertexArray of all lines.
         int index = 0;
         for(Line2D line : lines) {
@@ -111,7 +108,7 @@ public class DebugDraw {
         gl.glEnableVertexAttribArray(1);
 
         //Draw the batch
-        gl.glDrawArrays(GL_LINES, 0, lines.size());
+        gl.glDrawArrays(GL_LINES, 0, lines.size()*6*2);
 
         //Release Resources
         gl.glDisableVertexAttribArray(0);
