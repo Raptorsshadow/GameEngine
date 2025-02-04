@@ -33,7 +33,7 @@ public class DebugDraw {
     private static GLWrapper gl;
 
     private DebugDraw() {
-        DebugDraw.setGLWrapper(new LWJGLWrapper());
+        //Hidden private constructor
     }
 
     public static void setGLWrapper(GLWrapper gl) {
@@ -43,6 +43,9 @@ public class DebugDraw {
      * Initialize the vao and vbo resources.
      */
     public static void start() {
+        if(DebugDraw.gl == null) {
+            DebugDraw.setGLWrapper(new LWJGLWrapper());
+        }
         vaoId = gl.glGenVertexArrays();
         gl.glBindVertexArray(vaoId);
 
