@@ -18,14 +18,16 @@ import rubicon.Transform;
  */
 @NoArgsConstructor
 public class SpriteRenderer extends Component {
-
+    // Default Color for use with SpriteRenderer
     public static final Vector4f DEF_COLOR = new Vector4f(1, 1, 1, 1);
     // 4 bit Color variable (RGBA)
     @Getter
     private final Vector4f color = new Vector4f(1,1,1,1);
+    // Stores the previous transformer state
     protected transient Transform lastTransform;
     //Sprite containing texture data
     private Sprite sprite = new Sprite();
+    //State value for tracking if we need to re-render.
     private transient boolean isDirty = true;
 
     /**

@@ -3,6 +3,8 @@ package component;
 import imgui.ImGui;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import rubicon.GameObject;
@@ -21,9 +23,11 @@ import java.lang.reflect.Modifier;
 @Setter
 @Getter
 public abstract class Component implements Serializable {
+    private static final Logger log = LogManager.getLogger(Component.class);
+
     protected transient GameObject gameObject;
 
-    private static int ID_COUNTER = 0;
+    private static int idCounter = 0;
     private int uid = -1;
 
     /**
@@ -68,51 +72,98 @@ public abstract class Component implements Serializable {
 
                 //Check the type of field and render/update appropriately.
                 if(type == int.class) {
-                    int val = (int) value;
-                    int[] imInt = {val};
-                    if (ImGui.dragInt(name + " : ", imInt)) {
-                        f.set(this, imInt[0]);
-                    }
+                    imguiInt(f, (int) value, name);
                 } else if(type == float.class) {
-                    float val = (float) value;
-                    float[] imFloat = {val};
-                    if (ImGui.dragFloat(name + " : ", imFloat)) {
-                        f.set(this, imFloat[0]);
-                    }
+                    imguiFloat(f, (float) value, name);
                 } else if(type == boolean.class) {
-                    boolean val = (boolean) value;
-                    if(ImGui.checkbox(name + " : ", val)) {
-                        f.set(this, !val);
-                    }
+                    imguiBoolean(f, (boolean) value, name);
                 } else if (type == Vector3f.class) {
-                    Vector3f val = (Vector3f) value;
-                    float[] floats = {val.x, val.y, val.z};
-                    if(ImGui.dragFloat3(name + " : ", floats)) {
-                        val.set(floats[0], floats[1], floats[2]);
-                    }
+                    imguiVector3f((Vector3f) value, name);
                 } else if (type == Vector4f.class) {
-                    Vector4f val = (Vector4f) value;
-                    float[] floats = {val.x, val.y, val.z, val.w};
-                    if(ImGui.dragFloat4(name + " : ", floats)) {
-                        val.set(floats[0], floats[1], floats[2], floats[3]);
-                    }
+                    imguiVector4f((Vector4f) value, name);
                 }
                 if(isPrivate) {
                     f.setAccessible(false);
                 }
             }
         } catch(IllegalAccessException e) {
-            e.printStackTrace();
+            log.error("Unable to access field", e);
         }
     }
 
-    public void generateId() {
+    /**
+     * Generate an imgui control for managing a Vector4f field
+     * @param val field value
+     * @param name field name
+     */
+    private static void imguiVector4f(Vector4f val, String name) {
+        float[] floats = {val.x, val.y, val.z, val.w};
+        if(ImGui.dragFloat4(name + " : ", floats)) {
+            val.set(floats[0], floats[1], floats[2], floats[3]);
+        }
+    }
+
+    /**
+     * Generate an imgui control for managing a Vector3f field
+     * @param val field value
+     * @param name field name
+     */
+    private static void imguiVector3f(Vector3f val, String name) {
+        float[] floats = {val.x, val.y, val.z};
+        if(ImGui.dragFloat3(name + " : ", floats)) {
+            val.set(floats[0], floats[1], floats[2]);
+        }
+    }
+
+    /**
+     * Generate an imgui control for managing a boolean field
+     * @param val field value
+     * @param name field name
+     */
+    private void imguiBoolean(Field f, boolean val, String name) throws IllegalAccessException {
+        if(ImGui.checkbox(name + " : ", val)) {
+            f.set(this, !val);
+        }
+    }
+
+    /**
+     * Generate an imgui control for managing a float field
+     * @param val field value
+     * @param name field name
+     */
+    private void imguiFloat(Field f, float val, String name) throws IllegalAccessException {
+        float[] imFloat = {val};
+        if (ImGui.dragFloat(name + " : ", imFloat)) {
+            f.set(this, imFloat[0]);
+        }
+    }
+
+    /**
+     * Generate an imgui control for managing an int field
+     * @param val field value
+     * @param name field name
+     */
+    private void imguiInt(Field f, int val, String name) throws IllegalAccessException {
+        int[] imInt = {val};
+        if (ImGui.dragInt(name + " : ", imInt)) {
+            f.set(this, imInt[0]);
+        }
+    }
+
+    /**
+     * Set the uid to be the next available component identifier
+     */
+    public synchronized void generateId() {
         if (this.uid == -1) {
-            this.uid = ID_COUNTER++;
+            this.uid = idCounter++;
         }
     }
 
+    /**
+     * Set the component identifier seed.
+     * @param maxId new seed
+     */
     public static void init(int maxId) {
-        ID_COUNTER = maxId;
+        idCounter = maxId;
     }
 }

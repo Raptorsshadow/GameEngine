@@ -14,9 +14,10 @@ import render.Texture;
 @Data
 public class Sprite {
     //Width of the Sprite
-    private float width;
+    private                float      width;
     //Height of the Sprite
-    private float height;
+    private                float      height;
+    //Default Texture Coordinate vector to use if not provided.
     protected static final Vector2f[] DEF_VECTOR = new Vector2f[]{
             new Vector2f(1, 1),
             new Vector2f(1, 0),
@@ -30,8 +31,9 @@ public class Sprite {
     private Vector2f[] texCoords = DEF_VECTOR;
 
     /**
-     * Return the Textures Id
-     * @return texture Id or -1 if texture is null.
+     * Return the TextureId
+     *
+     * @return textureId or -1 if texture is null.
      */
     public int getTexId() {
         return texture != null ? texture.getTextureId() : -1;

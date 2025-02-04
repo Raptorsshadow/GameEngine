@@ -2,6 +2,8 @@ package render;
 
 import graphics.GLWrapper;
 import graphics.LWJGLWrapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import rubicon.Window;
@@ -16,6 +18,8 @@ import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
 
 public class DebugDraw {
+    private static final Logger log = LogManager.getLogger(DebugDraw.class);
+
     public static final int DEF_LIFETIME = 300;
     public static final Vector3f DEF_COLOR = new Vector3f(1f, 0f, 1f);
     private static final int MAX_LINES = 500;
@@ -26,10 +30,14 @@ public class DebugDraw {
     private static int vaoId;
     private static int vboId;
     private static boolean isStarted = false;
-    private static GLWrapper gl = new LWJGLWrapper();
+    private static GLWrapper gl;
 
     private DebugDraw() {
-        //Static Class, No Default.
+        DebugDraw.setGLWrapper(new LWJGLWrapper());
+    }
+
+    public static void setGLWrapper(GLWrapper gl) {
+        DebugDraw.gl = gl;
     }
     /**
      * Initialize the vao and vbo resources.
@@ -62,7 +70,7 @@ public class DebugDraw {
             isStarted = true;
         }
 
-        //Remove Dead Lines
+        //Remove Deadlines
         lines.removeIf(line -> line.beginFrame() < 0);
     }
 
@@ -97,6 +105,10 @@ public class DebugDraw {
         gl.glBindBuffer(GL_ARRAY_BUFFER, vboId);
         gl.glBufferSubData(GL_ARRAY_BUFFER, 0, Arrays.copyOfRange(vertexArray, 0, lines.size() * 6 * 2));
 
+        if(shader == null) {
+            log.warn("Debug Shader is null, unable to draw.");
+            return;
+        }
         // Enable the Shader
         shader.use();
         shader.uploadMat4f("uProjection", Window.getScene().getCamera().getProjectionMatrix());
