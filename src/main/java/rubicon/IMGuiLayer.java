@@ -113,7 +113,7 @@ public class IMGuiLayer {
         final ImFontGlyphRangesBuilder rangesBuilder = new ImFontGlyphRangesBuilder(); // Glyphs ranges provide
         rangesBuilder.addRanges(io.getFonts()
                 .getGlyphRangesDefault());
-        rangesBuilder.addRanges(FontAwesomeIcons._IconRange);
+        rangesBuilder.addRanges(FontAwesomeIcons.ICON_RANGE);
 
         // Font config for additional fonts
         // This is a natively allocated struct so don't forget to call destroy after atlas is built
