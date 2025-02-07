@@ -26,8 +26,8 @@ public class GameObject {
     //Track zIndex relative to other game objects
     private final int zIndex;
 
-    private static int ID_COUNTER = 0;
-    private int uid = -1;
+    private static int idCounter = 0;
+    private int uid;
     /**
      * Constructor that names the object.
      *
@@ -47,7 +47,7 @@ public class GameObject {
         this.name = name;
         this.transform = transform;
         this.zIndex = zIndex;
-        this.uid = ID_COUNTER++;
+        this.uid = idCounter++;
     }
 
     /**
@@ -116,6 +116,6 @@ public class GameObject {
     }
 
     public static void init(int maxId) {
-        ID_COUNTER = maxId;
+        idCounter = maxId;
     }
 }

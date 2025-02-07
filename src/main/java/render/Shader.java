@@ -1,5 +1,7 @@
 package render;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
 import graphics.GLWrapper;
@@ -21,6 +23,8 @@ import static org.lwjgl.opengl.GL20.*;
  * Description: Responsible for configuring and linking shader resources and managing lifecycle and destruction when finished.
  */
 public class Shader {
+    private static final Logger log = LogManager.getLogger(Shader.class);
+
     // Constant for parsing shader files used to key on type preprocessor
     public static final String TYPE_CONSTANT = "#type ";
 
@@ -94,8 +98,8 @@ public class Shader {
             } while (index >= TYPE_CONSTANT.length());
 
         } catch (IOException e) {
-            e.printStackTrace();
-            assert false : "Error: Could not open file for shader " + filePath;
+            log.error("Error: Could not open file for shader {}", filePath, e);
+            assert false;
         }
     }
 
@@ -116,9 +120,9 @@ public class Shader {
         int success = gl.glGetShaderi(vertexID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
             int len = gl.glGetShaderi(vertexID, GL_INFO_LOG_LENGTH);
-            System.out.println("ERROR: " + filePath + " 'defaultShader.glsl'\n\tVertex Shader Compilation Failed.");
-            System.out.println(gl.glGetShaderInfoLog(vertexID, len));
-            assert false : "";
+            log.error("{} 'defaultShader.glsl'\n\tVertex Shader Compilation Failed.", filePath);
+            log.error(gl.glGetShaderInfoLog(vertexID, len));
+            assert false;
         }
 
         // First load and compile the vertex Shader
@@ -130,9 +134,9 @@ public class Shader {
         success = gl.glGetShaderi(fragmentID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
             int len = gl.glGetShaderi(fragmentID, GL_INFO_LOG_LENGTH);
-            System.out.println("ERROR: " + filePath + "'defaultShader.glsl'\n\tFragment Shader Compilation Failed.");
-            System.out.println(gl.glGetShaderInfoLog(fragmentID, len));
-            assert false : "";
+            log.error("{} 'defaultShader.glsl'\n\tFragment Shader Compilation Failed.", filePath);
+            log.error(gl.glGetShaderInfoLog(fragmentID, len));
+            assert false;
         }
 
         // ========================
@@ -146,9 +150,9 @@ public class Shader {
         success = gl.glGetProgrami(shaderProgramId, GL_LINK_STATUS);
         if (success == GL_FALSE) {
             int len = gl.glGetProgrami(shaderProgramId, GL_INFO_LOG_LENGTH);
-            System.out.println("ERROR: " + filePath + " 'defaultShader.glsl'\n\tLinking of Shaders Failed.");
-            System.out.println(gl.glGetProgramInfoLog(shaderProgramId, len));
-            assert false : "";
+            log.error("{} 'defaultShader.glsl'\n\tLinking of Shaders Failed.", filePath);
+            log.error(gl.glGetProgramInfoLog(shaderProgramId, len));
+            assert false;
         }
     }
 

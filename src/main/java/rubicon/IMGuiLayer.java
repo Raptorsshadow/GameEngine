@@ -4,6 +4,8 @@ import imgui.*;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import scene.Scene;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -17,6 +19,8 @@ import static org.lwjgl.glfw.GLFW.*;
  * repo example app.
  */
 public class IMGuiLayer {
+    private static final Logger log = LogManager.getLogger(IMGuiLayer.class);
+
     //Framework instances
     protected ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
     protected ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
@@ -144,15 +148,17 @@ public class IMGuiLayer {
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         }
 
-        System.out.println("GLSL Version: " + this.glslVersion);
+        log.info("GLSL Version: {}", this.glslVersion);
     }
 
     /**
      * Render the actual IMGui Interface.  currently just renders the example from the repo.
+     * @param dt delta time
+     * @param scene scene to attach
      */
-    public void update(float dt, Scene currentScene) {
+    public void update(float dt, Scene scene) {
         startFrame();
-        currentScene.sceneImgui();
+        scene.sceneImgui();
         Extra.show(Window.getBackgroundColor());
         endFrame();
     }

@@ -1,9 +1,14 @@
 package graphics;
 
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.io.IoBuilder;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
+import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -19,6 +24,12 @@ import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
  * Description: Implements the GLWrapper interface passing through to the relevant GLFW calls.
  */
 public class LWJGLWrapper implements GLWrapper {
+    private static final Logger log = LogManager.getLogger(LWJGLWrapper.class);
+    private static final PrintStream errPrintStream = IoBuilder
+            .forLogger(log)
+            .setLevel(Level.ERROR)
+            .buildPrintStream();
+
     @Override
     public void glBindTexture(int target, int texture) {
         GL11.glBindTexture(target, texture);
@@ -286,7 +297,7 @@ public class LWJGLWrapper implements GLWrapper {
 
     @Override
     public GLFWErrorCallback enableErrors() {
-        return GLFWErrorCallback.createPrint(System.err).set();
+        return GLFWErrorCallback.createPrint(errPrintStream).set();
     }
 
     @Override

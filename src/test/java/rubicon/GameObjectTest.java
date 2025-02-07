@@ -11,10 +11,9 @@ import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
-public class GameObjectTest {
+class GameObjectTest {
     @Test
     void emptyConstructorTest() {
         GameObject test = new GameObject("Test");
@@ -63,7 +62,7 @@ public class GameObjectTest {
         t.start();
         verify(s).start();
         t.update(delta);
-        verify(s).update(eq(delta));
+        verify(s).update(delta);
         try (MockedStatic<ImGui> utilities = Mockito.mockStatic(ImGui.class)) {
             utilities.when(() -> ImGui.colorPicker4(any(), any())).thenReturn(false);
             t.imgui();

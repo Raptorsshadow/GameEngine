@@ -1,6 +1,7 @@
 package rubicon;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWKeyCallbackI;
 
 /**
  * Class: KeyListener
@@ -9,7 +10,7 @@ import org.lwjgl.glfw.GLFW;
  * Project: GameEngine
  * Description: Singleton that manages user keyboard input.
  */
-public class KeyListener {
+public class KeyListener implements GLFWKeyCallbackI {
 
     // Private singleton instance
     private static KeyListener instance;
@@ -35,6 +36,16 @@ public class KeyListener {
     }
 
     /**
+     * Returns if a given keyCode is pressed
+     *
+     * @param keyCode Key we're interested
+     * @return true if key pressed, false otherwise
+     */
+    public static boolean isKeyPressed(int keyCode) {
+        return get().keyPressed[keyCode];
+    }
+
+    /**
      * @param window   the window that received the event
      * @param key      the keyboard key that was pressed or released
      * @param scancode the platform-specific scancode of the key
@@ -43,21 +54,12 @@ public class KeyListener {
      * @see org.lwjgl.glfw.GLFWKeyCallbackI#invoke
      * Callback method that follows the {@link org.lwjgl.glfw.GLFWKeyCallbackI#invoke} interface
      */
-    public static void keyCallback(long window, int key, int scancode, int action, int mods) {
+    @Override
+    public void invoke(long window, int key, int scancode, int action, int mods) {
         if (action == GLFW.GLFW_PRESS) {
             get().keyPressed[key] = true;
         } else if (action == GLFW.GLFW_RELEASE) {
             get().keyPressed[key] = false;
         }
-    }
-
-    /**
-     * Returns if a given keyCode is pressed
-     *
-     * @param keyCode Key we're interested
-     * @return true if key pressed, false otherwise
-     */
-    public static boolean isKeyPressed(int keyCode) {
-        return get().keyPressed[keyCode];
     }
 }

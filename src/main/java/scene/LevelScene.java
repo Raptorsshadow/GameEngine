@@ -1,5 +1,7 @@
 package scene;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import rubicon.Window;
 
 /**
@@ -10,9 +12,10 @@ import rubicon.Window;
  * Description: Level scene class that renders a red screen for test purposes.
  */
 public class LevelScene extends Scene {
+    private static final Logger log = LogManager.getLogger(LevelScene.class);
 
     public LevelScene() {
-        System.out.println("Inside Level Scene");
+        log.info("Inside Level Scene");
         Window.getBackgroundColor()
                 .set(1, 0, 0, 1);
     }

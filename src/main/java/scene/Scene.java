@@ -6,6 +6,8 @@ import component.Component;
 import component.ComponentDeserializer;
 import imgui.ImGui;
 import lombok.Getter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import render.Renderer;
 import rubicon.Camera;
 import rubicon.GameObject;
@@ -16,7 +18,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,6 +28,7 @@ import java.util.List;
  * Description: Contract for managing a scene.
  */
 public abstract class Scene {
+    private static final Logger log = LogManager.getLogger(Scene.class);
 
     // Collection of GameObjects used to build the scene
     protected final List<GameObject> gameObjects = new ArrayList<>();
@@ -120,7 +122,7 @@ public abstract class Scene {
         try(FileWriter writer = new FileWriter("level.json")) {
             writer.write(gson.toJson(this.gameObjects));
         } catch(IOException e) {
-            e.printStackTrace();
+            log.error("Unable to Serialize the Scene State", e);
         }
     }
 
@@ -138,7 +140,7 @@ public abstract class Scene {
         try {
             inFile = new String(Files.readAllBytes(Paths.get("level.json")));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Unable to load the Scene State", e);
         }
 
         if (!inFile.isEmpty()) {
@@ -155,8 +157,9 @@ public abstract class Scene {
 
             GameObject.init(++maxGoId);
             Component.init(++maxCompId);
-            System.out.println("MGO : " + maxGoId);
-            System.out.println("MComp : " + maxCompId);
+
+            log.debug("MGO : {}", maxGoId);
+            log.debug("MComp : {}", maxCompId);
 
             this.levelLoaded = true;
         }
