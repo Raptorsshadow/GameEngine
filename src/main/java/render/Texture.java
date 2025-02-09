@@ -1,13 +1,14 @@
 package render;
 
-import lombok.Data;
-import org.lwjgl.BufferUtils;
 import graphics.GLWrapper;
 import graphics.LWJGLWrapper;
+import lombok.Data;
+import org.lwjgl.BufferUtils;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.Objects;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -51,9 +52,11 @@ public class Texture implements Serializable {
         //Load and provision the texture.
         loadTexture();
     }
-public void init(String filePath) {
-    this.init(filePath, new LWJGLWrapper());
-}
+
+    public void init(String filePath) {
+        this.init(filePath, new LWJGLWrapper());
+    }
+
     /**
      * Responsible for loading and provisioning the texture.
      */
@@ -86,8 +89,8 @@ public void init(String filePath) {
 
             //Instruct the system to populate the provisioned space.
             gl.glTexImage2D(GL_TEXTURE_2D, 0, colorType, widthBuffer.get(0), heightBuffer.get(0), 0, colorType,
-                    GL_UNSIGNED_BYTE,
-                    image);
+                            GL_UNSIGNED_BYTE,
+                            image);
         } else {
             assert false : "Error : Texture : Could not load Image: " + this.filePath;
         }
@@ -110,4 +113,17 @@ public void init(String filePath) {
         gl.glBindTexture(GL_TEXTURE_2D, 0);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Texture tex) {
+            return tex.getWidth() == this.width && tex.getHeight() == this.height && tex.getTextureId() == this.textureId && tex.getFilePath()
+                                                                                                                                .equals(this.filePath);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(width, height, textureId, filePath);
+    }
 }

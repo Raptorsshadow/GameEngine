@@ -12,6 +12,7 @@ import util.AssetPool;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.lwjgl.opengl.GL15C.*;
 
@@ -317,6 +318,6 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
     @Override
     public int hashCode() {
-        return Integer.valueOf(zIndex).hashCode();
+        return Objects.hash(zIndex);
     }
 }

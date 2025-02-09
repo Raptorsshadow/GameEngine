@@ -3,6 +3,7 @@ package component;
 import rubicon.GameObject;
 import rubicon.MouseListener;
 import rubicon.Window;
+import scene.Settings;
 
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 
@@ -43,8 +44,9 @@ public class MouseControls extends Component {
     @Override
     public void update(float dt) {
         if (this.holdingObject != null) {
-            this.holdingObject.transform.position.x = MouseListener.getOrthoX() - 16;
-            this.holdingObject.transform.position.y = MouseListener.getOrthoY() - 16;
+            // Handles Snap to Grid functionality
+            this.holdingObject.transform.position.x = (int) (MouseListener.getOrthoX() / Settings.GRID_WIDTH) * (float)Settings.GRID_WIDTH;
+            this.holdingObject.transform.position.y = (int) (MouseListener.getOrthoY() / Settings.GRID_HEIGHT) * (float)Settings.GRID_HEIGHT;
 
             if (MouseListener.isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
                 place();

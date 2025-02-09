@@ -2,6 +2,8 @@ package rubicon;
 
 import org.joml.Vector2f;
 
+import java.util.Objects;
+
 /**
  * Class: Transform
  * Author: rapto
@@ -73,6 +75,6 @@ public class Transform {
 
     @Override
     public int hashCode() {
-        return this.position.hashCode() + this.scale.hashCode();
+        return Objects.hash(position, scale);
     }
 }

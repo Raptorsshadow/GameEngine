@@ -1,6 +1,7 @@
 package rubicon;
 
 import lombok.Data;
+import lombok.Getter;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -34,6 +35,8 @@ public class Camera {
     //Placeholder for storing the inverse of the view matrix.  Used for mouse interactions with the screen.
     private final Matrix4f inverseView;
 
+    @Getter
+    private final Vector2f projectionSize = new Vector2f(RIGHT_LENGTH, TOP_LENGTH);
     /**
      * Constructor responsible for initializing relevant camera matrices and adjusting the projection to the
      * given position.
@@ -56,7 +59,7 @@ public class Camera {
         projectionMatrix.identity();
 
         //Configured the Projection matrix to be an orthogonal plane.
-        projectionMatrix.ortho(0.0f, RIGHT_LENGTH, 0.0f, TOP_LENGTH, NEAR_DIST, FAR_DIST);
+        projectionMatrix.ortho(0.0f, projectionSize.x, 0.0f, projectionSize.y, NEAR_DIST, FAR_DIST);
         projectionMatrix.invert(inverseProjection);
     }
 
