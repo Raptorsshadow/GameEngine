@@ -13,6 +13,7 @@ import org.lwjgl.system.Callback;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 import render.DebugDraw;
+import render.FrameBuffer;
 import scene.LevelEditorScene;
 import scene.LevelScene;
 import scene.Scene;
@@ -46,6 +47,7 @@ public class Window {
     //ImGui Layer used to render overlays.
     private final IMGuiLayer guiLayer;
     //Actual resolution values for the window.
+    private FrameBuffer frameBuffer;
     float dt = -1.0f;
     // Provisioned identifier for the Window
     private long glfwWindow;
@@ -288,6 +290,7 @@ public class Window {
         gl.glEnable(GL_BLEND);
         gl.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
+        this.frameBuffer = new FrameBuffer(3840, 2160);
         Window.changeScene(0);
 
         clearBuffer();
@@ -387,11 +390,13 @@ public class Window {
      * @param dt delta time of frame
      */
     private void process(float dt) {
+        this.frameBuffer.bind();
         //If dt isn't 0, we call update on the scene.
         if (dt >= 0) {
             DebugDraw.draw();
             currentScene.update(dt);
         }
+        this.frameBuffer.unbind();
         this.guiLayer.update(dt, currentScene);
         if (KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)) {
             System.exit(0);

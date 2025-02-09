@@ -158,4 +158,18 @@ public interface GLWrapper {
     void glDrawArrays(int mode, int first, int count);
 
     void glLineWidth(float width);
+
+    int glGenFramebuffers();
+
+    void glBindFramebuffer(int target, int frameBuffer);
+
+    void glFramebufferTexture2D(int target, int attachment, int texTarget, int texture, int level);
+
+    void glBindRenderbuffer(int target, int renderBuffer);
+
+    void glRenderbufferStorage(int target, int internalFormat, int width, int height);
+
+    void glFramebufferRenderbuffer(int target, int attachment, int renderBufferTarget, int renderBuffer);
+
+    int glCheckFramebufferStatus(int target);
 }

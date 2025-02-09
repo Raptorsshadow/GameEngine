@@ -390,4 +390,39 @@ public class LWJGLWrapper implements GLWrapper {
     public void glLineWidth(float width) {
         GL11.glLineWidth(width);
     }
+
+    @Override
+    public int glGenFramebuffers() {
+        return GL30.glGenFramebuffers();
+    }
+
+    @Override
+    public void glBindFramebuffer(int target, int frameBuffer) {
+        GL30.glBindFramebuffer(target, frameBuffer);
+    }
+
+    @Override
+    public void glFramebufferTexture2D(int target, int attachment, int texTarget, int texture, int level) {
+        GL30.glFramebufferTexture2D(target, attachment, texTarget, texture, level);
+    }
+
+    @Override
+    public void glBindRenderbuffer(int target, int renderBuffer) {
+        GL30.glBindRenderbuffer(target, renderBuffer);
+    }
+
+    @Override
+    public void glRenderbufferStorage(int target, int internalFormat, int width, int height) {
+        GL30.glRenderbufferStorage(target, internalFormat, width, height);
+    }
+
+    @Override
+    public void glFramebufferRenderbuffer(int target, int attachment, int renderBufferTarget, int renderBuffer) {
+        GL30.glFramebufferRenderbuffer(target, attachment, renderBufferTarget, renderBuffer);
+    }
+
+    @Override
+    public int glCheckFramebufferStatus(int target) {
+        return GL30.glCheckFramebufferStatus(target);
+    }
 }

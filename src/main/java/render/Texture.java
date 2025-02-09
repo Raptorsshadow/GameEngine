@@ -34,6 +34,35 @@ public class Texture implements Serializable {
 
     private transient GLWrapper gl = new LWJGLWrapper();
 
+    /**
+     * Creates an empty Texture of given width and height.
+     * @param width Width of texture to be generated
+     * @param height Height of texture to be generated
+     */
+    public Texture(int width, int height) {
+        this(width, height, new LWJGLWrapper());
+    }
+
+    /**
+     * Creates an empty Texture of given width and height.
+     * @param width Width of texture to be generated
+     * @param height Height of texture to be generated
+     * @param gl GLWrapper Implementation to use.
+     */
+    public Texture(int width, int height, GLWrapper gl) {
+        this.gl = gl;
+        this.filePath = "Generated";
+
+        // Generate and bind texture
+        textureId = gl.glGenTextures();
+        gl.glBindTexture(GL_TEXTURE_2D, textureId);
+
+        //Instruct the system to populate the provisioned space.
+        gl.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
+                        GL_UNSIGNED_BYTE,null);
+
+    }
+
     public void init(String filePath, GLWrapper gl) {
         this.gl = gl;
         this.filePath = filePath;
