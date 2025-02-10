@@ -1,9 +1,6 @@
 package scene;
 
-import component.GridLines;
-import component.MouseControls;
-import component.Sprite;
-import component.SpriteSheet;
+import component.*;
 import imgui.ImGui;
 import imgui.ImVec2;
 import org.joml.Vector2f;
@@ -46,6 +43,7 @@ public class LevelEditorScene extends Scene {
         loadResources();
         this.camera = new Camera(new Vector2f(-250, 0));
         if (this.levelLoaded) {
+
             this.activeGameObject = this.gameObjects.getFirst();
         }
     }
@@ -58,6 +56,13 @@ public class LevelEditorScene extends Scene {
 
         AssetPool.addSpriteSheet("assets/images/spritesheets/decorationsAndBlocks.png",
                                  spriteSheet);
+        //Fix texture Ids to prevent race condition issues with textureIds
+        gameObjects
+                .stream()
+                .filter(g -> g.getComponent(SpriteRenderer.class) != null)
+                .map(g -> g.getComponent(SpriteRenderer.class))
+                .filter(s -> s.getTexture() != null)
+                .forEach(s -> s.setTexture(AssetPool.getTexture(s.getTexture().getFilePath())));
     }
 
     /**

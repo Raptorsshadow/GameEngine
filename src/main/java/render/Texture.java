@@ -3,6 +3,7 @@ package render;
 import graphics.GLWrapper;
 import graphics.LWJGLWrapper;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.lwjgl.BufferUtils;
 
 import java.io.Serializable;
@@ -20,13 +21,14 @@ import static org.lwjgl.opengl.GL11.*;
  * Description: Texture definition file responsible for loading and parsing the Texture for use in Scene.
  */
 @Data
+@NoArgsConstructor
 public class Texture implements Serializable {
 
     // Filepath of the Texture
     private String filePath;
 
     // TextureId of registered resources
-    private int textureId;
+    private transient int textureId;
 
     //Width and Height of the Texture file
     private int width;

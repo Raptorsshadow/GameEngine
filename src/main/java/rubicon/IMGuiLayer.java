@@ -1,9 +1,13 @@
 package rubicon;
 
 import imgui.*;
+import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiConfigFlags;
+import imgui.flag.ImGuiStyleVar;
+import imgui.flag.ImGuiWindowFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
+import imgui.type.ImBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import scene.Scene;
@@ -158,8 +162,32 @@ public class IMGuiLayer {
      */
     public void update(float dt, Scene scene) {
         startFrame();
+        setupDockspace();
         scene.sceneImgui();
-        Extra.show(Window.getBackgroundColor());
+        //Extra.show(Window.getBackgroundColor());
+        ImGui.end();
         endFrame();
+    }
+
+    /**
+     * Create the DockSpace for our Window and provide a framework for adding Viewports.
+     */
+    private void setupDockspace() {
+        int windowFlags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
+
+        ImGui.setNextWindowPos(0.0f, 0.0f, ImGuiCond.Always);
+        ImGui.setNextWindowSize(Window.getWidth(), Window.getHeight());
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
+        windowFlags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse |
+                ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove |
+                ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
+
+        ImGui.begin("DockspaceDemo", new ImBoolean(true), windowFlags);
+        ImGui.popStyleVar(2);
+
+        //DockSpace
+        ImGui.dockSpace(ImGui.getID("Dockspace"));
+
     }
 }

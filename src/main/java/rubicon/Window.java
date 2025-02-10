@@ -390,7 +390,7 @@ public class Window {
      * @param dt delta time of frame
      */
     private void process(float dt) {
-        this.frameBuffer.bind();
+        //this.frameBuffer.bind();
         //If dt isn't 0, we call update on the scene.
         if (dt >= 0) {
             DebugDraw.draw();

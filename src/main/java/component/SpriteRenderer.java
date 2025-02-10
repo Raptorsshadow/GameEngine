@@ -125,4 +125,12 @@ public class SpriteRenderer extends Component {
         }
 
     }
+
+    /**
+     * Setter to update the Texture in use.
+     * @param t Texture
+     */
+    public void setTexture(Texture t) {
+        this.sprite.setTexture(t);
+    }
 }
