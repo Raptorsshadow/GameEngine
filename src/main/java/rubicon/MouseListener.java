@@ -1,7 +1,12 @@
 package rubicon;
 
+import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWCursorPosCallbackI;
+import org.lwjgl.glfw.GLFWMouseButtonCallbackI;
+import org.lwjgl.glfw.GLFWScrollCallbackI;
 
 import java.util.stream.IntStream;
 
@@ -12,6 +17,7 @@ import java.util.stream.IntStream;
  * Project: GameEngine
  * Description: Singleton that manages user mouse input.
  */
+
 public class MouseListener {
 
     //Singleton listener
@@ -34,6 +40,8 @@ public class MouseListener {
     //Track if the user is dragging the mouse (A button is pressed while moving the mouse)
     private boolean isDragging;
 
+    private Vector2f gameViewportPos = new Vector2f();
+    private Vector2f gameViewportSize = new Vector2f();
     /**
      * Constructor for initializing all variables.
      */
@@ -63,8 +71,8 @@ public class MouseListener {
      * @param window the window that received the event
      * @param xPos   the new cursor x-coordinate, relative to the left edge of the content area
      * @param yPos   the new cursor y-coordinate, relative to the top edge of the content area
-     * @see org.lwjgl.glfw.GLFWCursorPosCallbackI#invoke
-     * Callback method that follows the {@link org.lwjgl.glfw.GLFWCursorPosCallbackI#invoke} interface
+     * @see GLFWCursorPosCallbackI#invoke
+     * Callback method that follows the {@link GLFWCursorPosCallbackI#invoke} interface
      */
     public static void mousePosCallback(long window, double xPos, double yPos) {
         get().lastX = get().x;
@@ -80,8 +88,8 @@ public class MouseListener {
      * @param button the mouse button that was pressed or released
      * @param action the button action. One of:<br><table><tr><td>{@link GLFW#GLFW_PRESS PRESS}</td><td>{@link GLFW#GLFW_RELEASE RELEASE}</td></tr></table>
      * @param mods   bitfield describing which modifiers keys were held down
-     * @see org.lwjgl.glfw.GLFWMouseButtonCallbackI#invoke
-     * Callback method that follows the {@link org.lwjgl.glfw.GLFWMouseButtonCallbackI#invoke} interface
+     * @see GLFWMouseButtonCallbackI#invoke
+     * Callback method that follows the {@link GLFWMouseButtonCallbackI#invoke} interface
      */
     public static void mouseButtonCallback(long window, int button, int action, int mods) {
         if (action == GLFW.GLFW_PRESS) {
@@ -100,8 +108,8 @@ public class MouseListener {
      * @param window  the window that received the event
      * @param xOffset the scroll offset along the x-axis
      * @param yOffset the scroll offset along the y-axis
-     * @see org.lwjgl.glfw.GLFWScrollCallbackI#invoke
-     * Callback method that follows the {@link org.lwjgl.glfw.GLFWScrollCallbackI#invoke} interface
+     * @see GLFWScrollCallbackI#invoke
+     * Callback method that follows the {@link GLFWScrollCallbackI#invoke} interface
      */
     public static void mouseScrollCallback(long window, double xOffset, double yOffset) {
         get().scrollX = xOffset;
@@ -195,15 +203,34 @@ public class MouseListener {
     }
 
     /**
+     * Set game viewport Pos
+     * @param gameViewportPos updated gameViewportPos
+     */
+    public static void setGameViewportPos(Vector2f gameViewportPos) {
+        get().gameViewportPos.set(gameViewportPos);
+    }
+
+    /**
+     * Set game viewport size
+     * @param gameViewportSize updated gameViewportSize
+     */
+    public static void setGameViewportSize(Vector2f gameViewportSize) {
+        get().gameViewportSize.set(gameViewportSize);
+    }
+
+    /**
      * Return the OrthoX coordinates of the mouse.  Inverts the math we do in the shader and camera to get real
      * X pixel coordinates
      * @return orthoX window value
      */
     public static float getOrthoX() {
-        float currentX = getX();
-        currentX = (currentX / (Window.getWidth())) * 2f - 1f;
+        float currentX = getX() - get().gameViewportPos.x;
+        currentX = (currentX / get().gameViewportSize.x) * 2f - 1f;
         Vector4f tmp = new Vector4f(currentX, 0, 0, 1);
-        tmp.mul(Window.getScene().getCamera().getInverseProjection()).mul(Window.getScene().getCamera().getInverseView());
+        Camera camera = Window.getScene().getCamera();
+        Matrix4f viewProjection = new Matrix4f();
+        camera.getInverseView().mul(camera.getInverseProjection(), viewProjection);
+        tmp.mul(viewProjection);
         currentX = tmp.x;
         return currentX;
     }
@@ -214,10 +241,13 @@ public class MouseListener {
      * @return orthoY window value.
      */
     public static float getOrthoY() {
-        float currentY = Window.getHeight() - getY();
-        currentY = (currentY / Window.getHeight()) * 2f - 1f;
+        float currentY = getY() - get().gameViewportPos.y;
+        currentY = -((currentY / get().gameViewportSize.y) * 2f - 1f);
         Vector4f tmp = new Vector4f(0, currentY, 0, 1);
-        tmp.mul(Window.getScene().getCamera().getInverseProjection()).mul(Window.getScene().getCamera().getInverseView());
+        Camera camera = Window.getScene().getCamera();
+        Matrix4f viewProjection = new Matrix4f();
+        camera.getInverseView().mul(camera.getInverseProjection(), viewProjection);
+        tmp.mul(viewProjection);
         currentY = tmp.y;
         return currentY;
     }
