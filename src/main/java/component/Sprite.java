@@ -4,6 +4,8 @@ import lombok.Data;
 import org.joml.Vector2f;
 import render.Texture;
 
+import java.io.Serializable;
+
 /**
  * Class: Sprite
  * Author: rapto
@@ -12,7 +14,7 @@ import render.Texture;
  * Description: Manages an individual sprite resource
  */
 @Data
-public class Sprite {
+public class Sprite implements Serializable {
     //Width of the Sprite
     private                float      width;
     //Height of the Sprite
