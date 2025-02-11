@@ -4,8 +4,8 @@ import graphics.GLWrapper;
 import graphics.LWJGLWrapper;
 import imgui.app.Color;
 import imgui.app.Configuration;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL11;
@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Class: Window
@@ -38,24 +38,25 @@ public class Window {
     Logger log = LogManager.getLogger(Window.class);
 
     // Window singleton reference
-    private static Window window;
+    private static  Window window;
     //Default background colors for RGBA channels
-    protected final Color colorBg = new Color(1, 1, 1, 1);
+    protected final Color  colorBg = new Color(1, 1, 1, 1);
 
     // Window config
     private final Configuration config;
     //ImGui Layer used to render overlays.
-    private final IMGuiLayer guiLayer;
+    private final IMGuiLayer    guiLayer;
     //Actual resolution values for the window.
-    private FrameBuffer frameBuffer;
+    private       FrameBuffer   frameBuffer;
     float dt = -1.0f;
     // Provisioned identifier for the Window
-    private long glfwWindow;
+    private long  glfwWindow;
     // The active scene
     private Scene currentScene;
 
-    private final GLWrapper gl;
+    private final GLWrapper      gl;
     final         List<Callback> callbacks = new ArrayList<>();
+
     /**
      * Default Constructor taking window initialization params
      *
@@ -65,12 +66,13 @@ public class Window {
     private Window(Configuration config, IMGuiLayer guiLayer) {
         this(config, guiLayer, new LWJGLWrapper());
     }
+
     /**
      * Default Constructor taking window initialization params
      *
      * @param config   Window Configuration Data
      * @param guiLayer ImGuiLayer Object that manages ImGui resources
-     * @param gl wrapper that handles all native GLFW Calls
+     * @param gl       wrapper that handles all native GLFW Calls
      */
     private Window(Configuration config, IMGuiLayer guiLayer, GLWrapper gl) {
         this.gl = gl;
@@ -83,7 +85,7 @@ public class Window {
      *
      * @param config   Window Configuration Object
      * @param guiLayer ImGuiLayer Object that manages ImGui resources
-     * @param gl wrapper that handles all native GLFW Calls
+     * @param gl       wrapper that handles all native GLFW Calls
      * @return Instance of the window
      */
     public static Window get(Configuration config, IMGuiLayer guiLayer, GLWrapper gl) {
@@ -119,8 +121,8 @@ public class Window {
     public static Window get() {
         if (Window.window == null) {
             final Configuration config = new Configuration();
-            config.setHeight(1080);
             config.setWidth(1920);
+            config.setHeight(1080);
             config.setTitle("Test with IMGui");
             Window.window = new Window(config, new IMGuiLayer());
             Window.window.init();
@@ -210,6 +212,22 @@ public class Window {
     }
 
     /**
+     * Return the framebuffer
+     * @return framebuffer
+     */
+    public static FrameBuffer getFrameBuffer() {
+        return get().frameBuffer;
+    }
+
+    /**
+     * Return the targeted Aspect ratio
+     * @return aspect ratio of window dimensions.
+     */
+    public static float getTargetAspectRatio() {
+        return (float) get().config.getWidth() / get().config.getHeight();
+    }
+
+    /**
      * Initialize the Window and IMGui Framework.
      */
     public void init() {
@@ -253,7 +271,7 @@ public class Window {
         gl.glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // the window will be resizable
         gl.glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
         glfwWindow = gl.glfwCreateWindow(config.getWidth(), config.getHeight(), config.getTitle(), MemoryUtil.NULL,
-                MemoryUtil.NULL);
+                                         MemoryUtil.NULL);
 
         if (glfwWindow == MemoryUtil.NULL) {
             throw new IllegalArgumentException("Failed to create the GLFW window");
@@ -271,7 +289,7 @@ public class Window {
             gl.glfwGetWindowSize(glfwWindow, pWidth, pHeight);
             final GLFWVidMode vidmode = Objects.requireNonNull(gl.glfwGetVideoMode(gl.glfwGetPrimaryMonitor()));
             gl.glfwSetWindowPos(glfwWindow, (vidmode.width() - pWidth.get(0)) / 2,
-                    (vidmode.height() - pHeight.get(0)) / 2);
+                                (vidmode.height() - pHeight.get(0)) / 2);
         }
 
         gl.glfwMakeContextCurrent(glfwWindow);
@@ -291,6 +309,7 @@ public class Window {
         gl.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
         this.frameBuffer = new FrameBuffer(3840, 2160);
+        gl.glViewport(0, 0, 3840, 2160);
         Window.changeScene(0);
 
         clearBuffer();
@@ -304,6 +323,8 @@ public class Window {
      */
     private void clearBuffer() {
         DebugDraw.beginFrame();
+        this.frameBuffer.bind();
+
         gl.glClearColor(colorBg.getRed(), colorBg.getGreen(), colorBg.getBlue(), colorBg.getAlpha());
         gl.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
@@ -328,8 +349,9 @@ public class Window {
 
         //gl.freeCallbacks should do this.  If we
         callbacks.forEach(c -> {
-            if(c != null) {
-                log.warn("This shouldn't trip.  If this shows up an event listener was bound twice and may not have released properly or caused a memory leak or other resource issue in game.");
+            if (c != null) {
+                log.warn(
+                        "This shouldn't trip.  If this shows up an event listener was bound twice and may not have released properly or caused a memory leak or other resource issue in game.");
                 c.close();
             }
         });
@@ -373,7 +395,8 @@ public class Window {
         preProcess(dt);
         process(dt);
         postProcess(dt);
-        renderBuffer();}
+        renderBuffer();
+    }
 
     /**
      * Perform pre-render setup if necessary
@@ -390,7 +413,6 @@ public class Window {
      * @param dt delta time of frame
      */
     private void process(float dt) {
-        //this.frameBuffer.bind();
         //If dt isn't 0, we call update on the scene.
         if (dt >= 0) {
             DebugDraw.draw();

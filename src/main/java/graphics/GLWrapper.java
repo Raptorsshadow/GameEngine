@@ -172,4 +172,6 @@ public interface GLWrapper {
     void glFramebufferRenderbuffer(int target, int attachment, int renderBufferTarget, int renderBuffer);
 
     int glCheckFramebufferStatus(int target);
+
+    void glViewport(int x, int y, int w, int h);
 }

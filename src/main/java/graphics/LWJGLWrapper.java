@@ -425,4 +425,9 @@ public class LWJGLWrapper implements GLWrapper {
     public int glCheckFramebufferStatus(int target) {
         return GL30.glCheckFramebufferStatus(target);
     }
+
+    @Override
+    public void glViewport(int x, int y, int w, int h) {
+        GL11.glViewport(x,y,w,h);
+    }
 }

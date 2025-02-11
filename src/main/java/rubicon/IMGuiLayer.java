@@ -1,5 +1,6 @@
 package rubicon;
 
+import editor.GameViewWindow;
 import imgui.*;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiConfigFlags;
@@ -100,7 +101,7 @@ public class IMGuiLayer {
         io.setIniFilename("imgui.ini");                                // We don't want to save .ini file
         io.addConfigFlags(ImGuiConfigFlags.NavEnableKeyboard);  // Enable Keyboard Controls
         io.addConfigFlags(ImGuiConfigFlags.DockingEnable);      // Enable Docking
-        io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);    // Enable Multi-Viewport / Platform Windows
+        //io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);    // Enable Multi-Viewport / Platform Windows
         io.setConfigViewportsNoTaskBarIcon(true);
 
         initFonts(io);
@@ -151,7 +152,7 @@ public class IMGuiLayer {
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         }
-
+        glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
         log.info("GLSL Version: {}", this.glslVersion);
     }
 
@@ -164,7 +165,7 @@ public class IMGuiLayer {
         startFrame();
         setupDockspace();
         scene.sceneImgui();
-        //Extra.show(Window.getBackgroundColor());
+        GameViewWindow.imgui();
         ImGui.end();
         endFrame();
     }

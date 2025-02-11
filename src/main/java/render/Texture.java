@@ -59,6 +59,8 @@ public class Texture implements Serializable {
         textureId = gl.glGenTextures();
         gl.glBindTexture(GL_TEXTURE_2D, textureId);
 
+        gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         //Instruct the system to populate the provisioned space.
         gl.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
                         GL_UNSIGNED_BYTE,null);
