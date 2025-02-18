@@ -1,9 +1,11 @@
 package physics2d.primitives;
 
+import lombok.Data;
 import org.joml.Vector2f;
 import physics2d.rigidbody.Rigidbody2D;
 import util.JMath;
 
+@Data
 public class Box2D {
     private Vector2f size     = new Vector2f();
     private Vector2f halfSize = new Vector2f();

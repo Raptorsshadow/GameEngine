@@ -20,6 +20,11 @@ public class Line2D {
     private Vector3f color;
     private int      lifetime;
 
+    public Line2D(Vector2f from, Vector2f to) {
+        this.from = from;
+        this.to = to;
+    }
+
     /**
      * Decrement and return the lifetime counter
      *
@@ -28,5 +33,11 @@ public class Line2D {
     public int beginFrame() {
         lifetime--;
         return this.lifetime;
+    }
+    public Vector2f getStart() {
+        return this.from;
+    }
+    public Vector2f getEnd() {
+        return this.to;
     }
 }

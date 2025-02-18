@@ -18,7 +18,7 @@ class GameObjectTest {
     void emptyConstructorTest() {
         GameObject test = new GameObject("Test");
         assertEquals("Test", test.getName());
-        assertEquals(0, test.getzIndex());
+        assertEquals(0, test.getZIndex());
         assertNotNull(test.transform);
         assertEquals(0, test.transform.position.x);
         assertEquals(0, test.transform.position.y);
@@ -34,7 +34,7 @@ class GameObjectTest {
         String name = "TName";
         GameObject test = new GameObject(name, t, zIndex);
         assertEquals(name, test.getName());
-        assertEquals(zIndex, test.getzIndex());
+        assertEquals(zIndex, test.getZIndex());
         assertNotNull(test.transform);
         assertEquals(t, test.transform);
         assertDoesNotThrow(() -> test.getComponent(SpriteRenderer.class));
@@ -43,9 +43,9 @@ class GameObjectTest {
     @Test
     void addComponent() {
         GameObject t = new GameObject("test");
-        SpriteRenderer spr  = Mockito.mock(SpriteRenderer.class);
+        SpriteRenderer spr  = new SpriteRenderer();
         t.addComponent(spr);
-        assertEquals(t, spr.gameObject);
+        assertEquals(t, spr.getGameObject());
         assertEquals(spr, t.getComponent(spr.getClass()));
     }
 
@@ -57,7 +57,7 @@ class GameObjectTest {
         spr.setColor(new Vector4f());
         SpriteRenderer s = Mockito.spy(spr);
         t.addComponent(s);
-        assertEquals(t, s.gameObject);
+        assertEquals(t, s.getGameObject());
         assertEquals(s, t.getComponent(spr.getClass()));
         t.start();
         verify(s).start();

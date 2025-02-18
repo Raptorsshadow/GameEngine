@@ -17,7 +17,7 @@ public class JMath {
 
     /**
      * Rotate a vector around an origin by the given angle
-     * @param vec Vertex to rotate
+     * @param vec Vertex to rotate.  Will be modified.
      * @param angleDeg Degree of rotation
      * @param origin Origin of rotation
      */
@@ -25,8 +25,9 @@ public class JMath {
         float x = vec.x - origin.x;
         float y = vec.y - origin.y;
 
-        float cos = (float) Math.cos(Math.toRadians(angleDeg));
-        float sin = (float) Math.sin(Math.toRadians(angleDeg));
+        double radians = Math.toRadians(angleDeg);
+        float cos = (float) Math.cos(radians);
+        float sin = (float) Math.sin(radians);
 
         float xPrime = (x * cos) - (y * sin);
         float yPrime = (x * sin) + (y * cos);
