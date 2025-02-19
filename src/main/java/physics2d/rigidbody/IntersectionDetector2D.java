@@ -1,11 +1,11 @@
 package physics2d.rigidbody;
 
 import org.joml.Vector2f;
-import physics2d.primitives.AABB;
-import physics2d.primitives.Box2D;
-import physics2d.primitives.Circle;
+import physics2d.primitives.*;
 import render.Line2D;
 import util.JMath;
+
+import java.util.Vector;
 
 /**
  *
@@ -118,5 +118,83 @@ public class IntersectionDetector2D {
         return pointInCircle(closestPoint, circle);
     }
 
+    public static boolean lineAndAABB(Line2D line, AABB box) {
+        if(pointInAABB(line.getStart(), box) || pointInAABB(line.getEnd(), box)) {
+            return true;
+        }
+        Vector2f unitVector = new Vector2f(line.getEnd()).sub(line.getStart());
+        unitVector.normalize();
+        unitVector.x = unitVector.x != 0 ? 1.0f / unitVector.x : 0f;
+        unitVector.y = unitVector.y != 0 ? 1.0f / unitVector.y : 0f;
 
+        Vector2f min = box.getMin();
+        min.sub(line.getStart()).mul(unitVector);
+        Vector2f max = box.getMax();
+        max.sub(line.getStart()).mul(unitVector);
+
+        float tMin = Math.max(Math.min(min.x, max.x), Math.min(min.y, max.y));
+        float tMax = Math.min(Math.max(min.x, max.x), Math.max(min.y, max.y));
+        if(tMax < 0 || tMin > tMax) {
+            return false;
+        }
+        float t = tMin < 0f ? tMax : tMin;
+
+        return t > 0f && t*t < line.lengthSquared();
+    }
+
+    public static boolean lineAndBox2D(Line2D line, Box2D box) {
+        float theta = - box.getRigidbody().getRotation();
+        Vector2f center = box.getRigidbody().getPosition();
+        Vector2f localStart = new Vector2f(line.getStart());
+        Vector2f localEnd = new Vector2f(line.getEnd());
+        JMath.rotate(localStart, theta, center);
+        JMath.rotate(localEnd, theta, center);
+        return lineAndAABB(new Line2D(localStart, localEnd), new AABB(box.getMin(), box.getMax()));
+    }
+
+    //
+    //      Raycasts
+    //
+
+    public static boolean raycast(Ray2D ray, Circle circle, RaycastResult result) {
+        float intersectWithCircle;
+
+        RaycastResult.reset(result);
+
+        Vector2f originToCircle = new Vector2f(circle.getCenter()).sub((ray.getOrigin()));
+        float radiusSquared = circle.getRadius() * circle.getRadius();
+        float originToCircleLengthSquared = originToCircle.lengthSquared();
+
+        //Project the vector from the ray origin onto the direction of the ray
+        float projectionLength = originToCircle.dot(ray.getDirection());
+        float bSquared = originToCircleLengthSquared - projectionLength*projectionLength;
+
+        //Check if there was a hit.  Anything less than 0 can be considered a miss/No Intersection
+        if(radiusSquared - bSquared < 0.0f) {
+            return false;
+        }
+
+        //Calculate the length of the projection that occurs within the bounds of the circle.
+        float projectionWithinCircleLength = (float) Math.sqrt(radiusSquared - bSquared);
+
+        /*
+            Calculate intersection of ray with circle.
+            If the ray starts within the circle then we add the to the projectionlength
+            Otherwise we subtract.
+         */
+        if (originToCircleLengthSquared < radiusSquared) {
+            intersectWithCircle = projectionLength + projectionWithinCircleLength;
+        } else {
+            intersectWithCircle = projectionLength - projectionWithinCircleLength;
+        }
+
+        //Populate Results object if passed.
+        if(result != null) {
+            Vector2f point = new Vector2f(ray.getOrigin()).add(ray.getDirection().mul(intersectWithCircle));
+            Vector2f normal = new Vector2f(point).sub(circle.getCenter()).normalize();
+            result.init(point,normal,intersectWithCircle,false);
+        }
+
+        return true;
+    }
 }
