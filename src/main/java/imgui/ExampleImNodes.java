@@ -29,8 +29,8 @@ public class ExampleImNodes {
     public static void show(final ImBoolean showImNodesWindow, final Graph graph) {
         ImGui.setNextWindowSize(500, 400, ImGuiCond.Once);
         ImGui.setNextWindowPos(ImGui.getMainViewport()
-                .getPosX() + 100, ImGui.getMainViewport()
-                .getPosY() + 100, ImGuiCond.Once);
+                                    .getPosX() + 100, ImGui.getMainViewport()
+                                                           .getPosY() + 100, ImGuiCond.Once);
         if (ImGui.begin("ImNodes Demo", showImNodesWindow)) {
             ImGui.text("This a demo graph editor for ImNodes");
 
@@ -40,7 +40,7 @@ public class ExampleImNodes {
             if (ImGui.button(URL)) {
                 try {
                     Desktop.getDesktop()
-                            .browse(new URI(URL));
+                           .browse(new URI(URL));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -73,7 +73,7 @@ public class ExampleImNodes {
             for (Graph.GraphNode node : graph.nodes.values()) {
                 if (graph.nodes.containsKey(node.outputNodeId)) {
                     ImNodes.link(uniqueLinkId++, node.getOutputPinId(), graph.nodes.get(node.outputNodeId)
-                            .getInputPinId());
+                                                                                   .getInputPinId());
                 }
             }
 
@@ -95,7 +95,7 @@ public class ExampleImNodes {
                 if (hoveredNode != -1) {
                     ImGui.openPopup("node_context");
                     ImGui.getStateStorage()
-                            .setInt(ImGui.getID("delete_node_id"), hoveredNode);
+                         .setInt(ImGui.getID("delete_node_id"), hoveredNode);
                 } else if (isEditorHovered) {
                     ImGui.openPopup("node_editor_context");
                 }
@@ -103,10 +103,10 @@ public class ExampleImNodes {
 
             if (ImGui.isPopupOpen("node_context")) {
                 final int targetNode = ImGui.getStateStorage()
-                        .getInt(ImGui.getID("delete_node_id"));
+                                            .getInt(ImGui.getID("delete_node_id"));
                 if (ImGui.beginPopup("node_context")) {
                     if (ImGui.button("Delete " + graph.nodes.get(targetNode)
-                            .getName())) {
+                                                            .getName())) {
                         graph.nodes.remove(targetNode);
                         ImGui.closeCurrentPopup();
                     }

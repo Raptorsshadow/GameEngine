@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class Graph {
-    public final Map<Integer, GraphNode> nodes = new HashMap<>();
-    public int nextNodeId = 1;
-    public int nextPinId = 100;
+    public final Map<Integer, GraphNode> nodes      = new HashMap<>();
+    public       int                     nextNodeId = 1;
+    public       int                     nextPinId  = 100;
 
     public Graph() {
         final GraphNode first = createGraphNode();

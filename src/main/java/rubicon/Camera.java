@@ -16,12 +16,12 @@ import org.joml.Vector3f;
 @Data
 public class Camera {
 
-    public static final float RIGHT_LENGTH = 32f * 40f;
-    public static final float TOP_LENGTH = 32f * 21f;
-    public static final float NEAR_DIST = 0f;
-    public static final float FAR_DIST = 100f;
+    public static final float    RIGHT_LENGTH = 32f * 40f;
+    public static final float    TOP_LENGTH   = 32f * 21f;
+    public static final float    NEAR_DIST    = 0f;
+    public static final float    FAR_DIST     = 100f;
     //Defines the projection matrix used to describe the scene canvas
-    private final Matrix4f projectionMatrix;
+    private final       Matrix4f projectionMatrix;
 
     //Defines the viewpoint of the camera itself
     private final Matrix4f viewMatrix;
@@ -37,6 +37,7 @@ public class Camera {
 
     @Getter
     private final Vector2f projectionSize = new Vector2f(RIGHT_LENGTH, TOP_LENGTH);
+
     /**
      * Constructor responsible for initializing relevant camera matrices and adjusting the projection to the
      * given position.
@@ -73,7 +74,7 @@ public class Camera {
         Vector3f cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
         this.viewMatrix.identity();
         viewMatrix.lookAt(new Vector3f(position.x, position.y, 20.0f), cameraFront.add(position.x, position.y, 0.0f),
-                cameraUp);
+                          cameraUp);
         this.viewMatrix.invert(inverseView);
         return this.viewMatrix;
     }

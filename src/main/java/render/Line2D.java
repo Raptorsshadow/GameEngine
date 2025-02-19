@@ -34,9 +34,11 @@ public class Line2D {
         lifetime--;
         return this.lifetime;
     }
+
     public Vector2f getStart() {
         return this.from;
     }
+
     public Vector2f getEnd() {
         return this.to;
     }

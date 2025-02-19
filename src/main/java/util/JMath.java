@@ -1,5 +1,6 @@
 package util;
 
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2f;
 
 /**
@@ -12,16 +13,17 @@ import org.joml.Vector2f;
 public class JMath {
 
     private JMath() {
-        //Hide default constructor for static classes.
+        throw new UnsupportedOperationException("Utility class");
     }
 
     /**
      * Rotate a vector around an origin by the given angle
-     * @param vec Vertex to rotate.  Will be modified.
+     *
+     * @param vec      Vertex to rotate.  Will be modified.
      * @param angleDeg Degree of rotation
-     * @param origin Origin of rotation
+     * @param origin   Origin of rotation
      */
-    public static void rotate(Vector2f vec, float angleDeg, Vector2f origin) {
+    public static void rotate(@NotNull Vector2f vec, float angleDeg, @NotNull Vector2f origin) {
         float x = vec.x - origin.x;
         float y = vec.y - origin.y;
 
@@ -41,8 +43,9 @@ public class JMath {
 
     /**
      * Compare 2 float values with a given margin of error
-     * @param f1 float 1
-     * @param f2 float 2
+     *
+     * @param f1      float 1
+     * @param f2      float 2
      * @param epsilon margin of error
      * @return true if f1 and f2 are within epsilon
      */
@@ -52,17 +55,19 @@ public class JMath {
 
     /**
      * Compare 2 Vector2f values within a given margin of error
-     * @param vec1 first Vector2f
-     * @param vec2 second Vector2f
+     *
+     * @param vec1    first Vector2f
+     * @param vec2    second Vector2f
      * @param epsilon margin of error
      * @return true if the x and y coordinates of vec1 and vec2 are within epsilon
      */
-    public static boolean compare(Vector2f vec1, Vector2f vec2, float epsilon) {
+    public static boolean compare(@NotNull Vector2f vec1, @NotNull Vector2f vec2, float epsilon) {
         return compare(vec1.x, vec2.x, epsilon) && compare(vec1.y, vec2.y, epsilon);
     }
 
     /**
      * Compare 2 floats values, defaults to Float.MIN_VALUE for margin of error
+     *
      * @param f1 float 1
      * @param f2 float 2
      * @return true if f1 and f2 are within Float.MIN_VALUE of each other.
@@ -73,11 +78,12 @@ public class JMath {
 
     /**
      * Compare 2 Vector2f values, default to Float.MIN_VALUE for the margin of error
+     *
      * @param vec1 first Vector2f
      * @param vec2 second Vector2f
      * @return true if the x and y coordinates of vec1 and vec2 are withing Float.MIN_VALUE of each other.
      */
-    public static boolean compare(Vector2f vec1, Vector2f vec2) {
+    public static boolean compare(@NotNull Vector2f vec1, @NotNull Vector2f vec2) {
         return compare(vec1.x, vec2.x) && compare(vec1.y, vec2.y);
     }
 }

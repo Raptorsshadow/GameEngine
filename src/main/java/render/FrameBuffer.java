@@ -1,10 +1,10 @@
 package render;
 
 import graphics.GLWrapper;
-import graphics.LWJGLWrapper;
 import lombok.Data;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import scene.Settings;
 
 import static org.lwjgl.opengl.GL30C.*;
 
@@ -18,15 +18,11 @@ import static org.lwjgl.opengl.GL30C.*;
  */
 @Data
 public class FrameBuffer {
-    private final Logger  log   = LogManager.getLogger(FrameBuffer.class);
-    private final Texture texture;
-    private       int     fboID = 0;
+    private final Logger    log   = LogManager.getLogger(FrameBuffer.class);
+    private final Texture   texture;
+    private       int       fboID = 0;
+    private       GLWrapper gl;
 
-    private GLWrapper gl;
-
-    public FrameBuffer(int width, int height) {
-        this(width, height, new LWJGLWrapper());
-    }
 
     /**
      * Instantiates the Frame Buffer with the given width, height and GLWrapper
@@ -34,10 +30,9 @@ public class FrameBuffer {
      *
      * @param width  buffer width
      * @param height buffer height
-     * @param gl     LWJGL Implementation
      */
-    public FrameBuffer(int width, int height, GLWrapper gl) {
-        this.gl = gl;
+    public FrameBuffer(int width, int height) {
+        gl = Settings.graphicsImpl;
 
         //Generate the frame buffer
         this.fboID = gl.glGenFramebuffers();
@@ -58,7 +53,6 @@ public class FrameBuffer {
             log.error("Frame buffer is not complete");
             assert false;
         }
-        //Release the FrameBuffer
         unbind();
     }
 

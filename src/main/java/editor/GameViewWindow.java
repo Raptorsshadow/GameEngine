@@ -47,6 +47,7 @@ public class GameViewWindow {
 
     /**
      * Returns the size of the Viewport we can support bounded by aspect ratio.
+     *
      * @return Viewport dimensions
      */
     private static ImVec2 getLargestSizeForViewport() {
@@ -67,6 +68,7 @@ public class GameViewWindow {
 
     /**
      * Returns the center of the viewport for positioning purposes
+     *
      * @param aspectSize the calculated size of the viewport.
      * @return Center coordinates of the Viewport.
      */

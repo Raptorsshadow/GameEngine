@@ -29,7 +29,7 @@ class GameObjectTest {
 
     @Test
     void constructorTest() {
-        Transform t = new Transform(new Vector2f(1,2), new Vector2f(3,4));
+        Transform t = new Transform(new Vector2f(1, 2), new Vector2f(3, 4));
         int zIndex = 12;
         String name = "TName";
         GameObject test = new GameObject(name, t, zIndex);
@@ -43,7 +43,7 @@ class GameObjectTest {
     @Test
     void addComponent() {
         GameObject t = new GameObject("test");
-        SpriteRenderer spr  = new SpriteRenderer();
+        SpriteRenderer spr = new SpriteRenderer();
         t.addComponent(spr);
         assertEquals(t, spr.getGameObject());
         assertEquals(spr, t.getComponent(spr.getClass()));
@@ -64,7 +64,8 @@ class GameObjectTest {
         t.update(delta);
         verify(s).update(delta);
         try (MockedStatic<ImGui> utilities = Mockito.mockStatic(ImGui.class)) {
-            utilities.when(() -> ImGui.colorPicker4(any(), any())).thenReturn(false);
+            utilities.when(() -> ImGui.colorPicker4(any(), any()))
+                     .thenReturn(false);
             t.imgui();
             verify(s).imgui();
         }

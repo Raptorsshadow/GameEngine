@@ -19,7 +19,7 @@ public class Main {
         try {
             Window window = Window.get();
             window.run();
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("A Fatal Exception was encountered", e);
         }
     }

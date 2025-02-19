@@ -1,10 +1,9 @@
 package render;
 
 import graphics.GLWrapper;
-import graphics.LWJGLWrapper;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.lwjgl.BufferUtils;
+import scene.Settings;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
@@ -21,7 +20,6 @@ import static org.lwjgl.opengl.GL11.*;
  * Description: Texture definition file responsible for loading and parsing the Texture for use in Scene.
  */
 @Data
-@NoArgsConstructor
 public class Texture implements Serializable {
 
     // Filepath of the Texture
@@ -34,25 +32,20 @@ public class Texture implements Serializable {
     private int width;
     private int height;
 
-    private transient GLWrapper gl = new LWJGLWrapper();
+    private transient GLWrapper gl;
 
-    /**
-     * Creates an empty Texture of given width and height.
-     * @param width Width of texture to be generated
-     * @param height Height of texture to be generated
-     */
-    public Texture(int width, int height) {
-        this(width, height, new LWJGLWrapper());
+    public Texture() {
+        this.gl = Settings.graphicsImpl;
     }
 
     /**
      * Creates an empty Texture of given width and height.
-     * @param width Width of texture to be generated
+     *
+     * @param width  Width of texture to be generated
      * @param height Height of texture to be generated
-     * @param gl GLWrapper Implementation to use.
      */
-    public Texture(int width, int height, GLWrapper gl) {
-        this.gl = gl;
+    public Texture(int width, int height) {
+        this();
         this.filePath = "Generated";
 
         // Generate and bind texture
@@ -63,12 +56,11 @@ public class Texture implements Serializable {
         gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         //Instruct the system to populate the provisioned space.
         gl.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
-                        GL_UNSIGNED_BYTE,null);
+                        GL_UNSIGNED_BYTE, null);
 
     }
 
-    public void init(String filePath, GLWrapper gl) {
-        this.gl = gl;
+    public void init(String filePath) {
         this.filePath = filePath;
         // Generate and bind texture
         textureId = gl.glGenTextures();
@@ -84,10 +76,6 @@ public class Texture implements Serializable {
 
         //Load and provision the texture.
         loadTexture();
-    }
-
-    public void init(String filePath) {
-        this.init(filePath, new LWJGLWrapper());
     }
 
     /**

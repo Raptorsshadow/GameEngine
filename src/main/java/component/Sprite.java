@@ -15,10 +15,6 @@ import java.io.Serializable;
  */
 @Data
 public class Sprite implements Serializable {
-    //Width of the Sprite
-    private                float      width;
-    //Height of the Sprite
-    private                float      height;
     //Default Texture Coordinate vector to use if not provided.
     protected static final Vector2f[] DEF_VECTOR = new Vector2f[]{
             new Vector2f(1, 1),
@@ -26,7 +22,10 @@ public class Sprite implements Serializable {
             new Vector2f(0, 0),
             new Vector2f(0, 1)
     };
-
+    //Width of the Sprite
+    private                float      width;
+    //Height of the Sprite
+    private                float      height;
     //The texture containing the sprite
     private Texture    texture   = null;
     //The bounding box of the sprite

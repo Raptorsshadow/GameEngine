@@ -16,6 +16,7 @@ class CameraTest {
         assertNotNull(c.getProjectionMatrix());
         assertNotNull(c.getViewMatrix());
     }
+
     @Test
     void projectionMatrixTest() {
         Matrix4f proj = new Matrix4f();

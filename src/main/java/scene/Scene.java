@@ -35,16 +35,16 @@ public abstract class Scene {
 
     // Camera responsible for displaying the scene
     @Getter
-    protected Camera camera;
+    protected Camera     camera;
     // Renderer used to draw the scene
-    protected       Renderer         renderer = new Renderer();
+    protected Renderer   renderer         = new Renderer();
     //Currently Selected activeGameObject used to render specific ImGui Overlays
-    protected       GameObject       activeGameObject = null;
-    // State variable to track if the scene is running
-    private         boolean          isRunning = false;
-
+    protected GameObject activeGameObject = null;
     //Status bit for determine if level was loaded from file.
     protected boolean levelLoaded = false;
+    // State variable to track if the scene is running
+    private   boolean    isRunning        = false;
+
     /**
      * Contract method responsible for updating the scene event delta time.
      *
@@ -119,9 +119,9 @@ public abstract class Scene {
                 .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
                 .create();
 
-        try(FileWriter writer = new FileWriter("level.json")) {
+        try (FileWriter writer = new FileWriter("level.json")) {
             writer.write(gson.toJson(this.gameObjects));
-        } catch(IOException e) {
+        } catch (IOException e) {
             log.error("Unable to Serialize the Scene State", e);
         }
     }
@@ -147,9 +147,9 @@ public abstract class Scene {
             int maxGoId = -1;
             int maxCompId = -1;
             GameObject[] objs = gson.fromJson(inFile, GameObject[].class);
-            for(GameObject go : objs) {
+            for (GameObject go : objs) {
                 addGameObjectToScene(go);
-                for(Component c : go.getComponents()) {
+                for (Component c : go.getComponents()) {
                     maxCompId = Math.max(c.getUid(), maxCompId);
                 }
                 maxGoId = Math.max(go.getUid(), maxGoId);

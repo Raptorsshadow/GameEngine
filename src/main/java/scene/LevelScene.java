@@ -17,7 +17,7 @@ public class LevelScene extends Scene {
     public LevelScene() {
         log.info("Inside Level Scene");
         Window.getBackgroundColor()
-                .set(1, 0, 0, 1);
+              .set(1, 0, 0, 1);
     }
 
     /**

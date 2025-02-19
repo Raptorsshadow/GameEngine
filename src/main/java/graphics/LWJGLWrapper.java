@@ -24,7 +24,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
  * Description: Implements the GLWrapper interface passing through to the relevant GLFW calls.
  */
 public class LWJGLWrapper implements GLWrapper {
-    private static final Logger log = LogManager.getLogger(LWJGLWrapper.class);
+    private static final Logger      log            = LogManager.getLogger(LWJGLWrapper.class);
     private static final PrintStream errPrintStream = IoBuilder
             .forLogger(log)
             .setLevel(Level.ERROR)
@@ -297,7 +297,8 @@ public class LWJGLWrapper implements GLWrapper {
 
     @Override
     public GLFWErrorCallback enableErrors() {
-        return GLFWErrorCallback.createPrint(errPrintStream).set();
+        return GLFWErrorCallback.createPrint(errPrintStream)
+                                .set();
     }
 
     @Override
@@ -428,6 +429,6 @@ public class LWJGLWrapper implements GLWrapper {
 
     @Override
     public void glViewport(int x, int y, int w, int h) {
-        GL11.glViewport(x,y,w,h);
+        GL11.glViewport(x, y, w, h);
     }
 }

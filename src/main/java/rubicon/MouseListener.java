@@ -40,8 +40,9 @@ public class MouseListener {
     //Track if the user is dragging the mouse (A button is pressed while moving the mouse)
     private boolean isDragging;
 
-    private Vector2f gameViewportPos = new Vector2f();
+    private Vector2f gameViewportPos  = new Vector2f();
     private Vector2f gameViewportSize = new Vector2f();
+
     /**
      * Constructor for initializing all variables.
      */
@@ -80,7 +81,7 @@ public class MouseListener {
         get().x = xPos;
         get().y = yPos;
         get().isDragging = IntStream.range(0, get().mouseButtonPressed.length)
-                .anyMatch(pos -> get().mouseButtonPressed[pos]);
+                                    .anyMatch(pos -> get().mouseButtonPressed[pos]);
     }
 
     /**
@@ -204,6 +205,7 @@ public class MouseListener {
 
     /**
      * Set game viewport Pos
+     *
      * @param gameViewportPos updated gameViewportPos
      */
     public static void setGameViewportPos(Vector2f gameViewportPos) {
@@ -212,6 +214,7 @@ public class MouseListener {
 
     /**
      * Set game viewport size
+     *
      * @param gameViewportSize updated gameViewportSize
      */
     public static void setGameViewportSize(Vector2f gameViewportSize) {
@@ -221,15 +224,18 @@ public class MouseListener {
     /**
      * Return the OrthoX coordinates of the mouse.  Inverts the math we do in the shader and camera to get real
      * X pixel coordinates
+     *
      * @return orthoX window value
      */
     public static float getOrthoX() {
         float currentX = getX() - get().gameViewportPos.x;
         currentX = (currentX / get().gameViewportSize.x) * 2f - 1f;
         Vector4f tmp = new Vector4f(currentX, 0, 0, 1);
-        Camera camera = Window.getScene().getCamera();
+        Camera camera = Window.getScene()
+                              .getCamera();
         Matrix4f viewProjection = new Matrix4f();
-        camera.getInverseView().mul(camera.getInverseProjection(), viewProjection);
+        camera.getInverseView()
+              .mul(camera.getInverseProjection(), viewProjection);
         tmp.mul(viewProjection);
         currentX = tmp.x;
         return currentX;
@@ -238,15 +244,18 @@ public class MouseListener {
     /**
      * Return the OrthoY coordinates of the mouse.  Inverts the math we do in the shader and camera to get real
      * Y pixel coordinates.
+     *
      * @return orthoY window value.
      */
     public static float getOrthoY() {
         float currentY = getY() - get().gameViewportPos.y;
         currentY = -((currentY / get().gameViewportSize.y) * 2f - 1f);
         Vector4f tmp = new Vector4f(0, currentY, 0, 1);
-        Camera camera = Window.getScene().getCamera();
+        Camera camera = Window.getScene()
+                              .getCamera();
         Matrix4f viewProjection = new Matrix4f();
-        camera.getInverseView().mul(camera.getInverseProjection(), viewProjection);
+        camera.getInverseView()
+              .mul(camera.getInverseProjection(), viewProjection);
         tmp.mul(viewProjection);
         currentY = tmp.y;
         return currentY;

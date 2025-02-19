@@ -1,6 +1,8 @@
 package util;
 
 import component.SpriteSheet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import render.Shader;
 import render.Texture;
 
@@ -16,18 +18,18 @@ import java.util.Map;
  * Description: Manages Asset resources from filesystem
  */
 public class AssetPool {
-    //Map of Shader assets
-    private static final Map<String, Shader> shaderMap = new HashMap<>();
+    static final         Map<String, Shader>      shaderMap      = new HashMap<>();
     //Map  of Texture assets
-    private static final Map<String, Texture> textureMap = new HashMap<>();
+    static final         Map<String, Texture>     textureMap     = new HashMap<>();
     //Map  of SpriteSheet assets
-    private static final Map<String, SpriteSheet> spriteSheetMap = new HashMap<>();
+    static final         Map<String, SpriteSheet> spriteSheetMap = new HashMap<>();
+    private static final Logger                   log            = LogManager.getLogger(AssetPool.class);
 
     /**
      * Hide default constructor as this is a static util class.
      */
     private AssetPool() {
-        //Hide Static class constructor
+        throw new UnsupportedOperationException("Utility class");
     }
 
     /**
@@ -49,7 +51,8 @@ public class AssetPool {
                 return shader;
             }
         } else {
-            assert false : "ERROR : AssetPool : Shader with given resourceName not found.";
+            log.error("ERROR : AssetPool : Shader with given resourceName not found.");
+            assert false;
             return null;
         }
     }
@@ -73,7 +76,8 @@ public class AssetPool {
                 return texture;
             }
         } else {
-            assert false : "ERROR : AssetPool : Texture with given resourceName not found.";
+            log.error("ERROR : AssetPool : Texture with given resourceName not found.");
+            assert false;
             return null;
         }
     }
@@ -89,7 +93,8 @@ public class AssetPool {
         if (!spriteSheetMap.containsKey(file.getAbsolutePath())) {
             AssetPool.spriteSheetMap.put(file.getAbsolutePath(), spriteSheet);
         } else {
-            assert false : "ERROR : AssetPool : SpriteSheet with given resourceName not found.";
+            log.error("ERROR : AssetPool : SpriteSheet with given resourceName not found.");
+            assert false;
         }
     }
 
@@ -101,7 +106,8 @@ public class AssetPool {
      */
     public static SpriteSheet getSpriteSheet(String resourceName) {
         File file = new File(resourceName);
-        assert spriteSheetMap.containsKey(file.getAbsolutePath()) : "ERROR : AssetPool : SpriteSheet with given resourceName not found.";
+        assert spriteSheetMap.containsKey(
+                file.getAbsolutePath()) : "ERROR : AssetPool : SpriteSheet with given resourceName not found.";
         return AssetPool.spriteSheetMap.getOrDefault(file.getAbsolutePath(), null);
     }
 }

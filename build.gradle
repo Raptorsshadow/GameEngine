@@ -99,5 +99,6 @@ dependencies {
 tasks {
     test {
         jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
+        jvmArgs += "-ea"
     }
 }

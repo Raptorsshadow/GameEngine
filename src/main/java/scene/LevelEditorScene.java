@@ -21,10 +21,10 @@ import java.util.Objects;
  */
 public class LevelEditorScene extends Scene {
 
-    GameObject levelEditorStuff = new GameObject("levelEditor", new Transform(new Vector2f()), 0);
     private final SpriteSheet spriteSheet = new SpriteSheet(
             Objects.requireNonNull(AssetPool.getTexture("assets/images/spritesheets/decorationsAndBlocks.png")),
             16, 16, 81, 0);
+    GameObject levelEditorStuff = new GameObject("levelEditor", new Transform(new Vector2f()), 0);
 
     /**
      * Default constructor used to initialize the scene pieces
@@ -62,7 +62,8 @@ public class LevelEditorScene extends Scene {
                 .filter(g -> g.getComponent(SpriteRenderer.class) != null)
                 .map(g -> g.getComponent(SpriteRenderer.class))
                 .filter(s -> s.getTexture() != null)
-                .forEach(s -> s.setTexture(AssetPool.getTexture(s.getTexture().getFilePath())));
+                .forEach(s -> s.setTexture(AssetPool.getTexture(s.getTexture()
+                                                                 .getFilePath())));
     }
 
     /**

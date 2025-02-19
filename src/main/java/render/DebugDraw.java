@@ -1,12 +1,12 @@
 package render;
 
 import graphics.GLWrapper;
-import graphics.LWJGLWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import rubicon.Window;
+import scene.Settings;
 import util.AssetPool;
 import util.JMath;
 
@@ -27,12 +27,11 @@ import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
  * Description: Render Line2D components to the screen.
  */
 public class DebugDraw {
-    private static final Logger log = LogManager.getLogger(DebugDraw.class);
-
     // Default Lifetime duration
     public static final  int          DEF_LIFETIME = 300;
     // Default Color to draw with
     public static final  Vector3f     DEF_COLOR    = new Vector3f(1f, 0f, 1f);
+    private static final Logger log = LogManager.getLogger(DebugDraw.class);
     // Max number of debug lines to render.
     private static final int          MAX_LINES    = 500;
     // Collection to hold all the lines we're rendering
@@ -47,29 +46,16 @@ public class DebugDraw {
     private static       int          vboId;
     //State variable for managing lifecycle
     private static       boolean      isStarted    = false;
-    //GLWrapper interface.
-    private static       GLWrapper    gl;
 
     private DebugDraw() {
         //Hidden private constructor
     }
 
     /**
-     * Setter for the GLWrapper wrapper
-     *
-     * @param gl GLWrapper to set
-     */
-    public static void setGLWrapper(GLWrapper gl) {
-        DebugDraw.gl = gl;
-    }
-
-    /**
      * Initialize the vao and vbo resources.
      */
     public static void start() {
-        if (DebugDraw.gl == null) {
-            DebugDraw.setGLWrapper(new LWJGLWrapper());
-        }
+        GLWrapper gl = Settings.graphicsImpl;
         vaoId = gl.glGenVertexArrays();
         gl.glBindVertexArray(vaoId);
 
@@ -105,6 +91,7 @@ public class DebugDraw {
      * Draw all lines to the screen
      */
     public static void draw() {
+        GLWrapper gl = Settings.graphicsImpl;
         if (lines.isEmpty()) {
             return;
         }

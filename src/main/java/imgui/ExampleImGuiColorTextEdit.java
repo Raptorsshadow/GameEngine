@@ -28,9 +28,9 @@ public class ExampleImGuiColorTextEdit {
                 "#define WINAPI __stdcall",
                 "#define D3D11_SDK_VERSION (7)",
                 " #define assert(expression) (void)(                                                  \n" +
-                        "    (!!(expression)) ||                                                              \n" +
-                        "    (_wassert(_CRT_WIDE(#expression), _CRT_WIDE(__FILE__), (unsigned)(__LINE__)), 0) \n" +
-                        " )"
+                "    (!!(expression)) ||                                                              \n" +
+                "    (_wassert(_CRT_WIDE(#expression), _CRT_WIDE(__FILE__), (unsigned)(__LINE__)), 0) \n" +
+                " )"
         };
 
         // Adding custom preproc identifiers
@@ -78,7 +78,7 @@ public class ExampleImGuiColorTextEdit {
     public static void show(final ImBoolean showImColorTextEditWindow) {
         ImGui.setNextWindowSize(500, 400);
         if (ImGui.begin("Text Editor", showImColorTextEditWindow,
-                ImGuiWindowFlags.HorizontalScrollbar | ImGuiWindowFlags.MenuBar)) {
+                        ImGuiWindowFlags.HorizontalScrollbar | ImGuiWindowFlags.MenuBar)) {
             if (ImGui.beginMenuBar()) {
                 if (ImGui.beginMenu("File")) {
                     if (ImGui.menuItem("Save")) {

@@ -15,7 +15,7 @@ public class ComponentDeserializer implements JsonSerializer<Component>, JsonDes
     /**
      * Custom deserializer for Component Class.
      *
-     * @param json Element to deserialize
+     * @param json    Element to deserialize
      * @param typeOfT Type of element
      * @param context Deserialization Context
      * @return Component Instance
@@ -36,8 +36,9 @@ public class ComponentDeserializer implements JsonSerializer<Component>, JsonDes
 
     /**
      * Custom serializer for Component Class
-     * @param src Component to be serialized
-     * @param type Type of src
+     *
+     * @param src     Component to be serialized
+     * @param type    Type of src
      * @param context Serialization Context
      * @return JsonElement representing a Component
      */

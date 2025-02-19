@@ -1,11 +1,11 @@
 package render;
 
+import graphics.GLWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
-import graphics.GLWrapper;
-import graphics.LWJGLWrapper;
+import scene.Settings;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
@@ -23,27 +23,20 @@ import static org.lwjgl.opengl.GL20.*;
  * Description: Responsible for configuring and linking shader resources and managing lifecycle and destruction when finished.
  */
 public class Shader {
-    private static final Logger log = LogManager.getLogger(Shader.class);
-
     // Constant for parsing shader files used to key on type preprocessor
     public static final String TYPE_CONSTANT = "#type ";
-
+    private static final Logger log = LogManager.getLogger(Shader.class);
     //Shader filepath
     private final String filePath;
-
+    GLWrapper gl;
     //Shader programId registered on GPU
     private int shaderProgramId;
-
     //Lifecycle tracking variable.  True if shader has been registered and is running
     private boolean inUse;
-
     //Parsed out vertex source from shader file
     private String vertexSource;
-
     //Parsed out fragment source from shader file
     private String fragmentSource;
-
-    private final GLWrapper gl;
 
     /**
      * Constructor that attempts to load the given shader file and parse out the vertex and fragment sources.
@@ -51,16 +44,7 @@ public class Shader {
      * @param filePath Shader file combining vertex and fragment sources.
      */
     public Shader(String filePath) {
-        this(filePath, new LWJGLWrapper());
-    }
-
-    /**
-     * Constructor that attempts to load the given shader file and parse out the vertex and fragment sources.
-     * @param filePath Shader file combining vertex and fragment sources.
-     * @param gl wrapper that handles all native GLFW Calls
-     */
-    public Shader(String filePath, GLWrapper gl) {
-        this.gl = gl;
+        gl = Settings.graphicsImpl;
         this.filePath = filePath;
 
         try {
@@ -83,7 +67,7 @@ public class Shader {
                 eol = source.indexOf("\n", index);
                 if (index >= 6) {
                     shaderType = source.substring(index, eol)
-                            .trim();
+                                       .trim();
                     switch (shaderType) {
                         case "vertex":
                             this.vertexSource = split[i++];

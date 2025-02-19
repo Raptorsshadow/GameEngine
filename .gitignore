@@ -45,3 +45,6 @@ bin/
 ### LWJGL ###
 imgui.ini
 level.json
+
+### JACOCO ###
+htmlReport/**

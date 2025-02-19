@@ -45,8 +45,8 @@ public class MouseControls extends Component {
     public void update(float dt) {
         if (this.holdingObject != null) {
             // Handles Snap to Grid functionality
-            this.holdingObject.transform.position.x = (int) (MouseListener.getOrthoX() / Settings.GRID_WIDTH) * (float)Settings.GRID_WIDTH;
-            this.holdingObject.transform.position.y = (int) (MouseListener.getOrthoY() / Settings.GRID_HEIGHT) * (float)Settings.GRID_HEIGHT;
+            this.holdingObject.transform.position.x = (int) (MouseListener.getOrthoX() / Settings.GRID_WIDTH) * (float) Settings.GRID_WIDTH;
+            this.holdingObject.transform.position.y = (int) (MouseListener.getOrthoY() / Settings.GRID_HEIGHT) * (float) Settings.GRID_HEIGHT;
 
             if (MouseListener.isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
                 place();

@@ -1,7 +1,6 @@
 package rubicon;
 
 import graphics.GLWrapper;
-import graphics.LWJGLWrapper;
 import imgui.app.Color;
 import imgui.app.Configuration;
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +16,7 @@ import render.FrameBuffer;
 import scene.LevelEditorScene;
 import scene.LevelScene;
 import scene.Scene;
+import scene.Settings;
 
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -35,27 +35,24 @@ import static org.lwjgl.opengl.GL11.*;
  * scenes as necessary.
  */
 public class Window {
-    Logger log = LogManager.getLogger(Window.class);
-
     // Window singleton reference
     private static  Window window;
     //Default background colors for RGBA channels
     protected final Color  colorBg = new Color(1, 1, 1, 1);
-
+    final         List<Callback> callbacks = new ArrayList<>();
     // Window config
     private final Configuration config;
     //ImGui Layer used to render overlays.
     private final IMGuiLayer    guiLayer;
+    private final GLWrapper      gl;
+    Logger log = LogManager.getLogger(Window.class);
+    float dt = -1.0f;
     //Actual resolution values for the window.
     private       FrameBuffer   frameBuffer;
-    float dt = -1.0f;
     // Provisioned identifier for the Window
     private long  glfwWindow;
     // The active scene
     private Scene currentScene;
-
-    private final GLWrapper      gl;
-    final         List<Callback> callbacks = new ArrayList<>();
 
     /**
      * Default Constructor taking window initialization params
@@ -64,37 +61,9 @@ public class Window {
      * @param guiLayer ImGuiLayer Object that manages ImGui resources
      */
     private Window(Configuration config, IMGuiLayer guiLayer) {
-        this(config, guiLayer, new LWJGLWrapper());
-    }
-
-    /**
-     * Default Constructor taking window initialization params
-     *
-     * @param config   Window Configuration Data
-     * @param guiLayer ImGuiLayer Object that manages ImGui resources
-     * @param gl       wrapper that handles all native GLFW Calls
-     */
-    private Window(Configuration config, IMGuiLayer guiLayer, GLWrapper gl) {
-        this.gl = gl;
+        this.gl = Settings.graphicsImpl;
         this.config = config;
         this.guiLayer = guiLayer;
-    }
-
-    /**
-     * Instance accessor and retriever that passes a config and IMGuiLayer to initialize the window.
-     *
-     * @param config   Window Configuration Object
-     * @param guiLayer ImGuiLayer Object that manages ImGui resources
-     * @param gl       wrapper that handles all native GLFW Calls
-     * @return Instance of the window
-     */
-    public static Window get(Configuration config, IMGuiLayer guiLayer, GLWrapper gl) {
-        if (Window.window == null) {
-            Window.window = new Window(config, guiLayer, gl);
-            Window.window.init();
-        }
-
-        return Window.window;
     }
 
     /**
@@ -213,6 +182,7 @@ public class Window {
 
     /**
      * Return the framebuffer
+     *
      * @return framebuffer
      */
     public static FrameBuffer getFrameBuffer() {
@@ -221,6 +191,7 @@ public class Window {
 
     /**
      * Return the targeted Aspect ratio
+     *
      * @return aspect ratio of window dimensions.
      */
     public static float getTargetAspectRatio() {

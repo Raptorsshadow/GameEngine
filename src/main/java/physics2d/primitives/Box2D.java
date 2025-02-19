@@ -40,8 +40,8 @@ public class Box2D {
                 new Vector2f(max.x, min.y),
                 new Vector2f(max.x, max.y),
                 };
-        if(rigidbody.getRotation() != 0.0f) {
-            for(Vector2f vertex : vertices) {
+        if (rigidbody.getRotation() != 0.0f) {
+            for (Vector2f vertex : vertices) {
                 JMath.rotate(vertex, this.rigidbody.getRotation(), this.rigidbody.getPosition());
             }
         }

@@ -110,7 +110,8 @@ class SpriteRendererTest {
     @Test
     void imguiTrue() {
         try (MockedStatic<ImGui> utilities = Mockito.mockStatic(ImGui.class)) {
-            utilities.when(() -> ImGui.colorPicker4(any(), any())).thenReturn(true);
+            utilities.when(() -> ImGui.colorPicker4(any(), any()))
+                     .thenReturn(true);
             SpriteRenderer spr = new SpriteRenderer();
             spr.setClean();
             spr.imgui();
@@ -122,7 +123,8 @@ class SpriteRendererTest {
     @Test
     void imguiFalse() {
         try (MockedStatic<ImGui> utilities = Mockito.mockStatic(ImGui.class)) {
-            utilities.when(() -> ImGui.colorPicker4(any(), any())).thenReturn(false);
+            utilities.when(() -> ImGui.colorPicker4(any(), any()))
+                     .thenReturn(false);
             SpriteRenderer spr = new SpriteRenderer();
             spr.setClean();
             spr.imgui();

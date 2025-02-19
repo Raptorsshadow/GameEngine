@@ -17,17 +17,17 @@ import java.util.List;
 @Data
 public class GameObject {
 
+    private static int idCounter = 0;
     //Transform to be applied to this object when rendering
-    public final Transform transform;
+    public final  Transform       transform;
     //Name of component used for logging and management purposes
-    private final String name;
+    private final String          name;
     //All components managed by this object
     private final List<Component> components = new ArrayList<>();
     //Track zIndex relative to other game objects
-    private final int zIndex;
+    private final int             zIndex;
+    private        int uid;
 
-    private static int idCounter = 0;
-    private int uid;
     /**
      * Constructor that names the object.
      *
@@ -48,6 +48,10 @@ public class GameObject {
         this.transform = transform;
         this.zIndex = zIndex;
         this.uid = idCounter++;
+    }
+
+    public static void init(int maxId) {
+        idCounter = maxId;
     }
 
     /**
@@ -113,9 +117,5 @@ public class GameObject {
      */
     public void imgui() {
         this.components.forEach(Component::imgui);
-    }
-
-    public static void init(int maxId) {
-        idCounter = maxId;
     }
 }

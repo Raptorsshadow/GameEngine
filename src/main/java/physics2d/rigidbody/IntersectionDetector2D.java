@@ -20,8 +20,9 @@ public class IntersectionDetector2D {
 
     /**
      * Test if a point is on a given line segment.
+     *
      * @param point 2d Coordinate
-     * @param line Line Segment
+     * @param line  Line Segment
      * @return Point is on the line
      */
     public static boolean pointOnLine(Vector2f point, Line2D line) {
@@ -35,7 +36,8 @@ public class IntersectionDetector2D {
 
     /**
      * Test if a point is inside a given circle.
-     * @param point 2d Coordinate
+     *
+     * @param point  2d Coordinate
      * @param circle Circle
      * @return Point is contained within circle
      */
@@ -47,8 +49,9 @@ public class IntersectionDetector2D {
 
     /**
      * Test if a point is inside a given Axis Aligned Bounding Box (AABB)
+     *
      * @param point 2d Coordinate
-     * @param box Axis Aligned Bounding Box
+     * @param box   Axis Aligned Bounding Box
      * @return Point is contained within the AABB
      */
     public static boolean pointInAABB(Vector2f point, AABB box) {
@@ -57,28 +60,32 @@ public class IntersectionDetector2D {
 
     /**
      * test if a point is inside a given 2D Box
+     *
      * @param point 2d Coordinate
-     * @param box Bounding Box
+     * @param box   Bounding Box
      * @return Point is contained within the box.
      */
     public static boolean pointInBox2D(Vector2f point, Box2D box) {
         Vector2f pointInSpace = new Vector2f(point);
         JMath.rotate(pointInSpace,
-                box.getRigidbody().getRotation(),
-                box.getRigidbody().getPosition());
+                     box.getRigidbody()
+                        .getRotation(),
+                     box.getRigidbody()
+                        .getPosition());
         return pointInBounds(pointInSpace, box.getMin(), box.getMax());
     }
 
     /**
      * Test if a given point is contained by given min and max bounding edges.
+     *
      * @param point 2d Coordinate
-     * @param min 2d min coordinate of bounding box
-     * @param max 2d max coordinate of bounding box
+     * @param min   2d min coordinate of bounding box
+     * @param max   2d max coordinate of bounding box
      * @return Point is contained within min and max.
      */
     private static boolean pointInBounds(Vector2f point, Vector2f min, Vector2f max) {
         return point.x <= max.x && point.x >= min.x &&
-                point.y <= max.y && point.y >= min.y;
+               point.y <= max.y && point.y >= min.y;
     }
 
     //
@@ -87,7 +94,7 @@ public class IntersectionDetector2D {
 
     public static boolean lineAndCircle(Line2D line, Circle circle) {
         //check if the segment starts or ends in the circle.  Can return immediately
-        if(pointInCircle(line.getStart(), circle) || pointInCircle(line.getEnd(), circle)) {
+        if (pointInCircle(line.getStart(), circle) || pointInCircle(line.getEnd(), circle)) {
             return true;
         }
         //Get the length of the given line segment as a vector
@@ -100,7 +107,7 @@ public class IntersectionDetector2D {
         float t = centerToLineStart.dot(ab) / ab.dot(ab);
 
         //If t is less than 0 or greater than 1 we're outside the bounds of the line segment.  Return false
-        if(t < 0.0f || t > 1.0f) {
+        if (t < 0.0f || t > 1.0f) {
             return false;
         }
 

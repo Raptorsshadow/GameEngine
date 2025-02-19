@@ -6,8 +6,9 @@ import physics2d.rigidbody.Rigidbody2D;
 
 @Data
 public class Circle {
-    private float radius = 1.0f;
-    private Rigidbody2D body  = null;
+    private float       radius = 1.0f;
+    private Rigidbody2D body   = null;
+
     public Circle(float radius) {
         this.radius = radius;
     }

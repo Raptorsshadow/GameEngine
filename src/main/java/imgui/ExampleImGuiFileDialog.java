@@ -14,9 +14,9 @@ import java.util.Map;
 public class ExampleImGuiFileDialog {
     private static final String URL = "https://github.com/aiekick/ImGuiFileDialog";
 
-    private static Map<String, String> selection = null;
-    private static long userData = 0;
-    private static ImGuiFileDialogPaneFun callback = new ImGuiFileDialogPaneFun() {
+    private static Map<String, String>    selection = null;
+    private static long                   userData  = 0;
+    private static ImGuiFileDialogPaneFun callback  = new ImGuiFileDialogPaneFun() {
         @Override
         public void accept(String filter, long userDatas, boolean canContinue) {
             ImGui.text("Filter: " + filter);
@@ -26,8 +26,8 @@ public class ExampleImGuiFileDialog {
     public static void show(ImBoolean showImGuiFileDialogDemo) {
         ImGui.setNextWindowSize(800, 200, ImGuiCond.Once);
         ImGui.setNextWindowPos(ImGui.getMainViewport()
-                .getPosX() + 100, ImGui.getMainViewport()
-                .getPosY() + 100, ImGuiCond.Once);
+                                    .getPosX() + 100, ImGui.getMainViewport()
+                                                           .getPosY() + 100, ImGuiCond.Once);
         if (ImGui.begin("ImGuiFileDialogDemo Demo", showImGuiFileDialogDemo)) {
             ImGui.text("This a demo for ImGuiFileDialog");
 
@@ -37,7 +37,7 @@ public class ExampleImGuiFileDialog {
             if (ImGui.button(URL)) {
                 try {
                     Desktop.getDesktop()
-                            .browse(new URI(URL));
+                           .browse(new URI(URL));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -45,7 +45,7 @@ public class ExampleImGuiFileDialog {
 
             if (ImGui.button("Browse File")) {
                 ImGuiFileDialog.openModal("browse-key", "Choose File", ".java", ".", callback, 250, 1, 42,
-                        ImGuiFileDialogFlags.None);
+                                          ImGuiFileDialogFlags.None);
             }
 
             if (ImGuiFileDialog.display("browse-key", ImGuiFileDialogFlags.None, 200, 400, 800, 600)) {
@@ -58,7 +58,7 @@ public class ExampleImGuiFileDialog {
 
             if (ImGui.button("Browse Folder")) {
                 ImGuiFileDialog.openDialog("browse-folder-key", "Choose Folder", null, ".", "", callback, 1, 7L,
-                        ImGuiFileDialogFlags.None);
+                                           ImGuiFileDialogFlags.None);
             }
 
             if (ImGuiFileDialog.display("browse-folder-key", ImGuiFileDialogFlags.None, 200, 400, 800, 600)) {
@@ -72,9 +72,9 @@ public class ExampleImGuiFileDialog {
 
         if (selection != null && !selection.isEmpty()) {
             ImGui.text("Selected: " + selection.values()
-                    .stream()
-                    .findFirst()
-                    .get());
+                                               .stream()
+                                               .findFirst()
+                                               .get());
             ImGui.text("User Data: " + userData);
         }
 
