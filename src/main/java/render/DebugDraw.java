@@ -31,7 +31,7 @@ public class DebugDraw {
     public static final  int          DEF_LIFETIME = 300;
     // Default Color to draw with
     public static final  Vector3f     DEF_COLOR    = new Vector3f(1f, 0f, 1f);
-    private static final Logger log = LogManager.getLogger(DebugDraw.class);
+    private static final Logger       log          = LogManager.getLogger(DebugDraw.class);
     // Max number of debug lines to render.
     private static final int          MAX_LINES    = 500;
     // Collection to hold all the lines we're rendering

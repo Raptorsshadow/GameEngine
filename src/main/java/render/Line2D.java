@@ -43,5 +43,12 @@ public class Line2D {
         return this.to;
     }
 
-    public float lengthSquared() { return new Vector2f(to).sub(from).lengthSquared(); }
+    /**
+     * Return the length of the vector squared
+     * @return (to - from) ^ 2
+     */
+    public float lengthSquared() {
+        return new Vector2f(to).sub(from)
+                               .lengthSquared();
+    }
 }

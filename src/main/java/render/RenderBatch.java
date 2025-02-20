@@ -49,7 +49,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private final        Shader           shader;
     @Getter
     private final        int              zIndex;
-    private final GLWrapper gl;
+    private final        GLWrapper        gl;
     private              int              numSprites;
     private              boolean          hasRoom;
     private              int              vaoId;

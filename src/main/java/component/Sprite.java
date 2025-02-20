@@ -27,9 +27,9 @@ public class Sprite implements Serializable {
     //Height of the Sprite
     private                float      height;
     //The texture containing the sprite
-    private Texture    texture   = null;
+    private                Texture    texture    = null;
     //The bounding box of the sprite
-    private Vector2f[] texCoords = DEF_VECTOR;
+    private                Vector2f[] texCoords  = DEF_VECTOR;
 
     /**
      * Return the TextureId

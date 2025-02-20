@@ -7,13 +7,11 @@ import org.mockito.Mockito;
 import scene.Settings;
 
 /**
- *
- Class: GlobalTestSetup
- Author: rapto
- CreatedDate: 2/19/2025 : 2:19 AM
- Project: GameEngine
- Description: Configures application for unit test execution.
-
+ * Class: GlobalTestSetup
+ * Author: rapto
+ * CreatedDate: 2/19/2025 : 2:19 AM
+ * Project: GameEngine
+ * Description: Configures application for unit test execution.
  */
 public class GlobalTestSetup implements BeforeAllCallback {
     private static boolean initialized = false;

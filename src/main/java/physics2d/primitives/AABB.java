@@ -1,5 +1,6 @@
 package physics2d.primitives;
 
+import lombok.Data;
 import org.joml.Vector2f;
 import physics2d.rigidbody.Rigidbody2D;
 
@@ -10,6 +11,7 @@ import physics2d.rigidbody.Rigidbody2D;
  * Project: GameEngine
  * Description: Axis Aligned Bounding Box
  */
+@Data
 public class AABB {
 
     private Vector2f    size      = new Vector2f();
@@ -18,12 +20,12 @@ public class AABB {
 
     public AABB() {
         //Default no args
-        this.halfSize = new Vector2f(size).mul(0.5f);
     }
 
     public AABB(Vector2f min, Vector2f max) {
         this();
         this.size = new Vector2f(max).sub(min);
+        this.halfSize = new Vector2f(size).mul(0.5f);
     }
 
     public Vector2f getMin() {

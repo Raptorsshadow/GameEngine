@@ -41,7 +41,7 @@ public abstract class Scene {
     //Currently Selected activeGameObject used to render specific ImGui Overlays
     protected GameObject activeGameObject = null;
     //Status bit for determine if level was loaded from file.
-    protected boolean levelLoaded = false;
+    protected boolean    levelLoaded      = false;
     // State variable to track if the scene is running
     private   boolean    isRunning        = false;
 

@@ -23,10 +23,10 @@ import java.lang.reflect.Modifier;
 @Setter
 @Getter
 public abstract class Component implements Serializable {
-    private static final Logger log = LogManager.getLogger(Component.class);
-    private static int idCounter = 0;
-    protected transient GameObject gameObject;
-    private        int uid       = -1;
+    private static final Logger     log       = LogManager.getLogger(Component.class);
+    private static       int        idCounter = 0;
+    protected transient  GameObject gameObject;
+    private              int        uid       = -1;
 
     /**
      * Generate an imgui control for managing a Vector4f field

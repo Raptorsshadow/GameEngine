@@ -5,14 +5,16 @@ import physics2d.primitives.*;
 import render.Line2D;
 import util.JMath;
 
-import java.util.Vector;
-
 /**
- *
+ * Class: IntersectionDetector2D
+ * Author: rapto
+ * CreatedDate: 2/19/2025 : 10:20 PM
+ * Project: GameEngine
+ * Description: Collection of Collision detection utilities for various supported shapes and primitives.
  */
 public class IntersectionDetector2D {
     private IntersectionDetector2D() {
-        //Hidden static util Constructor.
+        throw new UnsupportedOperationException("Utility class");
     }
     //
     //    Point vs Primitive Tests
@@ -92,6 +94,13 @@ public class IntersectionDetector2D {
     //    Line Vs Primitive Tests
     //
 
+    /**
+     * Check if a line segment intersects a circle
+     *
+     * @param line   Line Segment
+     * @param circle Circle
+     * @return line intersects circle
+     */
     public static boolean lineAndCircle(Line2D line, Circle circle) {
         //check if the segment starts or ends in the circle.  Can return immediately
         if (pointInCircle(line.getStart(), circle) || pointInCircle(line.getEnd(), circle)) {
@@ -118,8 +127,15 @@ public class IntersectionDetector2D {
         return pointInCircle(closestPoint, circle);
     }
 
+    /**
+     * Check if a line segment intersects an AABB Box
+     *
+     * @param line Line Segment
+     * @param box  AABB
+     * @return line intersects box
+     */
     public static boolean lineAndAABB(Line2D line, AABB box) {
-        if(pointInAABB(line.getStart(), box) || pointInAABB(line.getEnd(), box)) {
+        if (pointInAABB(line.getStart(), box) || pointInAABB(line.getEnd(), box)) {
             return true;
         }
         Vector2f unitVector = new Vector2f(line.getEnd()).sub(line.getStart());
@@ -128,23 +144,33 @@ public class IntersectionDetector2D {
         unitVector.y = unitVector.y != 0 ? 1.0f / unitVector.y : 0f;
 
         Vector2f min = box.getMin();
-        min.sub(line.getStart()).mul(unitVector);
+        min.sub(line.getStart())
+           .mul(unitVector);
         Vector2f max = box.getMax();
-        max.sub(line.getStart()).mul(unitVector);
-
+        max.sub(line.getStart())
+           .mul(unitVector);
         float tMin = Math.max(Math.min(min.x, max.x), Math.min(min.y, max.y));
         float tMax = Math.min(Math.max(min.x, max.x), Math.max(min.y, max.y));
-        if(tMax < 0 || tMin > tMax) {
+        if (tMax < 0 || tMin > tMax) {
             return false;
         }
         float t = tMin < 0f ? tMax : tMin;
 
-        return t > 0f && t*t < line.lengthSquared();
+        return t > 0f && t * t < line.lengthSquared();
     }
 
+    /**
+     * Check if a line segment intersects a Box2D box
+     *
+     * @param line Line Segment
+     * @param box  Box2D
+     * @return line intersects box
+     */
     public static boolean lineAndBox2D(Line2D line, Box2D box) {
-        float theta = - box.getRigidbody().getRotation();
-        Vector2f center = box.getRigidbody().getPosition();
+        float theta = -box.getRigidbody()
+                          .getRotation();
+        Vector2f center = box.getRigidbody()
+                             .getPosition();
         Vector2f localStart = new Vector2f(line.getStart());
         Vector2f localEnd = new Vector2f(line.getEnd());
         JMath.rotate(localStart, theta, center);
@@ -156,6 +182,15 @@ public class IntersectionDetector2D {
     //      Raycasts
     //
 
+    /**
+     * Check if a particular Ray will intersect a Circle.
+     * Can optionally pass a RaycaseResult object to store details of the intersection.
+     *
+     * @param ray Ray2D
+     * @param circle Circle
+     * @param result Optional result object to store details of intersection if it occurs
+     * @return ray intersects circle.  Populates result if not null.
+     */
     public static boolean raycast(Ray2D ray, Circle circle, RaycastResult result) {
         float intersectWithCircle;
 
@@ -167,10 +202,10 @@ public class IntersectionDetector2D {
 
         //Project the vector from the ray origin onto the direction of the ray
         float projectionLength = originToCircle.dot(ray.getDirection());
-        float bSquared = originToCircleLengthSquared - projectionLength*projectionLength;
+        float bSquared = originToCircleLengthSquared - projectionLength * projectionLength;
 
         //Check if there was a hit.  Anything less than 0 can be considered a miss/No Intersection
-        if(radiusSquared - bSquared < 0.0f) {
+        if (radiusSquared - bSquared < 0.0f) {
             return false;
         }
 
@@ -189,10 +224,12 @@ public class IntersectionDetector2D {
         }
 
         //Populate Results object if passed.
-        if(result != null) {
-            Vector2f point = new Vector2f(ray.getOrigin()).add(ray.getDirection().mul(intersectWithCircle));
-            Vector2f normal = new Vector2f(point).sub(circle.getCenter()).normalize();
-            result.init(point,normal,intersectWithCircle,false);
+        if (result != null) {
+            Vector2f point = new Vector2f(ray.getOrigin()).add(ray.getDirection()
+                                                                  .mul(intersectWithCircle));
+            Vector2f normal = new Vector2f(point).sub(circle.getCenter())
+                                                 .normalize();
+            result.init(point, normal, intersectWithCircle, false);
         }
 
         return true;

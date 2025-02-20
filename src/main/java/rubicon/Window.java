@@ -36,23 +36,23 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class Window {
     // Window singleton reference
-    private static  Window window;
+    private static  Window         window;
     //Default background colors for RGBA channels
-    protected final Color  colorBg = new Color(1, 1, 1, 1);
-    final         List<Callback> callbacks = new ArrayList<>();
+    protected final Color          colorBg   = new Color(1, 1, 1, 1);
+    final           List<Callback> callbacks = new ArrayList<>();
     // Window config
-    private final Configuration config;
+    private final   Configuration  config;
     //ImGui Layer used to render overlays.
-    private final IMGuiLayer    guiLayer;
-    private final GLWrapper      gl;
+    private final   IMGuiLayer     guiLayer;
+    private final   GLWrapper      gl;
     Logger log = LogManager.getLogger(Window.class);
-    float dt = -1.0f;
+    float  dt  = -1.0f;
     //Actual resolution values for the window.
-    private       FrameBuffer   frameBuffer;
+    private FrameBuffer frameBuffer;
     // Provisioned identifier for the Window
-    private long  glfwWindow;
+    private long        glfwWindow;
     // The active scene
-    private Scene currentScene;
+    private Scene       currentScene;
 
     /**
      * Default Constructor taking window initialization params

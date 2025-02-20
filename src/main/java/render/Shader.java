@@ -24,19 +24,19 @@ import static org.lwjgl.opengl.GL20.*;
  */
 public class Shader {
     // Constant for parsing shader files used to key on type preprocessor
-    public static final String TYPE_CONSTANT = "#type ";
-    private static final Logger log = LogManager.getLogger(Shader.class);
+    public static final  String TYPE_CONSTANT = "#type ";
+    private static final Logger log           = LogManager.getLogger(Shader.class);
     //Shader filepath
-    private final String filePath;
+    private final        String filePath;
     GLWrapper gl;
     //Shader programId registered on GPU
-    private int shaderProgramId;
+    private int     shaderProgramId;
     //Lifecycle tracking variable.  True if shader has been registered and is running
     private boolean inUse;
     //Parsed out vertex source from shader file
-    private String vertexSource;
+    private String  vertexSource;
     //Parsed out fragment source from shader file
-    private String fragmentSource;
+    private String  fragmentSource;
 
     /**
      * Constructor that attempts to load the given shader file and parse out the vertex and fragment sources.
