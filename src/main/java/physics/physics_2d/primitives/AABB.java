@@ -1,8 +1,8 @@
-package physics2d.primitives;
+package physics.physics_2d.primitives;
 
 import lombok.Data;
 import org.joml.Vector2f;
-import physics2d.rigidbody.Rigidbody2D;
+import physics.physics_2d.rigidbody.Rigidbody2D;
 
 /**
  * Class: AABB
@@ -26,6 +26,11 @@ public class AABB {
         this();
         this.size = new Vector2f(max).sub(min);
         this.halfSize = new Vector2f(size).mul(0.5f);
+    }
+
+    public AABB(Vector2f min, Vector2f max, Rigidbody2D rigidbody) {
+        this(min, max);
+        this.rigidbody = rigidbody;
     }
 
     public Vector2f getMin() {

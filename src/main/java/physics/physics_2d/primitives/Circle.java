@@ -1,8 +1,8 @@
-package physics2d.primitives;
+package physics.physics_2d.primitives;
 
 import lombok.Data;
 import org.joml.Vector2f;
-import physics2d.rigidbody.Rigidbody2D;
+import physics.physics_2d.rigidbody.Rigidbody2D;
 
 @Data
 public class Circle {

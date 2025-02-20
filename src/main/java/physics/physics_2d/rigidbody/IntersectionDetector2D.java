@@ -1,7 +1,9 @@
-package physics2d.rigidbody;
+package physics.physics_2d.rigidbody;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joml.Vector2f;
-import physics2d.primitives.*;
+import physics.physics_2d.primitives.*;
 import render.Line2D;
 import util.JMath;
 
@@ -13,6 +15,7 @@ import util.JMath;
  * Description: Collection of Collision detection utilities for various supported shapes and primitives.
  */
 public class IntersectionDetector2D {
+    public static final Logger log = LogManager.getLogger(IntersectionDetector2D.class);
     private IntersectionDetector2D() {
         throw new UnsupportedOperationException("Utility class");
     }
@@ -140,8 +143,9 @@ public class IntersectionDetector2D {
         }
         Vector2f unitVector = new Vector2f(line.getEnd()).sub(line.getStart());
         unitVector.normalize();
-        unitVector.x = unitVector.x != 0 ? 1.0f / unitVector.x : 0f;
-        unitVector.y = unitVector.y != 0 ? 1.0f / unitVector.y : 0f;
+
+        unitVector.x = !Float.isNaN(unitVector.x) ? 1.0f / unitVector.x : 0f;
+        unitVector.y = !Float.isNaN(unitVector.y) ? 1.0f / unitVector.y : 0f;
 
         Vector2f min = box.getMin();
         min.sub(line.getStart())
@@ -175,7 +179,7 @@ public class IntersectionDetector2D {
         Vector2f localEnd = new Vector2f(line.getEnd());
         JMath.rotate(localStart, theta, center);
         JMath.rotate(localEnd, theta, center);
-        return lineAndAABB(new Line2D(localStart, localEnd), new AABB(box.getMin(), box.getMax()));
+        return lineAndAABB(new Line2D(localStart, localEnd), new AABB(box.getMin(), box.getMax(), box.getRigidbody()));
     }
 
     //
@@ -229,7 +233,7 @@ public class IntersectionDetector2D {
                                                                   .mul(intersectWithCircle));
             Vector2f normal = new Vector2f(point).sub(circle.getCenter())
                                                  .normalize();
-            result.init(point, normal, intersectWithCircle, false);
+            result.init(point, normal, intersectWithCircle, true);
         }
 
         return true;

@@ -1,4 +1,4 @@
-package physics2d.primitives;
+package physics.physics_2d.primitives;
 
 import component.Component;
 import org.joml.Vector2f;
