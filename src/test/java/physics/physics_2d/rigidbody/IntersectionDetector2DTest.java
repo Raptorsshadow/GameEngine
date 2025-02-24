@@ -36,8 +36,8 @@ class IntersectionDetector2DTest {
     void pointInCircleTest() {
         Vector2f point = new Vector2f(0, 0);
         Circle c = new Circle(1);
-        Rigidbody2D rb = new Rigidbody2D(new Vector2f(0, 0), 0);
-        c.setBody(rb);
+        Rigidbody2D rb = new Rigidbody2D(new Vector2f(0, 0));
+        c.setRigidBody(rb);
         assertTrue(IntersectionDetector2D.pointInCircle(point, c));
         rb.setPosition(new Vector2f(0, 1));
         assertTrue(IntersectionDetector2D.pointInCircle(point, c));
@@ -49,7 +49,7 @@ class IntersectionDetector2DTest {
     void pointInAABBTest() {
         AABB box = new AABB(new Vector2f(0, 0), new Vector2f(1, 1));
         Rigidbody2D rb = new Rigidbody2D(new Vector2f(0.5f, 0.5f), 0);
-        box.setRigidbody(rb);
+        box.setRigidBody(rb);
         Vector2f point = new Vector2f(0.5f, 0.5f);
         assertTrue(IntersectionDetector2D.pointInAABB(point, box));
         point = new Vector2f(0f, 0f);
@@ -68,7 +68,7 @@ class IntersectionDetector2DTest {
     void pointInBoxTest() {
         Box2D box = new Box2D(new Vector2f(0, 0), new Vector2f(1, 1));
         Rigidbody2D rb = new Rigidbody2D(new Vector2f(0.5f, 0.5f), 0);
-        box.setRigidbody(rb);
+        box.setRigidBody(rb);
         Vector2f point = new Vector2f(0.5f, 0.5f);
         assertTrue(IntersectionDetector2D.pointInBox2D(point, box));
         point = new Vector2f(0f, 0f);
@@ -95,7 +95,7 @@ class IntersectionDetector2DTest {
         Line2D line = new Line2D(new Vector2f(0, 0), new Vector2f(10, 10));
         Circle circle = new Circle(3);
         Rigidbody2D rb = new Rigidbody2D(new Vector2f(5, 5), 0);
-        circle.setBody(rb);
+        circle.setRigidBody(rb);
         assertTrue(IntersectionDetector2D.lineAndCircle(line, circle));
 
         //Handle To or From within the circle itself
@@ -118,7 +118,7 @@ class IntersectionDetector2DTest {
     void lineAndAABBTest() {
         AABB box = new AABB(new Vector2f(0, 0), new Vector2f(1, 1));
         Rigidbody2D rb = new Rigidbody2D(new Vector2f(0.5f, 0.5f), 0);
-        box.setRigidbody(rb);
+        box.setRigidBody(rb);
         Line2D line = new Line2D(new Vector2f(-3,-3), new Vector2f(5, 5));
         assertTrue(IntersectionDetector2D.lineAndAABB(line, box));
 
@@ -153,7 +153,7 @@ class IntersectionDetector2DTest {
     void lineAndBox2DTest() {
         Box2D box = new Box2D(new Vector2f(0, 0), new Vector2f(1, 1));
         Rigidbody2D rb = new Rigidbody2D(new Vector2f(0.5f, 0.5f), 0);
-        box.setRigidbody(rb);
+        box.setRigidBody(rb);
         Line2D line = new Line2D(new Vector2f(-3,-3), new Vector2f(5, 5));
         assertTrue(IntersectionDetector2D.lineAndBox2D(line, box));
 
@@ -189,7 +189,7 @@ class IntersectionDetector2DTest {
         Ray2D ray = new Ray2D(new Vector2f(0, 0), new Vector2f(1, 1));
         Circle circle = new Circle(3);
         Rigidbody2D rb = new Rigidbody2D(new Vector2f(5, 5), 0);
-        circle.setBody(rb);
+        circle.setRigidBody(rb);
         assertTrue(IntersectionDetector2D.raycast(ray, circle, null));
         ray = new Ray2D(new Vector2f(-10,0), new Vector2f(-1, -1));
         assertFalse(IntersectionDetector2D.raycast(ray, circle, null));

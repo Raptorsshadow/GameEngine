@@ -9,22 +9,16 @@ public class Box2D extends AABB {
         super(min, max);
     }
 
+    @Override
     public Vector2f[] getVertices() {
-        Vector2f min = getMin();
-        Vector2f max = getMax();
-
-        Vector2f[] vertices = {
-                new Vector2f(min.x, min.y),
-                new Vector2f(min.x, max.y),
-                new Vector2f(max.x, min.y),
-                new Vector2f(max.x, max.y),
-                };
-        if (this.getRigidbody()
-                .getRotation() != 0.0f) {
+        Vector2f [] vertices = super.getVertices();
+        if (getRigidBody().getRotation() != 0.0f) {
             for (Vector2f vertex : vertices) {
-                JMath.rotate(vertex, this.getRigidbody()
-                                         .getRotation(), this.getRigidbody()
-                                                             .getPosition());
+                JMath.rotate(
+                        vertex,
+                        getRigidBody().getRotation(),
+                        getRigidBody().getPosition()
+                );
             }
         }
         return vertices;
