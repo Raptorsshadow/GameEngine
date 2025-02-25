@@ -2,6 +2,7 @@ package rubicon;
 
 import org.joml.Vector2f;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Objects;
  * Project: GameEngine
  * Description: Stores transformation data to be used when rendering resources.
  */
-public class Transform {
+public class Transform implements Serializable {
 
     // X/Y Position data
     public final Vector2f position;

@@ -4,6 +4,10 @@ import component.*;
 import imgui.ImGui;
 import imgui.ImVec2;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
+import physics.physics_2d.PhysicsSystem2D;
+import physics.physics_2d.rigidbody.Rigidbody2D;
+import render.DebugDraw;
 import rubicon.Camera;
 import rubicon.GameObject;
 import rubicon.Prefabs;
@@ -25,7 +29,11 @@ public class LevelEditorScene extends Scene {
             Objects.requireNonNull(AssetPool.getTexture("assets/images/spritesheets/decorationsAndBlocks.png")),
             16, 16, 81, 0);
     GameObject levelEditorStuff = new GameObject("levelEditor", new Transform(new Vector2f()), 0);
-
+    PhysicsSystem2D physics = new PhysicsSystem2D(1.0f / 60.0f, new Vector2f(0, -10f));
+    Transform obj1;
+    Transform obj2;
+    Rigidbody2D rb1;
+    Rigidbody2D rb2;
     /**
      * Default constructor used to initialize the scene pieces
      */
@@ -40,10 +48,19 @@ public class LevelEditorScene extends Scene {
     public void init() {
         this.levelEditorStuff.addComponent(new MouseControls());
         this.levelEditorStuff.addComponent(new GridLines());
+        obj1 = new Transform(new Vector2f(100, 500));
+        obj2 = new Transform(new Vector2f(200, 500));
+        rb1 = new Rigidbody2D();
+        rb2 = new Rigidbody2D();
+        rb1.setRawTransform(obj1);
+        rb2.setRawTransform(obj2);
+        rb1.setMass(100);
+        rb2.setMass(200);
+        physics.addRigidBody(rb1);
+        physics.addRigidBody(rb2);
         loadResources();
         this.camera = new Camera(new Vector2f(-250, 0));
         if (this.levelLoaded) {
-
             this.activeGameObject = this.gameObjects.getFirst();
         }
     }
@@ -78,6 +95,9 @@ public class LevelEditorScene extends Scene {
         //update all gameobjects for the frame.
         this.gameObjects.forEach(go -> go.update(dt));
 
+        DebugDraw.addBox2D(obj1.position, new Vector2f(32, 32), 0, new Vector3f(1,0,0));
+        DebugDraw.addBox2D(obj2.position, new Vector2f(32, 32), 0, new Vector3f(0,1,0));
+        physics.update(dt);
         //Call the renderer
         this.renderer.render();
     }
